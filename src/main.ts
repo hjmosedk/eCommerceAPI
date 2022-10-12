@@ -10,7 +10,7 @@ async function bootstrap() {
     .setDescription(
       'This is the API for the eCommerce app made by Christian Kubel Højmose',
     )
-    .setVersion('0.0.1')
+    .setVersion('0.1.0')
     .addTag('e-commerce')
     .build();
   const document = SwaggerModule.createDocument(app, config);

@@ -7,6 +7,6 @@
     { "type": "style", "hidden": true },
     { "type": "refactor", "hidden": true },
     { "type": "perf", "hidden": true },
-    { "type": "test", "hidden": true }
+    { "type": "test", "section": "Test" }
   ]
 }
