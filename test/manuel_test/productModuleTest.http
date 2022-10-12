@@ -11,3 +11,18 @@ GET http://{{hostname}}:{{port}}/{{url}}
 GET http://{{hostname}}:{{port}}/{{url}}/1
 
 ###
+
+
+POST http://{{hostname}}:{{port}}/{{url}}
+Content-Type: application/json
+
+{
+    "name":"Frying Pan",
+    "sku": "FPA1", 
+    "description":"This is a cast iron frying pan, suitable for all cooking",
+    "price": 250,
+    "currency": "DKK",
+    "quantity": 500
+}
+
+###

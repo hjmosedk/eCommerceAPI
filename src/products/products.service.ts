@@ -18,4 +18,9 @@ export class ProductsService {
 
     return this.repo.findOne({ where: { id } });
   }
+
+  createOne(product: Partial<Product>) {
+    const newProduct = this.repo.create(product);
+    return this.repo.save(newProduct);
+  }
 }

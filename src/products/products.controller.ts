@@ -1,6 +1,14 @@
-import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Post,
+} from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
+import { CreateProductDto } from './dtos/create-product.dto';
 @ApiTags('e-commerce')
 @Controller('products')
 export class ProductsController {
@@ -26,5 +34,16 @@ export class ProductsController {
       throw new NotFoundException('Product not found, or does not exists');
     }
     return product;
+  }
+
+  @Post()
+  @ApiOperation({
+    description:
+      'This wil create a new product and return a copy of the newly created product',
+  })
+  async createOne(@Body() body: CreateProductDto) {
+    const newProduct = await this.productsService.createOne(body);
+
+    return newProduct;
   }
 }
