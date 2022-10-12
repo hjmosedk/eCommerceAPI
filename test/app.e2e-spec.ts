@@ -15,10 +15,19 @@ describe('AppController (e2e)', () => {
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  test('/ (GET)', () => {
     return request(app.getHttpServer())
       .get('/')
       .expect(200)
       .expect('Hello World!');
+  });
+
+  test('/products returns a list of products', async () => {
+    const products = await request(app.getHttpServer())
+      .get('/products')
+      .expect(200);
+
+    expect(products.body.length).toBe(0);
+    console.log(products.body);
   });
 });
