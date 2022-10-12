@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, NotFoundException, Param } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 @ApiTags('e-commerce')
@@ -13,5 +13,18 @@ export class ProductsController {
   })
   getAll() {
     return this.productsService.getAll();
+  }
+
+  @Get(':id')
+  @ApiOperation({
+    description: 'This will get one product from the database, based on the ID',
+  })
+  async getOne(@Param('id') id: string) {
+    const product = await this.productsService.getOne(parseInt(id));
+
+    if (!product) {
+      throw new NotFoundException('Product not found, or does not exists');
+    }
+    return product;
   }
 }

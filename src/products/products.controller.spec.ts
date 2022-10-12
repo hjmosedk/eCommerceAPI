@@ -40,6 +40,18 @@ describe('ProductsController', () => {
           } as Product,
         ]);
       },
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      getOne(_id: number) {
+        return Promise.resolve({
+          id: 1,
+          name: 'testProduct',
+          sku: 'testSKU1',
+          description: 'This is just a test',
+          price: 2558,
+          picture: 'not yet',
+          quantity: 10,
+        } as Product);
+      },
     };
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ProductsController],
@@ -61,6 +73,21 @@ describe('ProductsController', () => {
       expect.assertions(2);
       expect(products.length).toBe(3);
       expect(products).toBeDefined();
+    });
+
+    test('One products is correctly found in the database', async () => {
+      const products = await productController.getAll();
+      const product = await productController.getOne(products[0].id.toString());
+      expect.assertions(2);
+      expect(product).toBeDefined();
+      expect(product.sku).toBe('testSKU1');
+    });
+    test('Invalid ID returns an error', async () => {
+      fakeProductsService.getOne = () => null;
+
+      try {
+        await productController.getOne('2558');
+      } catch (error) {}
     });
   });
 });

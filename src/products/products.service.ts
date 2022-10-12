@@ -10,4 +10,12 @@ export class ProductsService {
   getAll() {
     return this.repo.find();
   }
+
+  getOne(id: number) {
+    if (!id) {
+      return null;
+    }
+
+    return this.repo.findOne({ where: { id } });
+  }
 }

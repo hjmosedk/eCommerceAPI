@@ -72,4 +72,25 @@ describe('ProductsService', () => {
       expect(productsRepositoryFindSpy).toHaveBeenCalled();
     });
   });
+  test('A product is returned when :ID is called', async () => {
+    const product = {
+      id: 1,
+      name: 'Diamantring',
+      sku: 'DIA1',
+      description: 'Dette er en ring af diamant',
+      price: 5000,
+      picture: 'Not implemened',
+      quantity: 10,
+    } as Product;
+
+    const productRepositoryFindOneSpy = jest
+      .spyOn(productRepository, 'findOne')
+      .mockResolvedValue(product);
+
+    const result = await productService.getOne(1);
+
+    expect.assertions(2);
+    expect(result).toBe(product);
+    expect(productRepositoryFindOneSpy).toBeCalledWith({ where: { id: 1 } });
+  });
 });

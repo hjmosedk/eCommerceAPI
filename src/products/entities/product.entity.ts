@@ -67,4 +67,7 @@ export class ProductRepositoryFake {
   public async find(): Promise<void> {
     [];
   }
+  public async findOne(): Promise<void> {
+    [];
+  }
 }
