@@ -71,26 +71,68 @@ describe('ProductsService', () => {
       expect(result).toBe(products);
       expect(productsRepositoryFindSpy).toHaveBeenCalled();
     });
+    test('A product is returned when :ID is called', async () => {
+      const product = {
+        id: 1,
+        name: 'Diamantring',
+        sku: 'DIA1',
+        description: 'Dette er en ring af diamant',
+        price: 5000,
+        picture: 'Not implemened',
+        quantity: 10,
+      } as Product;
+
+      const productRepositoryFindOneSpy = jest
+        .spyOn(productRepository, 'findOne')
+        .mockResolvedValue(product);
+
+      const result = await productService.getOne(1);
+
+      expect.assertions(2);
+      expect(result).toBe(product);
+      expect(productRepositoryFindOneSpy).toBeCalledWith({ where: { id: 1 } });
+    });
+    test('Wrong ID returns an error', async () => {
+      const productRepositoryFindOneErrorSpy = jest
+        .spyOn(productRepository, 'findOne')
+        .mockResolvedValue(null);
+
+      expect.assertions(2);
+
+      const noProduct = await productService.getOne(1);
+      expect(noProduct).toBe(null);
+      expect(productRepositoryFindOneErrorSpy).toHaveBeenCalledWith({
+        where: { id: 1 },
+      });
+    });
   });
-  test('A product is returned when :ID is called', async () => {
-    const product = {
-      id: 1,
-      name: 'Diamantring',
-      sku: 'DIA1',
-      description: 'Dette er en ring af diamant',
-      price: 5000,
-      picture: 'Not implemened',
-      quantity: 10,
-    } as Product;
 
-    const productRepositoryFindOneSpy = jest
-      .spyOn(productRepository, 'findOne')
-      .mockResolvedValue(product);
+  describe('Test ProductModule, create new product', () => {
+    test('Creating a new item is possible', async () => {
+      const newProduct = {
+        name: 'Cooking Stove',
+        sku: 'STO1',
+        description: 'This is a completely new stove',
+        price: 5000,
+        picture: 'Not implemened',
+        quantity: 10,
+      } as Product;
 
-    const result = await productService.getOne(1);
+      const productRepositoryCreateNewSpy = jest
+        .spyOn(productRepository, 'create')
+        .mockReturnValue(newProduct);
 
-    expect.assertions(2);
-    expect(result).toBe(product);
-    expect(productRepositoryFindOneSpy).toBeCalledWith({ where: { id: 1 } });
+      const productRepositorySaveNewSpy = jest
+        .spyOn(productRepository, 'save')
+        .mockResolvedValue(newProduct);
+
+      const resultNewProduct = await productService.createOne(newProduct);
+
+      expect.assertions(3);
+
+      expect(productRepositoryCreateNewSpy).toHaveBeenCalledWith(newProduct);
+      expect(productRepositorySaveNewSpy).toHaveBeenCalledWith(newProduct);
+      expect(resultNewProduct).toEqual(newProduct);
+    });
   });
 });

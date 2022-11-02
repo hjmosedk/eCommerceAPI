@@ -1,3 +1,4 @@
+import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Product } from './entities/product.entity';
 import { ProductsController } from './products.controller';
@@ -9,7 +10,7 @@ describe('ProductsController', () => {
 
   beforeEach(async () => {
     fakeProductsService = {
-      getAll() {
+      getAll: () => {
         return Promise.resolve([
           {
             id: 1,
@@ -41,7 +42,7 @@ describe('ProductsController', () => {
         ]);
       },
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      getOne(_id: number) {
+      getOne: (_id: number) => {
         return Promise.resolve({
           id: 1,
           name: 'testProduct',
@@ -52,6 +53,7 @@ describe('ProductsController', () => {
           quantity: 10,
         } as Product);
       },
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
     };
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ProductsController],
@@ -87,7 +89,13 @@ describe('ProductsController', () => {
 
       try {
         await productController.getOne('2558');
-      } catch (error) {}
+      } catch (error) {
+        expect.assertions(2);
+        expect(error).toBeInstanceOf(NotFoundException);
+        expect(error.message).toContain(
+          'Product not found, or does not exists',
+        );
+      }
     });
   });
 });
