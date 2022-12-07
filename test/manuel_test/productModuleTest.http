@@ -19,7 +19,7 @@ Content-Type: application/json
 {
     "name":"Frying Pan",
     "sku": "FPA1", 
-    "description":"This is a cast iron frying pan, suitable for all cooking",
+
     "price": 250,
     "currency": "DKK",
     "quantity": 500
