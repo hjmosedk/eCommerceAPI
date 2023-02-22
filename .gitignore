@@ -1,3 +1,9 @@
+notes.md
+.dccache
+.dcignore
+env.development
+env.test
+
 # compiled output
 /dist
 /node_modules
@@ -34,8 +40,3 @@ lerna-debug.log*
 !.vscode/tasks.json
 !.vscode/launch.json
 !.vscode/extensions.json
-
-notes.md
-.dccache
-env.development
-env.test
