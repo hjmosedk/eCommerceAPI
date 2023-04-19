@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { IsDefined } from 'class-validator';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -11,21 +12,24 @@ export class Product {
   id: number;
 
   @Column()
+  @IsDefined()
   @ApiProperty({
     description: 'This is the name of the product - The name is required',
     example: 'Gloves',
   })
   name: string;
-  required: true;
 
   @Column()
+  @IsDefined()
   @ApiProperty({
-    description: 'This is the SKU of the product, it is a text',
+    description:
+      'This is the SKU of the product, it is a text - The name is required',
     example: 'GLW1',
   })
   sku: string;
 
   @Column()
+  @IsDefined()
   @ApiProperty({
     description: 'This is the description of the product',
     example: 'These gloves are made by real leather',
@@ -33,6 +37,7 @@ export class Product {
   description: string;
 
   @Column()
+  @IsDefined()
   @ApiProperty({
     description: 'This is the price of the product',
     example: 350,
@@ -40,6 +45,7 @@ export class Product {
   price: number;
 
   @Column({ length: 3, default: 'DKK' })
+  @IsDefined()
   @ApiProperty({
     description:
       'This is the currency used for this product - This will always defaults to DKK',
@@ -55,6 +61,7 @@ export class Product {
   picture: string;
 
   @Column({ default: 10 })
+  @IsDefined()
   @ApiProperty({
     description:
       'This is the quantity of the product in stock - it will default to 10',
