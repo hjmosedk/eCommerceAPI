@@ -1,4 +1,4 @@
-@hostname = 192.168.1.90
+@hostname = 192.168.1.135
 @port = 3000
 @url = products
 
@@ -18,11 +18,11 @@ Content-Type: application/json
 
 {
     "name":"Frying Pan",
-    "sku": "FPA1", 
-
-    "price": 250,
+    "sku": "FPA1",
+    "description": "This is a frying pan",  
+    "price": 25000,
     "currency": "DKK",
-    "quantity": 500
+    "quantity": 5
 }
 
 ###

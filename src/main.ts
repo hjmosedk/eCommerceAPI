@@ -3,7 +3,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const allowlist = ['http://192.168.1.90:3000', 'http://192.168.1.90:4200'];
+  const allowlist = ['http://192.168.1.135:3000', 'http://192.168.1.135:4200'];
   const corsOptionsDelegate = function (req: any, callback: any) {
     let corsOptions: any;
     if (allowlist.indexOf(req.header('Origin')) !== -1) {
