@@ -3,6 +3,7 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 
+type newProduct = Omit<Product, 'id'>;
 @Injectable()
 export class ProductsService {
   constructor(@InjectRepository(Product) private repo: Repository<Product>) {}
@@ -22,5 +23,15 @@ export class ProductsService {
   createOne(product: Partial<Product>) {
     const newProduct = this.repo.create(product);
     return this.repo.save(newProduct);
+  }
+
+  createMany(products: newProduct[]) {
+    const newProducts: newProduct[] = [];
+    products.forEach((product) => {
+      const newProduct = this.repo.create(product);
+      newProducts.push(newProduct);
+    });
+
+    return this.repo.insert(newProducts);
   }
 }
