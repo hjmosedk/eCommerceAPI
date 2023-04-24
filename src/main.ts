@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+// * File ignored in testing, as this is a configuration file, and not a logic file - No logic to test
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';

@@ -54,7 +54,9 @@ describe('AppController (e2e)', () => {
       },
     ];
 
-    await productService.createMany(testProducts);
+    const test = await productService.createMany(testProducts);
+    console.log(test);
+    return test;
   });
 
   afterAll(async () => {

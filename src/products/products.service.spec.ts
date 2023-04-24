@@ -1,8 +1,14 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { Product, ProductRepositoryFake } from './entities/product.entity';
+import { InsertResult, Repository } from 'typeorm';
+import {
+  CurrencyType,
+  Product,
+  ProductRepositoryFake,
+} from './entities/product.entity';
 import { ProductsService } from './products.service';
+
+type newProduct = Omit<Product, 'id'>;
 
 describe('ProductsService', () => {
   let productService: ProductsService;
@@ -99,11 +105,9 @@ describe('ProductsService', () => {
 
       expect.assertions(2);
 
-      const noProduct = await productService.getOne(1);
+      const noProduct = await productService.getOne(null);
       expect(noProduct).toBe(null);
-      expect(productRepositoryFindOneErrorSpy).toHaveBeenCalledWith({
-        where: { id: 1 },
-      });
+      expect(productRepositoryFindOneErrorSpy).not.toBeCalled();
     });
   });
 
@@ -133,6 +137,94 @@ describe('ProductsService', () => {
       expect(productRepositoryCreateNewSpy).toHaveBeenCalledWith(newProduct);
       expect(productRepositorySaveNewSpy).toHaveBeenCalledWith(newProduct);
       expect(resultNewProduct).toEqual(newProduct);
+    });
+    test('CreateMany, is correctly applied on the service', async () => {
+      // TODO fix test to make more sense, right now, it is not making a lot of sense -> The service works as it is used in e2e to prepare database.
+
+      const products = [
+        {
+          name: 'Diamantring',
+          sku: 'DIA1',
+          description: 'Dette er en ring af diamant',
+          category: 'clothing',
+          price: 5000,
+          currency: CurrencyType.DKK,
+          picture: 'Not implemened',
+          quantity: 10,
+        } as newProduct,
+        {
+          name: 'Cheeseburger',
+          sku: 'CHE1',
+          description: 'Dette er en cheecburger',
+          category: 'food',
+          price: 49,
+          currency: CurrencyType.DKK,
+          picture: 'Not implemened',
+          quantity: 10,
+        } as newProduct,
+        {
+          name: 'Handsker',
+          sku: 'HAN1',
+          description: 'Dette er et par handsker',
+          category: 'clothes',
+          price: 25,
+          currency: CurrencyType.DKK,
+          picture: 'Not implemened',
+          quantity: 10,
+        } as newProduct,
+      ];
+
+      const newProducts = [
+        {
+          id: 1,
+          name: 'Diamantring',
+          sku: 'DIA1',
+          description: 'Dette er en ring af diamant',
+          category: 'clothing',
+          price: 5000,
+          currency: CurrencyType.DKK,
+          picture: 'Not implemened',
+          quantity: 10,
+        } as Product,
+        {
+          id: 2,
+          name: 'Cheeseburger',
+          sku: 'CHE1',
+          description: 'Dette er en cheecburger',
+          category: 'food',
+          price: 49,
+          currency: CurrencyType.DKK,
+          picture: 'Not implemened',
+          quantity: 10,
+        } as Product,
+        {
+          id: 3,
+          name: 'Handsker',
+          sku: 'HAN1',
+          description: 'Dette er et par handsker',
+          category: 'clothes',
+          price: 25,
+          currency: CurrencyType.DKK,
+          picture: 'Not implemened',
+          quantity: 10,
+        } as Product,
+      ];
+
+      const productRepositorySaveManySpy = jest
+        .spyOn(productRepository, 'create')
+        .mockReturnValue(newProducts[0]);
+
+      const productRepositoryInsertManySpy = jest
+        .spyOn(productRepository, 'insert')
+        .mockResolvedValue(new InsertResult());
+
+      const resultManyProducts = await productService.createMany(products);
+
+      expect.assertions(3);
+
+      expect(productRepositorySaveManySpy).toBeCalledTimes(newProducts.length);
+      expect(productRepositoryInsertManySpy).toBeCalled();
+      expect(resultManyProducts).toEqual(new InsertResult());
     });
   });
 });

@@ -16,13 +16,37 @@ GET http://{{hostname}}:{{port}}/{{url}}/1
 POST http://{{hostname}}:{{port}}/{{url}}
 Content-Type: application/json
 
-{
+
+  [
+    {
     "name":"Frying Pan",
     "sku": "FPA1",
-    "description": "This is a frying pan",  
+    "description": "This is a frying pan",
+    "category":"food",
     "price": 25000,
     "currency": "DKK",
-    "quantity": 5
-}
+    "quantity": 5, 
+    }, 
+    { 
+    "name":"Bacon",
+    "sku": "BAC1",
+    "description": "This is bacon",  
+    "category":"food", 
+    "price": 21000,
+    "currency": "DKK",
+    "quantity": 1, 
+    }, 
+    {
+    "name":"Tongs",
+    "sku": "TON1",
+    "description": "This is tongs",
+    "category": "utensils",  
+    "price": 30000,
+    "currency": "DKK",
+    "quantity": 5,  
+    }
+]  
+
+
 
 ###

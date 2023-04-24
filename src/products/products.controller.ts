@@ -43,7 +43,6 @@ export class ProductsController {
   })
   async createOne(@Body() body: CreateProductDto) {
     const newProduct = await this.productsService.createOne(body);
-
     return newProduct;
   }
 }

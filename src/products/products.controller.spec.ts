@@ -1,8 +1,10 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Product } from './entities/product.entity';
+import { CurrencyType, Product } from './entities/product.entity';
 import { ProductsController } from './products.controller';
 import { ProductsService } from './products.service';
+
+type newProduct = Omit<Product, 'id'>;
 
 describe('ProductsController', () => {
   let productController: ProductsController;
@@ -43,6 +45,18 @@ describe('ProductsController', () => {
       },
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       getOne: (_id: number) => {
+        return Promise.resolve({
+          id: 1,
+          name: 'testProduct',
+          sku: 'testSKU1',
+          description: 'This is just a test',
+          price: 2558,
+          picture: 'not yet',
+          quantity: 10,
+        } as Product);
+      },
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      createOne: (_product: newProduct) => {
         return Promise.resolve({
           id: 1,
           name: 'testProduct',
@@ -96,6 +110,23 @@ describe('ProductsController', () => {
           'Product not found, or does not exists',
         );
       }
+    });
+    test('Create a new product works', async () => {
+      const productToBeCreated = {
+        name: 'testProduct',
+        sku: 'testSKU1',
+        description: 'This is just a test',
+        category: 'test',
+        price: 2558,
+        currency: CurrencyType.DKK,
+        picture: 'not yet',
+        quantity: 10,
+      };
+      const product = await productController.createOne(productToBeCreated);
+      expect.assertions(3);
+      expect(product).toBeDefined();
+      expect(product.id).toBe(1);
+      expect(product.name).toBe('testProduct');
     });
   });
 });

@@ -89,6 +89,8 @@ export class Product {
   quantity: number;
 }
 
+/* istanbul ignore next*/
+// * To be ignored, as it is used for testing only, no effect in production
 export class ProductRepositoryFake {
   public async find(): Promise<void> {
     [];
@@ -100,6 +102,9 @@ export class ProductRepositoryFake {
     [];
   }
   public async save(): Promise<void> {
+    [];
+  }
+  public async insert(): Promise<void> {
     [];
   }
 }

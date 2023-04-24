@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+// * File ignored in testing, as this is a configuration file, and not a logic file - No logic to test
 import { Module, ValidationPipe } from '@nestjs/common';
 //import { AppController } from './app.controller';
 import { AppService } from './app.service';
