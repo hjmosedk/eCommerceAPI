@@ -1,11 +1,12 @@
 import { Module, ValidationPipe } from '@nestjs/common';
-import { AppController } from './app.controller';
+//import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ProductsModule } from './products/products.module';
 import { Product } from './products/entities/product.entity';
 import { APP_PIPE } from '@nestjs/core';
+
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
@@ -30,7 +31,7 @@ import { APP_PIPE } from '@nestjs/core';
     }),
     ProductsModule,
   ],
-  controllers: [AppController],
+  //controllers: [AppController],
   providers: [
     AppService,
     { provide: APP_PIPE, useValue: new ValidationPipe({ whitelist: true }) },
