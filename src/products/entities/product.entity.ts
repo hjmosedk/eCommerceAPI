@@ -2,6 +2,13 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsDefined } from 'class-validator';
 import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
 
+export enum CurrencyType {
+  DKK = 'DKK',
+  USD = 'USD',
+  EUR = 'EUR',
+  GBP = 'GBP',
+}
+
 @Entity()
 export class Product {
   @PrimaryGeneratedColumn()
@@ -11,7 +18,7 @@ export class Product {
   })
   id: number;
 
-  @Column()
+  @Column({ type: 'text' })
   @IsDefined()
   @ApiProperty({
     description: 'This is the name of the product - The name is required',
@@ -19,7 +26,7 @@ export class Product {
   })
   name: string;
 
-  @Column()
+  @Column({ type: 'text', update: false, unique: true })
   @IsDefined()
   @ApiProperty({
     description:
@@ -28,7 +35,7 @@ export class Product {
   })
   sku: string;
 
-  @Column()
+  @Column({ type: 'text' })
   @IsDefined()
   @ApiProperty({
     description: 'This is the description of the product',
@@ -36,7 +43,15 @@ export class Product {
   })
   description: string;
 
-  @Column()
+  @Column({ type: 'text' })
+  @IsDefined()
+  @ApiProperty({
+    description: 'This is the category of the product',
+    example: 'clothes',
+  })
+  category: string;
+
+  @Column({ type: 'int' })
   @IsDefined()
   @ApiProperty({
     description: 'This is the price of the product',
@@ -44,23 +59,27 @@ export class Product {
   })
   price: number;
 
-  @Column({ length: 3, default: 'DKK' })
+  @Column({
+    type: 'enum',
+    enum: ['DKK', 'USD', 'EUR', 'GBP'],
+    default: 'DKK',
+  })
   @IsDefined()
   @ApiProperty({
     description:
       'This is the currency used for this product - This will always defaults to DKK',
     example: 'DKK',
   })
-  currency: string;
+  currency: CurrencyType;
 
-  @Column({ default: 'Not implemented yet' })
+  @Column({ type: 'text', default: 'Not implemented yet' })
   @ApiProperty({
     description: 'This function is not yet implemented',
     example: 'Not yet',
   })
   picture: string;
 
-  @Column({ default: 10 })
+  @Column({ type: 'int', default: 10 })
   @IsDefined()
   @ApiProperty({
     description:
