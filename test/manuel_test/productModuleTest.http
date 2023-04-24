@@ -16,8 +16,8 @@ GET http://{{hostname}}:{{port}}/{{url}}/1
 POST http://{{hostname}}:{{port}}/{{url}}
 Content-Type: application/json
 
-
-  [
+{
+    "products":[
     {
     "name":"Frying Pan",
     "sku": "FPA1",
@@ -45,7 +45,9 @@ Content-Type: application/json
     "currency": "DKK",
     "quantity": 5,  
     }
-]  
+    ]    
+}
+
 
 
 

@@ -91,6 +91,17 @@ describe('ProductsController', () => {
       expect(products).toBeDefined();
     });
 
+    test('No products returns an error', async () => {
+      fakeProductsService.getAll = () => Promise.resolve([]);
+
+      try {
+        await productController.getAll();
+      } catch (error) {
+        expect.assertions(2);
+        expect(error).toBeInstanceOf(NotFoundException);
+        expect(error.message).toContain('There is no products in the database');
+      }
+    });
     test('One products is correctly found in the database', async () => {
       const products = await productController.getAll();
       const product = await productController.getOne(products[0].id.toString());

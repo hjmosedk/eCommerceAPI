@@ -19,8 +19,14 @@ export class ProductsController {
     description:
       'This will get all products from the database - They are not sorted, and any sorting must be done on client side, this also includes items not in stock',
   })
-  getAll() {
-    return this.productsService.getAll();
+  async getAll() {
+    const products = await this.productsService.getAll();
+
+    if (products.length < 1) {
+      throw new NotFoundException('There is no products in the database');
+    }
+
+    return products;
   }
 
   @Get(':id')
