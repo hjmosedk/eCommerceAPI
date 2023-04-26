@@ -8,7 +8,7 @@ GET http://{{hostname}}:{{port}}/{{url}}
 
 ###
 
-GET http://{{hostname}}:{{port}}/{{url}}/1
+GET http://{{hostname}}:{{port}}/{{url}}/14
 
 ###
 
@@ -17,38 +17,23 @@ POST http://{{hostname}}:{{port}}/{{url}}
 Content-Type: application/json
 
 {
-    "products":[
-    {
-    "name":"Frying Pan",
-    "sku": "FPA1",
-    "description": "This is a frying pan",
-    "category":"food",
-    "price": 25000,
+    "name":"Xbox Series X",
+    "sku": "XBX",
+    "description": "This is an xbox series X console",
+    "category":"electronics",
+    "price": 500000,
     "currency": "DKK",
-    "quantity": 5, 
-    }, 
-    { 
-    "name":"Bacon",
-    "sku": "BAC1",
-    "description": "This is bacon",  
-    "category":"food", 
-    "price": 21000,
-    "currency": "DKK",
-    "quantity": 1, 
-    }, 
-    {
-    "name":"Tongs",
-    "sku": "TON1",
-    "description": "This is tongs",
-    "category": "utensils",  
-    "price": 30000,
-    "currency": "DKK",
-    "quantity": 5,  
-    }
-    ]    
+    "quantity": 1
 }
 
-
-
-
 ###
+
+PATCH  http://{{hostname}}:{{port}}/{{url}}/14
+Content-Type: application/json
+
+{
+ "name":"Playstation 5",
+ "price": 550000,
+ "currency":"DKK"
+
+}

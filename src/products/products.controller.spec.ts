@@ -68,6 +68,17 @@ describe('ProductsController', () => {
         } as Product);
       },
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      updateProduct: (_id: number, _attrs: Partial<Product>) => {
+        return Promise.resolve({
+          id: 1,
+          name: 'testProduct',
+          sku: 'testSKU1',
+          description: 'This is just a test',
+          price: 2558,
+          picture: 'not yet',
+          quantity: 10,
+        } as Product);
+      },
     };
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ProductsController],
@@ -122,6 +133,8 @@ describe('ProductsController', () => {
         );
       }
     });
+  });
+  describe('The product controller can create new products', () => {
     test('Create a new product works', async () => {
       const productToBeCreated = {
         name: 'testProduct',
