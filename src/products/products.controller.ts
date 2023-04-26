@@ -5,10 +5,12 @@ import {
   NotFoundException,
   Param,
   Post,
+  Patch,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { CreateProductDto } from './dtos/create-product.dto';
+import { UpdateProductDto } from './dtos/update-product.dto';
 @ApiTags('e-commerce')
 @Controller('products')
 export class ProductsController {
@@ -50,5 +52,14 @@ export class ProductsController {
   async createOne(@Body() body: CreateProductDto) {
     const newProduct = await this.productsService.createOne(body);
     return newProduct;
+  }
+
+  @Patch(':id')
+  @ApiOperation({
+    description:
+      'This will allow for the update of a product - some data cannot be updated, and will not be accepted by the server - Refer to the DTO',
+  })
+  updateOne(@Param('id') id: string, @Body() body: UpdateProductDto) {
+    return this.productsService.updateProduct(parseInt(id), body);
   }
 }
