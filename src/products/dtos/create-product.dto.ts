@@ -75,4 +75,7 @@ export class CreateProductDto {
     example: '10',
   })
   quantity: number;
+
+  @ApiProperty({ description: 'This is the image file from the form' })
+  image: string;
 }

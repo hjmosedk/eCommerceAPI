@@ -28,7 +28,7 @@ Content-Type: application/json
 
 ###
 
-PATCH  http://{{hostname}}:{{port}}/{{url}}/14
+PATCH  http://{{hostname}}:{{port}}/{{url}}
 Content-Type: application/json
 
 {

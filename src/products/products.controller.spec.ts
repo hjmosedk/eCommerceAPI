@@ -153,4 +153,39 @@ describe('ProductsController', () => {
       expect(product.name).toBe('testProduct');
     });
   });
+  describe('Patch function of the controller is working', () => {
+    test('sku cannot be updated', async () => {
+      fakeProductsService.updateProduct = (
+        id: number,
+        attrs: Partial<Product>,
+      ) =>
+        Promise.reject({
+          message: 'The sku used is already in use, must be unique',
+          status: 409,
+        });
+
+      const updatedProduct = {
+        name: 'testProduct',
+        description: 'This is just a test',
+        sku: 'Inuse',
+        category: 'test',
+        price: 2558,
+        currency: CurrencyType.DKK,
+        quantity: 10,
+      };
+
+      try {
+        const product = await productController.updateProduct(
+          '14',
+          updatedProduct,
+        );
+      } catch (error) {
+        expect.assertions(2);
+        expect(error.message).toContain(
+          'The sku used is already in use, must be unique',
+        );
+        expect(error.status).toBe(409);
+      }
+    });
+  });
 });
