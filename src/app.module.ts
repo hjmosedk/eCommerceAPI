@@ -8,6 +8,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ProductsModule } from './products/products.module';
 import { Product } from './products/entities/product.entity';
 import { APP_PIPE } from '@nestjs/core';
+import { FilesModule } from './files/files.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { APP_PIPE } from '@nestjs/core';
       isGlobal: true,
     }),
     ProductsModule,
+    FilesModule,
   ],
   //controllers: [AppController],
   providers: [

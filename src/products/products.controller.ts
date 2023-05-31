@@ -6,22 +6,11 @@ import {
   Param,
   Post,
   Patch,
-  UseInterceptors,
-  UploadedFile,
-  StreamableFile,
-  Res,
-  BadRequestException,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { CreateProductDto } from './dtos/create-product.dto';
 import { UpdateProductDto } from './dtos/update-product.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { createReadStream, existsSync } from 'fs';
-import { join } from 'path';
-import { randomUUID } from 'crypto';
-import type { Response } from 'express';
 
 @ApiTags('e-commerce')
 @Controller('products')
@@ -43,6 +32,7 @@ export class ProductsController {
     return products;
   }
 
+  /*
   @Get('file/:name')
   getFile(
     @Res({ passthrough: true }) res: Response,
@@ -81,7 +71,7 @@ export class ProductsController {
     });
     return new StreamableFile(image);
   }
-
+*/
   @Get(':id')
   @ApiOperation({
     description: 'This will get one product from the database, based on the ID',
@@ -100,12 +90,12 @@ export class ProductsController {
     description:
       'This wil create a new product and return a copy of the newly created product',
   })
-  @UseInterceptors(FileInterceptor('image'))
   async createOne(@Body() body: CreateProductDto) {
     const newProduct = await this.productsService.createOne(body);
     return newProduct;
   }
 
+  /*
   @Post('upload')
   @UseInterceptors(
     FileInterceptor('image', {
@@ -123,6 +113,7 @@ export class ProductsController {
   uploadFile(@UploadedFile() image: Express.Multer.File) {
     return { name: image.filename };
   }
+*/
 
   @Patch(':id')
   @ApiOperation({

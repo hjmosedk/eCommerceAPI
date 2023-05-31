@@ -37,3 +37,16 @@ Content-Type: application/json
  "currency":"DKK"
 
 }
+
+###
+
+POST http://localhost:3000/images/upload
+Content-Type: multipart/form-data; boundary=TestData
+
+--TestData
+Content-Disposition: form-data; name="image"; filename="72943496-7458-4234-9cb0-e4aeb7c8db41.jpeg"
+Content-Type: text/plain
+
+< .72943496-7458-4234-9cb0-e4aeb7c8db41.jpeg
+--TestData--
+
