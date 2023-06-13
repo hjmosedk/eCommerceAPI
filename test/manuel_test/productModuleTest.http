@@ -40,7 +40,7 @@ Content-Type: application/json
 
 ###
 
-POST http://localhost:3000/images/upload
+POST http://{{hostname}}:{{port}}/images/upload
 Content-Type: multipart/form-data; boundary=TestData
 
 --TestData
@@ -50,3 +50,5 @@ Content-Type: text/plain
 < .72943496-7458-4234-9cb0-e4aeb7c8db41.jpeg
 --TestData--
 
+###
+GET http://192.168.1.135:3000/images/5d13222d-4f02-4dad-8578-df8d20a76bdd.jpeg

@@ -33,8 +33,8 @@ export class ImagesController {
     const imageStream = this.imageService.getImageStream(imageFilePath);
 
     res.set({
-      'Content-Type': 'application/jpeg',
-      'Content-Disposition': `attachment; filename=${name}`,
+      'Content-Type': 'image/jpeg',
+      'Content-Disposition': `inline; filename=${name}`,
     });
     return new StreamableFile(imageStream);
   }

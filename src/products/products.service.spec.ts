@@ -44,7 +44,7 @@ describe('ProductsService', () => {
           sku: 'DIA1',
           description: 'Dette er en ring af diamant',
           price: 5000,
-          picture: 'Not implemened',
+          image: 'Not implemened',
           quantity: 10,
         } as Product,
         {
@@ -53,7 +53,7 @@ describe('ProductsService', () => {
           sku: 'CHE1',
           description: 'Dette er en cheecburger',
           price: 49,
-          picture: 'Not implemened',
+          image: 'Not implemened',
           quantity: 10,
         } as Product,
         {
@@ -62,7 +62,7 @@ describe('ProductsService', () => {
           sku: 'HAN1',
           description: 'Dette er et par handsker',
           price: 25,
-          picture: 'Not implemened',
+          image: 'Not implemened',
           quantity: 10,
         } as Product,
       ];
@@ -84,7 +84,7 @@ describe('ProductsService', () => {
         sku: 'DIA1',
         description: 'Dette er en ring af diamant',
         price: 5000,
-        picture: 'Not implemened',
+        image: 'Not implemened',
         quantity: 10,
       } as Product;
 
@@ -118,7 +118,7 @@ describe('ProductsService', () => {
         sku: 'STO1',
         description: 'This is a completely new stove',
         price: 5000,
-        picture: 'Not implemened',
+        image: 'Not implemened',
         quantity: 10,
       } as Product;
 
@@ -149,7 +149,7 @@ describe('ProductsService', () => {
           category: 'clothing',
           price: 5000,
           currency: CurrencyType.DKK,
-          picture: 'Not implemened',
+          image: 'Not implemened',
           quantity: 10,
         } as newProduct,
         {
@@ -159,7 +159,7 @@ describe('ProductsService', () => {
           category: 'food',
           price: 49,
           currency: CurrencyType.DKK,
-          picture: 'Not implemened',
+          image: 'Not implemened',
           quantity: 10,
         } as newProduct,
         {
@@ -169,7 +169,7 @@ describe('ProductsService', () => {
           category: 'clothes',
           price: 25,
           currency: CurrencyType.DKK,
-          picture: 'Not implemened',
+          image: 'Not implemened',
           quantity: 10,
         } as newProduct,
       ];
@@ -183,7 +183,7 @@ describe('ProductsService', () => {
           category: 'clothing',
           price: 5000,
           currency: CurrencyType.DKK,
-          picture: 'Not implemened',
+          image: 'Not implemened',
           quantity: 10,
         } as Product,
         {
@@ -194,7 +194,7 @@ describe('ProductsService', () => {
           category: 'food',
           price: 49,
           currency: CurrencyType.DKK,
-          picture: 'Not implemened',
+          image: 'Not implemened',
           quantity: 10,
         } as Product,
         {
@@ -205,7 +205,7 @@ describe('ProductsService', () => {
           category: 'clothes',
           price: 25,
           currency: CurrencyType.DKK,
-          picture: 'Not implemened',
+          image: 'Not implemened',
           quantity: 10,
         } as Product,
       ];
