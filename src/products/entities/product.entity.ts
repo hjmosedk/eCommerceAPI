@@ -89,6 +89,22 @@ export class Product {
     example: 10,
   })
   quantity: number;
+
+  @Column({ type: 'int', default: 0 })
+  @ApiProperty({
+    description:
+      'This is a number to determine the percentage saving on the product - It is an number',
+    example: 25,
+  })
+  percentage: number;
+
+  @Column({ type: 'boolean', default: false })
+  @IsDefined()
+  @ApiProperty({
+    description:
+      'If this value is true, the product is on sale, if it is false, the product is not on sale',
+  })
+  onSale: boolean;
 }
 
 /* istanbul ignore next*/
