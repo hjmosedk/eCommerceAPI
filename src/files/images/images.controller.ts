@@ -8,13 +8,14 @@ import {
   StreamableFile,
   Res,
 } from '@nestjs/common';
-import { ApiOperation } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import type { Response } from 'express';
 import { ImageService } from './image.service';
 import { randomUUID } from 'crypto';
 
+@ApiTags('Images')
 @Controller('images')
 export class ImagesController {
   constructor(private imageService: ImageService) {}

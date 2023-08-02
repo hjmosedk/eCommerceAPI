@@ -23,8 +23,7 @@ async function bootstrap() {
     .setDescription(
       'This is the API for the eCommerce app made by Christian Kubel Højmose',
     )
-    .setVersion('0.1.0')
-    .addTag('e-commerce')
+    .setVersion('0.0.2')
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);

@@ -6,6 +6,7 @@ import {
   Min,
   IsEnum,
   IsOptional,
+  IsBoolean,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { CurrencyType } from '../entities/product.entity';
@@ -70,4 +71,22 @@ export class UpdateProductDto {
     example: '10',
   })
   quantity: number;
+
+  @IsNumber()
+  @IsOptional()
+  @ApiProperty({
+    description:
+      'This is the information about the percentage save on the product',
+    example: 33,
+  })
+  percentage: number;
+
+  @IsBoolean()
+  @IsOptional()
+  @ApiProperty({
+    description:
+      'This is the information about if the product is on sale or not',
+    example: false,
+  })
+  onSale: boolean;
 }

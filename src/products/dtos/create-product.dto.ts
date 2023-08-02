@@ -7,6 +7,7 @@ import {
   Min,
   IsEnum,
   IsNotEmpty,
+  IsBoolean,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { CurrencyType } from '../entities/product.entity';
@@ -79,4 +80,18 @@ export class CreateProductDto {
   @ApiProperty({ description: 'This is the image file from the form' })
   @IsString()
   image: string;
+
+  @ApiProperty({
+    description:
+      'This is the information about the percentage save on the product',
+  })
+  @IsNumber()
+  percentage: number;
+
+  @ApiProperty({
+    description:
+      'This is the information about if the product is on sale or not',
+  })
+  @IsBoolean()
+  onSale: boolean;
 }
