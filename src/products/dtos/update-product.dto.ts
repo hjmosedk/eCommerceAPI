@@ -72,6 +72,11 @@ export class UpdateProductDto {
   })
   quantity: number;
 
+  @ApiProperty({ description: 'This is the image file from the form' })
+  @IsString()
+  @IsOptional()
+  image: string;
+
   @IsNumber()
   @IsOptional()
   @ApiProperty({
@@ -89,4 +94,8 @@ export class UpdateProductDto {
     example: false,
   })
   onSale: boolean;
+
+  constructor(partial: Partial<UpdateProductDto>) {
+    Object.assign(this, partial);
+  }
 }
