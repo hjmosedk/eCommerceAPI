@@ -48,6 +48,6 @@ export class ProductsService {
     }
 
     Object.assign(product, attrs);
-    return this.repo.save(product);
+    return await this.repo.save(product);
   }
 }

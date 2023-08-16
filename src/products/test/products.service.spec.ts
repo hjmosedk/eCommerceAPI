@@ -16,6 +16,7 @@ import {
   goldWatchItem,
   fakeGoldWatchItem,
 } from '../../../test/testObjects';
+import { NotFoundException } from '@nestjs/common';
 
 describe('ProductsService', () => {
   let productService: ProductsService;
@@ -98,6 +99,59 @@ describe('ProductsService', () => {
         fakeGoldWatchItem,
       );
       expect(resultNewProduct).toEqual(fakeGoldWatchItem);
+    });
+  });
+
+  describe('Test ProductModule, update product', () => {
+    test('Product not found error, when id is not correct', async () => {
+      const productId = 123;
+      const productRepositoryFindOneSpy = jest
+        .spyOn(productRepository, 'findOne')
+        .mockResolvedValue(null);
+
+      expect.assertions(3);
+      try {
+        await productService.updateProduct(productId, {});
+        expect(true).toBe(false); //* If this code is reached, something is wrong and the test should fail
+      } catch (error) {
+        expect(error).toBeInstanceOf(NotFoundException);
+        expect(error.message).toBe('Product does not exist');
+      }
+
+      expect(productRepositoryFindOneSpy).toBeCalledWith({
+        where: { id: productId },
+      });
+    });
+    test('Updating products, works as expected', async () => {
+      const productId = fakeDiamondRingItem.id;
+      const updateAttrs = {
+        onSale: true,
+        percentage: 35,
+      };
+
+      const productRepositoryFindOneSpy = jest
+        .spyOn(productRepository, 'findOne')
+        .mockResolvedValue(fakeDiamondRingItem);
+      const productRepositorySaveOneSpy = jest
+        .spyOn(productRepository, 'save')
+        .mockResolvedValue({ ...fakeDiamondRingItem, ...updateAttrs });
+
+      const updatedProduct = await productService.updateProduct(
+        productId,
+        updateAttrs,
+      );
+
+      expect(productRepositoryFindOneSpy).toHaveBeenCalledWith({
+        where: { id: productId },
+      });
+
+      expect(productRepositorySaveOneSpy).toHaveBeenCalledWith(
+        expect.objectContaining(updateAttrs),
+      );
+
+      expect(updatedProduct).toEqual(
+        expect.objectContaining({ ...fakeDiamondRingItem, ...updateAttrs }),
+      );
     });
   });
 });
