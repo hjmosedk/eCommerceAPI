@@ -1,8 +1,7 @@
 /* istanbul ignore file */
 // * File ignored in testing, as this is a configuration file, and not a logic file - No logic to test
 import { Module, ValidationPipe } from '@nestjs/common';
-//import { AppController } from './app.controller';
-import { AppService } from './app.service';
+import { AppController } from './app.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ProductsModule } from './products/products.module';
@@ -35,9 +34,8 @@ import { FilesModule } from './files/files.module';
     ProductsModule,
     FilesModule,
   ],
-  //controllers: [AppController],
+  controllers: [AppController],
   providers: [
-    AppService,
     { provide: APP_PIPE, useValue: new ValidationPipe({ whitelist: true }) },
   ],
 })

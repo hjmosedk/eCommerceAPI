@@ -1,14 +1,16 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, HttpStatus, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
-import { AppService } from './app.service';
+import { Response } from 'express';
 
-@ApiTags('e-commerce')
+@ApiTags('HealthCheck')
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor() {}
 
   @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  healthService(@Res() response: Response) {
+    return response
+      .status(HttpStatus.OK)
+      .json({ message: 'All OK!', status: response.statusCode });
   }
 }
