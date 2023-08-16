@@ -44,7 +44,7 @@ export class ProductsService {
     const product = await this.repo.findOne({ where: { id } });
 
     if (!product) {
-      throw new NotFoundException('Product does not exists');
+      throw new NotFoundException('Product does not exist');
     }
 
     Object.assign(product, attrs);
