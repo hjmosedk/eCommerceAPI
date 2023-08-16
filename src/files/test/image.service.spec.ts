@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ImageService } from './image.service';
+import { ImageService } from '../images/image.service';
 import { NotFoundException, BadRequestException } from '@nestjs/common';
 import { ReadStream } from 'fs';
 
-describe.skip('ImageService', () => {
+describe('ImageService', () => {
   let imageService: ImageService;
   let fileSystemMock: any;
 
@@ -46,7 +46,7 @@ describe.skip('ImageService', () => {
     });
   });
 
-  describe.skip('getImageFilePath', () => {
+  describe('getImageFilePath', () => {
     test('should return the correct file path', () => {
       const name = '72943496-7458-4234-9cb0-e4aeb7c8db41.jpeg';
       const result = imageService.getImageFilePath(name);
@@ -55,7 +55,7 @@ describe.skip('ImageService', () => {
     });
   });
 
-  describe.skip('getImageStream', () => {
+  describe('getImageStream', () => {
     test('should throw NotFoundException when image file does not exist', () => {
       const filePath = 'path/to/nonexistent.jpeg';
       fileSystemMock.existsSync = jest.fn().mockReturnValue(false);
