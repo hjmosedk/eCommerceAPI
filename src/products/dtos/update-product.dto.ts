@@ -96,6 +96,7 @@ export class UpdateProductDto {
   onSale: boolean;
 
   constructor(partial: Partial<UpdateProductDto>) {
+    /* istanbul ignore next */ //* This does not need to be tested separately as this is standard practices, and is tested in other test
     Object.assign(this, partial);
   }
 }
