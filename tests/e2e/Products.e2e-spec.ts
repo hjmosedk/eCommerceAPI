@@ -4,14 +4,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 // NestJS dependencies, to ensure the app works
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { AppModule } from '../app.module';
+import { AppModule } from '../../src/app.module';
 
 // Services to be used for testing
-import { ProductsService } from '../products/products.service';
+import { ProductsService } from '../../src/products/products.service';
 
 // Test objects
-import { testProducts, goldWatchItem, wrongGlove } from './testObjects';
-import { Product } from '../products/entities/product.entity';
+import { testProducts, goldWatchItem, wrongGlove } from '../testObjects';
+import { Product } from '../../src/products/entities/product.entity';
 import { DataSource } from 'typeorm';
 
 describe('e2e test for products module', () => {

@@ -1,8 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Response } from 'express';
 import { StreamableFile } from '@nestjs/common';
-import { ImagesController } from '../images/images.controller';
-import { ImageService } from '../images/image.service';
+import { ImagesController } from '../../../src/files/images/images.controller';
+import { ImageService } from '../../../src/files/images/image.service';
 import { Readable } from 'stream';
 import { ReadStream } from 'fs';
 
