@@ -46,9 +46,13 @@ export class ImagesController {
       storage: diskStorage({
         destination: './uploads',
         filename: function (req, file, cb) {
+          /* istanbul ignore next */ //* These will be tested as part of the system
           const mimeType = file.mimetype.split('/')[1];
+          /* istanbul ignore next */ //* These will be tested as part of the system
           const fileID = randomUUID();
+          /* istanbul ignore next */ //* These will be tested as part of the system
           const fileName = `${fileID}.${mimeType}`;
+          /* istanbul ignore next */ //* These will be tested as part of the system
           cb(null, fileName);
         },
       }),

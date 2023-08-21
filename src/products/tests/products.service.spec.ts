@@ -4,18 +4,14 @@ import {
   //InsertResult,
   Repository,
 } from 'typeorm';
-import {
-  //CurrencyType,
-  Product,
-  ProductRepositoryFake,
-} from '../entities/product.entity';
+import { Product, ProductRepositoryFake } from '../entities/product.entity';
 import { ProductsService } from '../products.service';
 import {
   fakeTestProducts,
   fakeDiamondRingItem,
   goldWatchItem,
   fakeGoldWatchItem,
-} from '../../../test/testObjects';
+} from '../../tests/testObjects';
 import { NotFoundException } from '@nestjs/common';
 
 describe('ProductsService', () => {

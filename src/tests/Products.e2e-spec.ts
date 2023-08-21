@@ -4,18 +4,14 @@ import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 // NestJS dependencies, to ensure the app works
 import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { AppModule } from '../../app.module';
+import { AppModule } from '../app.module';
 
 // Services to be used for testing
-import { ProductsService } from '../products.service';
+import { ProductsService } from '../products/products.service';
 
 // Test objects
-import {
-  testProducts,
-  goldWatchItem,
-  wrongGlove,
-} from '../../../test/testObjects';
-import { Product } from '../entities/product.entity';
+import { testProducts, goldWatchItem, wrongGlove } from './testObjects';
+import { Product } from '../products/entities/product.entity';
 import { DataSource } from 'typeorm';
 
 describe('e2e test for products module', () => {
@@ -123,7 +119,7 @@ describe('e2e test for products module', () => {
     expect(productUpdate.body.onSale).toEqual(true);
     expect(productUpdate.body.percentage).toBe(35);
 
-    //* Ensure the updated product is "stuck"
+    //* Ensure the updated product is "correctly updated"
     const updatedProductAfterUpdateResponse = await request(app.getHttpServer())
       .get('/products/2')
       .expect(200);

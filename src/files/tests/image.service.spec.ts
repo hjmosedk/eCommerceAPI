@@ -66,7 +66,7 @@ describe('ImageService', () => {
     });
 
     test('should return a readable stream when image file exists', () => {
-      const filePath = './test/72943496-7458-4234-9cb0-e4aeb7c8db41.jpeg';
+      const filePath = 'src/tests/72943496-7458-4234-9cb0-e4aeb7c8db41.jpeg';
       const streamMock = {} as any;
       fileSystemMock.existsSync = jest.fn().mockReturnValue(true);
       fileSystemMock.createReadStream = jest.fn().mockReturnValue(streamMock);

@@ -7,7 +7,7 @@ import {
   fakeDiamondRingItem,
   fakeTestProducts,
   diamondRingItem,
-} from '../../../test/testObjects';
+} from '../../tests/testObjects';
 
 type newProduct = Omit<Product, 'id'>;
 
