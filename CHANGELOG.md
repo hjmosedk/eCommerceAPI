@@ -2,6 +2,25 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0](https://codeberg.org/hjmosedk/eCommerceAPI/compare/v0.0.3...v0.1.0) (2023-08-22)
+
+
+### Bug Fixes
+
+* **productsService:** fixed typo in error message ([51a65a8](https://codeberg.org/hjmosedk/eCommerceAPI/commits/51a65a85ad163c218cf34c56a814cd43fff4c71c))
+* **updateProduct:** fixed a bug with the upload functionallity ([de69ac7](https://codeberg.org/hjmosedk/eCommerceAPI/commits/de69ac75db7d92f751c8feb10f0bbc10694e8709))
+
+
+### Test
+
+* **all:** adjusted all test, and moved them to src - Test comments for coverages files ([d1ef217](https://codeberg.org/hjmosedk/eCommerceAPI/commits/d1ef217807f5276622a107f292bef4225b99ac4c))
+* **coverage:** added comments in all files for wht they are excluded from test coverage ([57ae069](https://codeberg.org/hjmosedk/eCommerceAPI/commits/57ae069a42f42f71165cc42c7482ce2f8aa609f0))
+* **e2e-Products:** updated and adjusted the e2e test for products ([be17868](https://codeberg.org/hjmosedk/eCommerceAPI/commits/be17868d0a407af1aa7f7b8149f9a9c431524915))
+* **imageUpload:** adjusted the test to work as expeced and to ensure proper testing ([8fc83c0](https://codeberg.org/hjmosedk/eCommerceAPI/commits/8fc83c01809e0ef619d7216a189abe642091f9b0))
+* **productsController:** adjusted tests to works as expected, and to ensure proper testing ([77fc6a3](https://codeberg.org/hjmosedk/eCommerceAPI/commits/77fc6a391144be7a8e24943282186c0a2f33bbeb))
+* **productService:** updated and adjusted product service test ([9b3fcfe](https://codeberg.org/hjmosedk/eCommerceAPI/commits/9b3fcfe9e70b2ce554844d6dbb722206db0e4bfc))
+* **productsService:** adjusted test to ensure better coverage ([6f7e202](https://codeberg.org/hjmosedk/eCommerceAPI/commits/6f7e202d42a6ccffe14e12b785686d24d39b56ee))
+
 ### [0.0.3](https://codeberg.org/hjmosedk/eCommerceAPI/compare/v0.0.2...v0.0.3) (2023-08-02)
 
 ### ⚠ BREAKING CHANGES
