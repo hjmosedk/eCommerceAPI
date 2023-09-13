@@ -25,6 +25,14 @@ export class ProductsService {
     return this.repo.save(newProduct);
   }
 
+  async clearDatabase() {
+    try {
+      this.repo.clear();
+    } catch (error) {
+      throw new Error(`Error cleaning database: ${error.message}`);
+    }
+  }
+
   /* istanbul ignore next */
   createMany(products: newProduct[]) {
     /* istanbul ignore next */

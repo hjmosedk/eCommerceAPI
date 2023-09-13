@@ -15,5 +15,6 @@ import { UniqueConstraintFilter } from './unique-constraint.filter';
     { provide: APP_FILTER, useClass: UniqueConstraintFilter },
   ],
   controllers: [ProductsController],
+  exports: [ProductsService],
 })
 export class ProductsModule {}
