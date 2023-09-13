@@ -10,7 +10,7 @@ import {
   IsBoolean,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { CurrencyType } from '../entities/product.entity';
+import { CurrencyType, Status } from '../entities/product.entity';
 
 export class CreateProductDto {
   @IsString()
@@ -94,4 +94,10 @@ export class CreateProductDto {
   })
   @IsBoolean()
   onSale: boolean;
+
+  @IsString()
+  @ApiProperty({
+    description: 'This is information about the status of the product',
+  })
+  status: Status;
 }

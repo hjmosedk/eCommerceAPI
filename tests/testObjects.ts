@@ -1,4 +1,8 @@
-import { CurrencyType, Product } from '../src/products/entities/product.entity';
+import {
+  CurrencyType,
+  Product,
+  Status,
+} from '../src/products/entities/product.entity';
 
 type newProduct = Omit<Product, 'id'>;
 
@@ -12,9 +16,10 @@ export const diamondRingItem: newProduct = {
   price: 250000,
   currency: CurrencyType.DKK,
   image: '66de3cfd-3830-47d2-8ce3-bd622a6dbcf4',
-  quantity: 5,
+  quantity: 0,
   percentage: 0,
   onSale: false,
+  status: Status.public,
 };
 
 export const cheecburgerItem: newProduct = {
@@ -28,6 +33,7 @@ export const cheecburgerItem: newProduct = {
   quantity: 10,
   percentage: 0,
   onSale: false,
+  status: Status.public,
 };
 
 export const glovesItem: newProduct = {
@@ -41,6 +47,7 @@ export const glovesItem: newProduct = {
   quantity: 10,
   percentage: 20,
   onSale: true,
+  status: Status.private,
 };
 
 export const goldWatchItem: newProduct = {
@@ -54,6 +61,7 @@ export const goldWatchItem: newProduct = {
   quantity: 10,
   percentage: 20,
   onSale: true,
+  status: Status.public,
 };
 
 export const testProducts: newProduct[] = [
@@ -71,6 +79,7 @@ export const wrongGlove: wrongProduct = {
   quantity: 10,
   percentage: 20,
   onSale: true,
+  status: Status.public,
 };
 
 export const fakeDiamondRingItem: Product = {
@@ -85,6 +94,7 @@ export const fakeDiamondRingItem: Product = {
   quantity: 5,
   percentage: 0,
   onSale: false,
+  status: Status.private,
 };
 
 export const fakeCheecburgerItem: Product = {
@@ -96,9 +106,10 @@ export const fakeCheecburgerItem: Product = {
   price: 4900,
   currency: CurrencyType.DKK,
   image: 'f1e4fce4-dc0a-4e70-a284-874180510703',
-  quantity: 10,
+  quantity: 0,
   percentage: 0,
   onSale: false,
+  status: Status.public,
 };
 
 export const fakeGlovesItem: Product = {
@@ -113,6 +124,7 @@ export const fakeGlovesItem: Product = {
   quantity: 10,
   percentage: 20,
   onSale: true,
+  status: Status.public,
 };
 
 export const fakeGoldWatchItem: Product = {
@@ -127,6 +139,7 @@ export const fakeGoldWatchItem: Product = {
   quantity: 10,
   percentage: 20,
   onSale: true,
+  status: Status.private,
 };
 
 export const fakeTestProducts = [

@@ -1,12 +1,13 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Product } from '../../src/products/entities/product.entity';
+import { Product, Status } from '../../src/products/entities/product.entity';
 import { ProductsController } from '../../src/products/products.controller';
 import { ProductsService } from '../../src/products/products.service';
 import {
   fakeDiamondRingItem,
   fakeTestProducts,
   diamondRingItem,
+  fakeGlovesItem,
 } from '../testObjects';
 
 type newProduct = Omit<Product, 'id'>;
@@ -19,6 +20,17 @@ describe('ProductsController', () => {
     fakeProductsService = {
       getAll: () => {
         return Promise.resolve(fakeTestProducts);
+      },
+      getActiveProducts: () => {
+        const publicProducts = fakeTestProducts.filter(
+          (product) => product.status === Status.public,
+        );
+
+        const activeProducts = publicProducts.filter(
+          (product) => product.quantity > 0,
+        );
+
+        return Promise.resolve(activeProducts);
       },
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       getOne: (_id: number) => {
@@ -53,6 +65,13 @@ describe('ProductsController', () => {
       expect.assertions(2);
       expect(products.length).toBe(3);
       expect(products).toBeDefined();
+    });
+
+    test('Get only active products', async () => {
+      const activeProducts = await productController.getActiveProducts();
+      expect.assertions(2);
+      expect(activeProducts.length).toBe(1);
+      expect(activeProducts[0].name).toBe(fakeGlovesItem.name);
     });
 
     test('No products returns an error', async () => {

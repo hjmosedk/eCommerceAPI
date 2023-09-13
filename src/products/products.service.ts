@@ -1,7 +1,7 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Product } from './entities/product.entity';
+import { Product, Status } from './entities/product.entity';
 
 type newProduct = Omit<Product, 'id'>;
 @Injectable()
@@ -10,6 +10,20 @@ export class ProductsService {
 
   getAll() {
     return this.repo.find();
+  }
+
+  async getActiveProducts() {
+    const allProducts = await this.repo.find();
+
+    const publicProducts = allProducts.filter(
+      (product) => product.status === Status.public,
+    );
+
+    const activeProducts = publicProducts.filter(
+      (product) => product.quantity > 0,
+    );
+
+    return activeProducts;
   }
 
   getOne(id: number) {

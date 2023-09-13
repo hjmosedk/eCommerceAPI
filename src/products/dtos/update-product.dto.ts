@@ -9,7 +9,7 @@ import {
   IsBoolean,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { CurrencyType } from '../entities/product.entity';
+import { CurrencyType, Status } from '../entities/product.entity';
 
 export class UpdateProductDto {
   @IsString()
@@ -94,6 +94,15 @@ export class UpdateProductDto {
     example: false,
   })
   onSale: boolean;
+
+  @IsString()
+  @IsOptional()
+  @ApiProperty({
+    description: 'TThis have information about the status of the product',
+    examples: ['public', 'private'],
+  })
+  status: Status;
+
   /* istanbul ignore next */ //* This does not need to be tested separately as this is standard practices, and is tested in other test
   constructor(partial: Partial<UpdateProductDto>) {
     /* istanbul ignore next */ //* This does not need to be tested separately as this is standard practices, and is tested in other test

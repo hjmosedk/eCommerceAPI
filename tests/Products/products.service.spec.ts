@@ -55,6 +55,17 @@ describe('ProductsService', () => {
       expect(result).toBe(fakeTestProducts);
       expect(productsRepositoryFindSpy).toHaveBeenCalled();
     });
+    test('Only the active product is returned', async () => {
+      const productsRepositoryFindSpy = jest
+        .spyOn(productRepository, 'find')
+        .mockResolvedValue(fakeTestProducts);
+
+      const result = await productService.getActiveProducts();
+
+      expect.assertions(2);
+      expect(result.length).toBe(1);
+      expect(productsRepositoryFindSpy).toHaveBeenCalled();
+    });
     test('A product is returned when :ID is called', async () => {
       const productRepositoryFindOneSpy = jest
         .spyOn(productRepository, 'findOne')

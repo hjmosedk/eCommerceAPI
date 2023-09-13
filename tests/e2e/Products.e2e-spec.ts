@@ -44,6 +44,17 @@ describe('e2e test for products module', () => {
       .expect(200);
 
     //* Since we added three products, there should be three products in the endpoint.
+    expect(products.body.length).toBe(1);
+  });
+
+  test('get all products from the /products/all endpoint, GET test', async () => {
+    expect.assertions(1);
+    //* Ensure there is products in the endpoint
+    const products = await request(app.getHttpServer())
+      .get('/products/all')
+      .expect(200);
+
+    //* Since we added three products, there should be three products in the endpoint.
     expect(products.body.length).toBe(3);
   });
 
@@ -61,7 +72,7 @@ describe('e2e test for products module', () => {
 
     //* Getting all product now, should result in a list of four products, the one test, and the three from the setup
     const products = await request(app.getHttpServer())
-      .get('/products')
+      .get('/products/all')
       .expect(200);
 
     //* Since we added a product, the length should be 4

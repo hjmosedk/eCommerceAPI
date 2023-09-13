@@ -20,7 +20,22 @@ export class ProductsController {
   @Get()
   @ApiOperation({
     description:
-      'This will get all products from the database - They are not sorted, and any sorting must be done on client side, this also includes items not in stock',
+      'This will return all product with stock <0 and who are public',
+  })
+  async getActiveProducts() {
+    const activeProducts = await this.productsService.getActiveProducts();
+
+    if (activeProducts.length < 1) {
+      throw new NotFoundException('There is no products in the database');
+    }
+
+    return activeProducts;
+  }
+
+  @Get('/all')
+  @ApiOperation({
+    description:
+      'This will get all products from the database - They are not sorted, and any sorting must be done on client side, this also includes items not in stock, and products who are not public',
   })
   async getAll() {
     const products = await this.productsService.getAll();
