@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://codeberg.org/hjmosedk/eCommerceAPI/compare/v0.1.0...v0.2.0) (2023-09-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* **activeProduct:** /products have changed behavour
+
+### Features
+
+* **activeProduct:** the API can now sort on products, if they are active or if they are on stock ([7fb29c5](https://codeberg.org/hjmosedk/eCommerceAPI/commits/7fb29c5a844aa43cea63394c05bc743f49be3397))
+* **isPublic:** status can now be changed by the API ([fcbfd32](https://codeberg.org/hjmosedk/eCommerceAPI/commits/fcbfd3258c24f10f25bb1c166186d141145c8e1b))
+
+
+### Test
+
+* **e2e:** added support for e2e test via the frontend ([4804ce9](https://codeberg.org/hjmosedk/eCommerceAPI/commits/4804ce9763a758904f65acbefc0923717ba8f86d))
+* **products:** updated test to account for new isPublic property ([1835e8d](https://codeberg.org/hjmosedk/eCommerceAPI/commits/1835e8d05b59430462f30eef4179204a1bef23a6))
+
 ## [0.1.0](https://codeberg.org/hjmosedk/eCommerceAPI/compare/v0.0.3...v0.1.0) (2023-08-22)
 
 
