@@ -1,6 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { Product, Status } from '../../src/products/entities/product.entity';
+import { Product } from '../../src/products/entities/product.entity';
 import { ProductsController } from '../../src/products/products.controller';
 import { ProductsService } from '../../src/products/products.service';
 import {
@@ -23,7 +23,7 @@ describe('ProductsController', () => {
       },
       getActiveProducts: () => {
         const publicProducts = fakeTestProducts.filter(
-          (product) => product.status === Status.public,
+          (product) => product.isPublic == true,
         );
 
         const activeProducts = publicProducts.filter(

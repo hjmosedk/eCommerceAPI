@@ -1,8 +1,4 @@
-import {
-  CurrencyType,
-  Product,
-  Status,
-} from '../src/products/entities/product.entity';
+import { CurrencyType, Product } from '../src/products/entities/product.entity';
 
 type newProduct = Omit<Product, 'id'>;
 
@@ -19,7 +15,7 @@ export const diamondRingItem: newProduct = {
   quantity: 0,
   percentage: 0,
   onSale: false,
-  status: Status.public,
+  isPublic: true,
 };
 
 export const cheecburgerItem: newProduct = {
@@ -33,7 +29,7 @@ export const cheecburgerItem: newProduct = {
   quantity: 10,
   percentage: 0,
   onSale: false,
-  status: Status.public,
+  isPublic: true,
 };
 
 export const glovesItem: newProduct = {
@@ -47,7 +43,7 @@ export const glovesItem: newProduct = {
   quantity: 10,
   percentage: 20,
   onSale: true,
-  status: Status.private,
+  isPublic: false,
 };
 
 export const goldWatchItem: newProduct = {
@@ -61,7 +57,7 @@ export const goldWatchItem: newProduct = {
   quantity: 10,
   percentage: 20,
   onSale: true,
-  status: Status.public,
+  isPublic: true,
 };
 
 export const testProducts: newProduct[] = [
@@ -79,7 +75,7 @@ export const wrongGlove: wrongProduct = {
   quantity: 10,
   percentage: 20,
   onSale: true,
-  status: Status.public,
+  isPublic: true,
 };
 
 export const fakeDiamondRingItem: Product = {
@@ -94,7 +90,7 @@ export const fakeDiamondRingItem: Product = {
   quantity: 5,
   percentage: 0,
   onSale: false,
-  status: Status.private,
+  isPublic: false,
 };
 
 export const fakeCheecburgerItem: Product = {
@@ -109,7 +105,7 @@ export const fakeCheecburgerItem: Product = {
   quantity: 0,
   percentage: 0,
   onSale: false,
-  status: Status.public,
+  isPublic: true,
 };
 
 export const fakeGlovesItem: Product = {
@@ -124,7 +120,7 @@ export const fakeGlovesItem: Product = {
   quantity: 10,
   percentage: 20,
   onSale: true,
-  status: Status.public,
+  isPublic: true,
 };
 
 export const fakeGoldWatchItem: Product = {
@@ -139,7 +135,7 @@ export const fakeGoldWatchItem: Product = {
   quantity: 10,
   percentage: 20,
   onSale: true,
-  status: Status.private,
+  isPublic: false,
 };
 
 export const fakeTestProducts = [
