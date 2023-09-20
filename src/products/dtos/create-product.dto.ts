@@ -10,7 +10,7 @@ import {
   IsBoolean,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { CurrencyType, Status } from '../entities/product.entity';
+import { CurrencyType } from '../entities/product.entity';
 
 export class CreateProductDto {
   @IsString()
@@ -97,7 +97,8 @@ export class CreateProductDto {
 
   @IsString()
   @ApiProperty({
-    description: 'This is information about the status of the product',
+    description:
+      'This property is used to define if the product is public or not public (shows up on the main page or only in the admin page)',
   })
-  status: Status;
+  isPublic: boolean;
 }

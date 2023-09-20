@@ -9,7 +9,7 @@ import {
   IsBoolean,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { CurrencyType, Status } from '../entities/product.entity';
+import { CurrencyType } from '../entities/product.entity';
 
 export class UpdateProductDto {
   @IsString()
@@ -98,10 +98,10 @@ export class UpdateProductDto {
   @IsString()
   @IsOptional()
   @ApiProperty({
-    description: 'TThis have information about the status of the product',
-    examples: ['public', 'private'],
+    description:
+      'This property is used to define if the product is public or not public (shows up on the main page or only in the admin page)',
   })
-  status: Status;
+  isPublic: boolean;
 
   /* istanbul ignore next */ //* This does not need to be tested separately as this is standard practices, and is tested in other test
   constructor(partial: Partial<UpdateProductDto>) {

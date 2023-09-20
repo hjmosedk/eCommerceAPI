@@ -9,11 +9,6 @@ export enum CurrencyType {
   GBP = 'GBP',
 }
 
-export enum Status {
-  private = 'private',
-  public = 'public',
-}
-
 @Entity()
 export class Product {
   @PrimaryGeneratedColumn()
@@ -111,14 +106,13 @@ export class Product {
   })
   onSale: boolean;
 
-  @Column({ type: 'enum', enum: ['private', 'public'], default: 'public' })
+  @Column({ type: 'boolean', default: true })
   @IsDefined()
   @ApiProperty({
     description:
-      'This property is used to define if the product is active or inactive in the webshop',
-    examples: ['public', 'private'],
+      'This property is used to define if the product is public or not public (shows up on the main page or only in the admin page)',
   })
-  status: Status;
+  isPublic: boolean;
 }
 
 /* istanbul ignore next*/

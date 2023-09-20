@@ -70,6 +70,19 @@ export class ProductsController {
     return newProduct;
   }
 
+  @Post(':id')
+  @ApiOperation({
+    description:
+      'This endpoint will change the status of the isPublic property',
+  })
+  async changeStatus(@Param('id') id: string) {
+    const updatedProduct = await this.productsService.updateStatus(
+      parseInt(id),
+    );
+
+    return updatedProduct;
+  }
+
   @Patch(':id')
   @ApiOperation({
     description:
