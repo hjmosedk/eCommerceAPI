@@ -8,6 +8,9 @@ import { ProductsModule } from './products/products.module';
 import { Product } from './products/entities/product.entity';
 import { APP_PIPE } from '@nestjs/core';
 import { FilesModule } from './files/files.module';
+import { OrdersModule } from './orders/orders.module';
+import { Order } from './orders/entities/order.entity';
+import { OrderItem } from './orders/entities/orderItem.entity';
 
 @Module({
   imports: [
@@ -21,7 +24,7 @@ import { FilesModule } from './files/files.module';
           username: config.get<string>('DATABASE_USERNAME'),
           password: config.get<string>('DATABASE_PASSWORD'),
           database: config.get<string>('DATABASE_NAME'),
-          entities: [Product],
+          entities: [Product, Order, OrderItem],
           synchronize: true,
           dropSchema: process.env.NODE_ENV === 'test' ? true : false,
         };
@@ -33,6 +36,7 @@ import { FilesModule } from './files/files.module';
     }),
     ProductsModule,
     FilesModule,
+    OrdersModule,
   ],
   controllers: [AppController],
   providers: [

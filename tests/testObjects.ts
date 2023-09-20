@@ -1,4 +1,4 @@
-import { CurrencyType, Product } from '../src/products/entities/product.entity';
+/*import { CurrencyType, Product } from '../src/products/entities/product.entity';
 
 type newProduct = Omit<Product, 'id'>;
 
@@ -143,3 +143,4 @@ export const fakeTestProducts = [
   fakeCheecburgerItem,
   fakeGlovesItem,
 ];
+*/

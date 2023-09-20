@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDefined } from 'class-validator';
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { OrderItem } from 'src/orders/entities/orderItem.entity';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 
 export enum CurrencyType {
   DKK = 'DKK',
@@ -113,6 +114,9 @@ export class Product {
       'This property is used to define if the product is public or not public (shows up on the main page or only in the admin page)',
   })
   isPublic: boolean;
+
+  @ManyToOne(() => OrderItem, (orderItem) => orderItem.product)
+  orderItems: OrderItem[];
 }
 
 /* istanbul ignore next*/
