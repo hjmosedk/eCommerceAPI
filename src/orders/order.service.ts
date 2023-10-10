@@ -1,19 +1,25 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order, OrderStatus, Customer } from './entities/order.entity';
 import { Repository } from 'typeorm';
 import { OrderItem } from './entities/orderItem.entity';
+import { ProductsService } from 'src/products/products.service';
+import { OrderItemsListDto } from './dtos/order-items-list.dto';
 
 @Injectable()
 export class OrderService {
-  constructor(@InjectRepository(Order) private repo: Repository<Order>) {}
+  constructor(
+    @InjectRepository(Order) private orderRepo: Repository<Order>,
+    @InjectRepository(OrderItem) private orderItemRepo: Repository<OrderItem>,
+    private productService: ProductsService,
+  ) {}
 
   getAll() {
-    return this.repo.find();
+    return this.orderRepo.find();
   }
 
   getOrderByStatus(status: OrderStatus) {
-    return this.repo.find({ where: { orderStatus: status } });
+    return this.orderRepo.find({ where: { orderStatus: status } });
   }
 
   getOne(id: number) {
@@ -21,15 +27,17 @@ export class OrderService {
       return null;
     }
 
-    return this.repo.findOne({ where: { id } });
+    return this.orderRepo.findOne({
+      where: { id },
+      relations: ['orderItems', 'orderItems.product'],
+    });
   }
 
-  createOne(items: OrderItem[], customer: Customer) {
-    const { personalInformation, notes, shippingAddress, billingAddress } =
+  async createOne(items: OrderItemsListDto[], customer: Customer) {
+    const { personalInformation, shippingAddress, billingAddress, notes } =
       customer;
-    const { firstName, middleName, lastName, email, phone } =
+    const { firstName, lastName, middleName, email, phone } =
       personalInformation;
-
     const {
       address: bilAdd,
       address2nd: billAdd2nd,
@@ -37,10 +45,9 @@ export class OrderService {
       zipCode: billZip,
       country: billCountry,
     } = billingAddress;
+    const { address2nd, address, city, country, zipCode } = shippingAddress;
 
-    const { address, address2nd, city, zipCode, country } = shippingAddress;
-
-    const order = this.repo.create({
+    const order = this.orderRepo.create({
       customerFirstName: firstName,
       customerMiddleName: middleName,
       customerLastName: lastName,
@@ -60,15 +67,35 @@ export class OrderService {
     });
     const orderItems: OrderItem[] = [];
 
-    for (const { product, quantity } of items) {
-      const orderItem = new OrderItem();
-      orderItem.product = product;
-      orderItem.quantity = quantity;
-      orderItems.push(orderItem);
+    for (const { productId, orderedQuantity, salesPrice } of items) {
+      try {
+        const orderProduct = await this.productService.getOne(productId);
+        if (!orderProduct) {
+          throw new NotFoundException('Product is not in store');
+        }
+
+        const itemsInOrder = new OrderItem();
+        itemsInOrder.productId = productId;
+        itemsInOrder.orderedQuantity = orderedQuantity;
+        itemsInOrder.salesPrice = salesPrice;
+        this.orderItemRepo.save(itemsInOrder);
+
+        orderItems.push(itemsInOrder);
+      } catch (error) {
+        throw new Error(`Not able to create order - Error CKH001`);
+      }
     }
 
     order.orderItems = orderItems;
+    console.log('This is the order items: ', order.orderItems);
+    const { id } = await this.orderRepo.save(order);
 
-    this.repo.save(order);
+    return this.getOne(id);
+  }
+
+  async changeStatus(orderId: number, newStatus: OrderStatus) {
+    const order = await this.getOne(orderId);
+    order.orderStatus = newStatus;
+    this.orderRepo.save(order);
   }
 }

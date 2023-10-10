@@ -1,4 +1,116 @@
 GET http://192.168.1.135:3000/orders
-Content-Type: "application/application/json"
+Content-Type: application/json
 
 {}
+
+####
+
+POST http://192.168.1.135:3000/orders
+Content-Type: application/json
+
+{
+  "items": 
+  [
+    {
+    "orderedQuantity":5, 
+    "productId": 44,
+    "salesPrice": 5000 
+    }, 
+    {
+    "orderedQuantity": 1, 
+    "productId": 43,
+    "salesPrice": 3000000
+  }
+],
+    "customer": {
+      "personalInformation": {
+        "firstName": "Christian",
+        "middleName": "Kubel",
+        "lastName": "Højmose",
+        "email":"test@test.dk",
+        "phone":"01234567"        
+      },
+      "shippingAddress": {
+        "address":"A Street", 
+        "address2nd":"On the street",
+        "city": "New York", 
+        "country": "Denmark", 
+        "zipCode": 7500
+      },
+      "billingAddress": {
+        "address":"A Street", 
+        "address2nd":"On the street",
+        "city": "New York", 
+        "country": "Denmark", 
+        "zipCode": 7500
+      },
+      "note": "Here is a note!"
+    }
+}
+
+####
+
+GET http://192.168.1.135:3000/products
+Content-Type: application/json
+
+{}
+
+####
+
+POST http://192.168.1.135:3000/orders
+Content-Type: application/json
+
+{ 
+  "items": 
+  [
+    {
+    "orderQuantity":5, 
+    "product": 
+    {"id": 44,
+    "name": "Handbag",
+    "sku": "BAG-1",
+    "description": "This is a red handbag, it is used, but as new. This item does not offer free shipping, but we do offer a nice packing for the product. It is of imitated leather, and does not have any real silver - it is metal, of unknown origin. ",
+    "category": "Accessories",
+    "price": 5000,
+    "currency": "DKK",
+    "image": "42d966e1-0d94-4f02-b6df-d163ea2a6559.jpeg",
+    "quantity": 10,
+    "percentage": 0,
+    "onSale": false,
+    "isPublic": "true"}}, 
+    {
+    "orderQuantity": 1, 
+    "product": {
+    "id": 43,
+    "name": "Canon Camera",
+    "sku": "CAM-1",
+    "description": "A black camera of the brand \"Canon\", it comes with one lens, but no cord to carry the camera. The camera is used but as good as new - We do offer free shipping on this item, but any extra insurance is on the buyer's account. ",
+    "category": "Electronics",
+    "price": 3000000,
+    "currency": "DKK",
+    "image": "5b635204-7c2e-419c-bd8c-13ca1497332a.jpeg",
+    "quantity": 5,
+    "percentage": 0,
+    "onSale": false,
+    "isPublic": "true"
+    }
+  }
+]
+}
+####
+POST http://192.168.1.135:3000/products HTTP/1.2
+Content-Type: application/json
+
+{
+  "name": "Diamond Ring",
+  "sku": "RNG-2",
+  "description": "This is a diamond ring - This is some placeholder text!",
+  "category": "Jewelry",
+  "price": 250000,
+  "currency": "DKK",
+  "image": "66de3cfd-3830-47d2-8ce3-bd622a6dbcf4",
+  "quantity": 5,
+  "percentage": 0,
+  "onSale": false,
+  "isPublic": "true"
+}

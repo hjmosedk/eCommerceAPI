@@ -1,6 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDefined, IsOptional } from 'class-validator';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { OrderItem } from './orderItem.entity';
 
 export enum OrderStatus {
@@ -24,7 +30,7 @@ export interface CustomerInfo {
   middleName: string;
   lastName: string;
   email: string;
-  phone: number;
+  phone: string;
 }
 
 export interface Address {
@@ -40,16 +46,17 @@ export class Order {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @OneToMany(() => OrderItem, (orderItem) => orderItem.order)
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.order, { cascade: true })
+  @JoinColumn()
   @ApiProperty({ description: 'This is the content of the order' })
   orderItems: OrderItem[];
 
-  @Column({ type: 'date' })
+  @Column({ type: 'date', update: false, default: () => 'CURRENT_TIMESTAMP' })
   @IsDefined()
   @ApiProperty({ description: 'This is the time of the creation of the order' })
   orderDate: Date;
 
-  @Column({ type: 'date' })
+  @Column({ type: 'date', default: () => 'CURRENT_TIMESTAMP' })
   @IsDefined()
   @ApiProperty({
     description: 'This is the last time there where any change to the order',
@@ -86,7 +93,7 @@ export class Order {
     description:
       'This the phone number of the customer (to be updated with a User reference in the future)',
   })
-  customerPhone: number;
+  customerPhone: string;
 
   @Column({ type: 'text' })
   @IsDefined()
@@ -136,7 +143,7 @@ export class Order {
   })
   customerShippingCountry: string;
 
-  @Column({ type: 'text' })
+  @Column({ type: 'text', nullable: true })
   @IsOptional()
   @ApiProperty({
     description: 'This the shipping notes in connection with the order if any ',
@@ -186,6 +193,7 @@ export class Order {
   @Column({
     type: 'enum',
     enum: ['received', 'reserved', 'confirmed', 'packed', 'shipped', 'closed'],
+    default: 'received',
   })
   @IsDefined()
   @ApiProperty({
@@ -193,6 +201,7 @@ export class Order {
       'This is a representation of the status of the order in the system',
   })
   orderStatus: string;
+
   constructor(partial: Partial<Order> = {}) {
     Object.assign(this, partial);
   }

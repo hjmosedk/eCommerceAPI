@@ -1,7 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDefined } from 'class-validator';
 import { OrderItem } from 'src/orders/entities/orderItem.entity';
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import {
+  Entity,
+  Column,
+  PrimaryGeneratedColumn,
+  OneToMany,
+  JoinColumn,
+} from 'typeorm';
 
 export enum CurrencyType {
   DKK = 'DKK',
@@ -115,7 +121,8 @@ export class Product {
   })
   isPublic: boolean;
 
-  @ManyToOne(() => OrderItem, (orderItem) => orderItem.product)
+  @OneToMany(() => OrderItem, (orderItem) => orderItem.productId)
+  @JoinColumn()
   orderItems: OrderItem[];
 }
 
