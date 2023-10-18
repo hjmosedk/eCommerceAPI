@@ -10,12 +10,12 @@ import {
 import { OrderItem } from './orderItem.entity';
 
 export enum OrderStatus {
-  received = 'RECEIVED',
-  reserved = 'RESERVED',
-  confirmed = 'CONFIRMED',
-  packed = 'PACKED',
-  shipped = 'SHIPPED',
-  closed = 'CLOSED',
+  RECEIVED = 'RECEIVED',
+  RESERVED = 'RESERVED',
+  CONFIRMED = 'CONFIRMED',
+  PACKED = 'PACKED',
+  SHIPPED = 'SHIPPED',
+  CLOSED = 'CLOSED',
 }
 
 export interface Customer {

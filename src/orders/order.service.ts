@@ -1,10 +1,16 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order, OrderStatus, Customer } from './entities/order.entity';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { OrderItem } from './entities/orderItem.entity';
 import { ProductsService } from 'src/products/products.service';
 import { OrderItemsListDto } from './dtos/order-items-list.dto';
+import typeGuards from './typeGuards/type.guards';
 
 @Injectable()
 export class OrderService {
@@ -14,26 +20,83 @@ export class OrderService {
     private productService: ProductsService,
   ) {}
 
-  getAll() {
-    return this.orderRepo.find();
+  private getOrderAndProductInformation() {
+    return this.orderRepo
+      .createQueryBuilder('order')
+      .leftJoin('order.orderItems', 'orderItem')
+      .leftJoin('orderItem.product', 'product')
+      .select([
+        'order',
+        'orderItem',
+        'product.name',
+        'product.sku',
+        'product.image',
+      ]);
   }
 
-  getOrderByStatus(status: OrderStatus) {
-    return this.orderRepo.find({ where: { orderStatus: status } });
+  async getAll(): Promise<Order[]> {
+    try {
+      const orders = await this.getOrderAndProductInformation().getMany();
+
+      if (!orders) {
+        throw new NotFoundException('Database does not have any products');
+      }
+
+      return orders;
+    } catch (error) {
+      throw new InternalServerErrorException('Database error');
+    }
   }
 
-  getOne(id: number) {
-    if (!id) {
-      return null;
+  async getOrderByStatus(status: OrderStatus): Promise<Order[]> {
+    if (!typeGuards.isOrderStatus(status)) {
+      throw new BadRequestException('Status it not a valid value');
     }
 
-    return this.orderRepo.findOne({
-      where: { id },
-      relations: ['orderItems', 'orderItems.product'],
-    });
+    try {
+      // * To ensure best practice both in postgres and typescript
+      const postgresqlStatus = status.toLowerCase();
+      const orders = await this.getOrderAndProductInformation()
+        .where('order.orderStatus = :status', { status: postgresqlStatus })
+        .getMany();
+
+      if (!orders || orders.length === 0) {
+        throw new NotFoundException('Database does not have any orders');
+      }
+      return orders;
+    } catch (error) {
+      throw new InternalServerErrorException('Database Error');
+    }
   }
 
-  async createOne(items: OrderItemsListDto[], customer: Customer) {
+  async getOne(id: number): Promise<Order> {
+    if (!id) {
+      throw new BadRequestException('Id is missing');
+    }
+
+    try {
+      const order = await this.getOrderAndProductInformation()
+        .where('order.id = :id', { id: id })
+        .getOne();
+
+      if (!order) {
+        throw new NotFoundException('No product found with the ID');
+      }
+
+      return order;
+    } catch (error) {
+      throw new InternalServerErrorException('No product found with the ID');
+    }
+  }
+
+  async createOne(
+    items: OrderItemsListDto[],
+    customer: Customer,
+  ): Promise<Order> {
+    if (!items || !customer) {
+      throw new BadRequestException('Items or customer missing');
+    }
+
     const { personalInformation, shippingAddress, billingAddress, notes } =
       customer;
     const { firstName, lastName, middleName, email, phone } =
@@ -87,15 +150,41 @@ export class OrderService {
     }
 
     order.orderItems = orderItems;
-    console.log('This is the order items: ', order.orderItems);
     const { id } = await this.orderRepo.save(order);
 
     return this.getOne(id);
   }
 
-  async changeStatus(orderId: number, newStatus: OrderStatus) {
-    const order = await this.getOne(orderId);
-    order.orderStatus = newStatus;
-    this.orderRepo.save(order);
+  async changeStatus(orderId: number, newStatus: OrderStatus): Promise<Order> {
+    if (!orderId || !newStatus) {
+      throw new BadRequestException('Id or status missing');
+    }
+
+    if (!typeGuards.isOrderStatus(newStatus)) {
+      throw new BadRequestException('New Status is not accepted');
+    }
+
+    try {
+      const order = await this.getOne(orderId);
+      if (!order) {
+        throw new NotFoundException('Order not found in system');
+      }
+
+      const newOrderStatus = newStatus.toLowerCase();
+      order.orderStatus = newOrderStatus;
+
+      const updatedOrder: UpdateResult = await this.orderRepo.update(
+        { id: orderId },
+        { orderStatus: newOrderStatus },
+      );
+
+      if (updatedOrder.affected === 1) {
+        return order;
+      } else {
+        throw new InternalServerErrorException('Failed to update order status');
+      }
+    } catch (error) {
+      throw new InternalServerErrorException('Database error');
+    }
   }
 }
