@@ -8,12 +8,22 @@ type newProduct = Omit<Product, 'id'>;
 export class ProductsService {
   constructor(@InjectRepository(Product) private repo: Repository<Product>) {}
 
-  getAll() {
-    return this.repo.find();
+  async getAll() {
+    const products = await this.repo.find();
+
+    if (!products) {
+      return null;
+    }
+
+    return products;
   }
 
   async getActiveProducts() {
-    const allProducts = await this.repo.find();
+    const allProducts = await this.getAll();
+
+    if (!allProducts) {
+      return null;
+    }
 
     const publicProducts = allProducts.filter(
       (product) => product.isPublic === true,
@@ -26,17 +36,17 @@ export class ProductsService {
     return activeProducts;
   }
 
-  getOne(id: number) {
+  async getOne(id: number) {
     if (!id) {
       return null;
     }
 
-    return this.repo.findOne({ where: { id } });
+    return await this.repo.findOne({ where: { id } });
   }
 
-  createOne(product: Partial<newProduct>) {
+  async createOne(product: Partial<newProduct>) {
     const newProduct = this.repo.create(product);
-    return this.repo.save(newProduct);
+    return await this.repo.save(newProduct);
   }
 
   async clearDatabase() {
@@ -48,7 +58,7 @@ export class ProductsService {
   }
 
   /* istanbul ignore next */
-  createMany(products: newProduct[]) {
+  async createMany(products: newProduct[]) {
     /* istanbul ignore next */
     const newProducts: newProduct[] = [];
     /* istanbul ignore next */
@@ -59,7 +69,7 @@ export class ProductsService {
       newProducts.push(newProduct);
     });
     /* istanbul ignore next */
-    return this.repo.insert(newProducts);
+    return await this.repo.insert(newProducts);
   }
 
   async updateProduct(id: number, attrs: Partial<Product>) {
@@ -81,6 +91,6 @@ export class ProductsService {
     }
 
     product.isPublic = !product.isPublic;
-    return this.repo.save(product);
+    return await this.repo.save(product);
   }
 }

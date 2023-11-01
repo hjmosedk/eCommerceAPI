@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDefined } from 'class-validator';
-import { OrderItem } from 'src/orders/entities/orderItem.entity';
+import { OrderItem } from '../../orders/entities/orderItem.entity';
 import {
   Entity,
   Column,

@@ -1,4 +1,4 @@
-/*import { CurrencyType, Product } from '../src/products/entities/product.entity';
+import { CurrencyType, Product } from '../src/products/entities/product.entity';
 
 type newProduct = Omit<Product, 'id'>;
 
@@ -16,6 +16,7 @@ export const diamondRingItem: newProduct = {
   percentage: 0,
   onSale: false,
   isPublic: true,
+  orderItems: [],
 };
 
 export const cheecburgerItem: newProduct = {
@@ -30,6 +31,7 @@ export const cheecburgerItem: newProduct = {
   percentage: 0,
   onSale: false,
   isPublic: true,
+  orderItems: [],
 };
 
 export const glovesItem: newProduct = {
@@ -44,6 +46,7 @@ export const glovesItem: newProduct = {
   percentage: 20,
   onSale: true,
   isPublic: false,
+  orderItems: [],
 };
 
 export const goldWatchItem: newProduct = {
@@ -58,6 +61,7 @@ export const goldWatchItem: newProduct = {
   percentage: 20,
   onSale: true,
   isPublic: true,
+  orderItems: [],
 };
 
 export const testProducts: newProduct[] = [
@@ -76,6 +80,7 @@ export const wrongGlove: wrongProduct = {
   percentage: 20,
   onSale: true,
   isPublic: true,
+  orderItems: [],
 };
 
 export const fakeDiamondRingItem: Product = {
@@ -91,6 +96,7 @@ export const fakeDiamondRingItem: Product = {
   percentage: 0,
   onSale: false,
   isPublic: false,
+  orderItems: [],
 };
 
 export const fakeCheecburgerItem: Product = {
@@ -106,6 +112,7 @@ export const fakeCheecburgerItem: Product = {
   percentage: 0,
   onSale: false,
   isPublic: true,
+  orderItems: [],
 };
 
 export const fakeGlovesItem: Product = {
@@ -121,6 +128,7 @@ export const fakeGlovesItem: Product = {
   percentage: 20,
   onSale: true,
   isPublic: true,
+  orderItems: [],
 };
 
 export const fakeGoldWatchItem: Product = {
@@ -136,6 +144,7 @@ export const fakeGoldWatchItem: Product = {
   percentage: 20,
   onSale: true,
   isPublic: false,
+  orderItems: [],
 };
 
 export const fakeTestProducts = [
@@ -143,4 +152,3 @@ export const fakeTestProducts = [
   fakeCheecburgerItem,
   fakeGlovesItem,
 ];
-*/

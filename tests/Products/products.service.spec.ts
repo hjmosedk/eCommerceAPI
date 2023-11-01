@@ -1,13 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import {
-  //InsertResult,
-  Repository,
-} from 'typeorm';
-import {
-  Product,
-  ProductRepositoryFake,
-} from '../../src/products/entities/product.entity';
+import { Repository } from 'typeorm';
+import { Product } from '../../src/products/entities/product.entity';
 import { ProductsService } from '../../src/products/products.service';
 import {
   fakeTestProducts,
@@ -27,7 +21,7 @@ describe('ProductsService', () => {
         ProductsService,
         {
           provide: getRepositoryToken(Product),
-          useClass: ProductRepositoryFake,
+          useClass: Repository,
         },
       ],
     }).compile();

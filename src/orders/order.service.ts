@@ -8,7 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Order, OrderStatus, Customer } from './entities/order.entity';
 import { Repository, UpdateResult } from 'typeorm';
 import { OrderItem } from './entities/orderItem.entity';
-import { ProductsService } from 'src/products/products.service';
+import { ProductsService } from '../products/products.service';
 import { OrderItemsListDto } from './dtos/order-items-list.dto';
 import typeGuards from './typeGuards/type.guards';
 
@@ -35,17 +35,13 @@ export class OrderService {
   }
 
   async getAll(): Promise<Order[]> {
-    try {
-      const orders = await this.getOrderAndProductInformation().getMany();
+    const orders = await this.getOrderAndProductInformation().getMany();
 
-      if (!orders) {
-        throw new NotFoundException('Database does not have any products');
-      }
-
-      return orders;
-    } catch (error) {
-      throw new InternalServerErrorException('Database error');
+    if (!orders) {
+      throw new NotFoundException('Database does not have any products');
     }
+
+    return orders;
   }
 
   async getOrderByStatus(status: OrderStatus): Promise<Order[]> {
@@ -53,40 +49,31 @@ export class OrderService {
       throw new BadRequestException('Status it not a valid value');
     }
 
-    try {
-      // * To ensure best practice both in postgres and typescript
-      const postgresqlStatus = status.toLowerCase();
-      const orders = await this.getOrderAndProductInformation()
-        .where('order.orderStatus = :status', { status: postgresqlStatus })
-        .getMany();
+    // * To ensure best practice both in postgres and typescript
+    const postgresqlStatus = status.toLowerCase();
+    const orders = await this.getOrderAndProductInformation()
+      .where('order.orderStatus = :status', { status: postgresqlStatus })
+      .getMany();
 
-      if (!orders || orders.length === 0) {
-        throw new NotFoundException('Database does not have any orders');
-      }
-      return orders;
-    } catch (error) {
-      throw new InternalServerErrorException('Database Error');
+    if (!orders || orders.length === 0) {
+      throw new NotFoundException('No orders in system');
     }
+    return orders;
   }
 
   async getOne(id: number): Promise<Order> {
     if (!id) {
       throw new BadRequestException('Id is missing');
     }
+    const order = await this.getOrderAndProductInformation()
+      .where('order.id = :id', { id: id })
+      .getOne();
 
-    try {
-      const order = await this.getOrderAndProductInformation()
-        .where('order.id = :id', { id: id })
-        .getOne();
-
-      if (!order) {
-        throw new NotFoundException('No product found with the ID');
-      }
-
-      return order;
-    } catch (error) {
-      throw new InternalServerErrorException('No product found with the ID');
+    if (!order) {
+      throw new NotFoundException('No product found with the ID');
     }
+
+    return order;
   }
 
   async createOne(
@@ -152,7 +139,7 @@ export class OrderService {
     order.orderItems = orderItems;
     const { id } = await this.orderRepo.save(order);
 
-    return this.getOne(id);
+    return await this.getOne(id);
   }
 
   async changeStatus(orderId: number, newStatus: OrderStatus): Promise<Order> {
@@ -164,27 +151,23 @@ export class OrderService {
       throw new BadRequestException('New Status is not accepted');
     }
 
-    try {
-      const order = await this.getOne(orderId);
-      if (!order) {
-        throw new NotFoundException('Order not found in system');
-      }
+    const order = await this.getOne(orderId);
+    if (!order) {
+      throw new NotFoundException('Order not found in system');
+    }
 
-      const newOrderStatus = newStatus.toLowerCase();
-      order.orderStatus = newOrderStatus;
+    const newOrderStatus = newStatus.toLowerCase();
+    order.orderStatus = newOrderStatus;
 
-      const updatedOrder: UpdateResult = await this.orderRepo.update(
-        { id: orderId },
-        { orderStatus: newOrderStatus },
-      );
+    const updatedOrder: UpdateResult = await this.orderRepo.update(
+      { id: orderId },
+      { orderStatus: newOrderStatus },
+    );
 
-      if (updatedOrder.affected === 1) {
-        return order;
-      } else {
-        throw new InternalServerErrorException('Failed to update order status');
-      }
-    } catch (error) {
-      throw new InternalServerErrorException('Database error');
+    if (updatedOrder.affected === 1) {
+      return order;
+    } else {
+      throw new InternalServerErrorException('Failed to update order status');
     }
   }
 }
