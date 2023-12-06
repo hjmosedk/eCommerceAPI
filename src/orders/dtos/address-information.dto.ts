@@ -1,24 +1,52 @@
-import { IsString, IsOptional, IsNumber } from 'class-validator';
+import { IsString, IsNumber, IsOptional } from 'class-validator';
 import { Address } from '../entities/order.entity';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class AddressDto implements Address {
+  @ApiProperty({
+    description:
+      'This is the address line for the customer, this could be either shipping or billing',
+    type: 'string',
+    example: 'Home Street 20',
+  })
   @IsString()
-  @IsOptional()
   address: string;
 
+  @ApiProperty({
+    description:
+      'This is the 2nd address line for the customer, this could be either shipping or billing',
+    type: 'string',
+    example: 'Apartment Row 22',
+    required: false,
+  })
   @IsString()
   @IsOptional()
   address2nd: string;
 
+  @ApiProperty({
+    description:
+      'This is the city of the customer - Could be either shipping or billing',
+    type: 'string',
+    example: 'Køge',
+  })
   @IsString()
-  @IsOptional()
   city: string;
 
+  @ApiProperty({
+    description:
+      'This is the country of the customer - Could be either shipping or billing',
+    type: 'string',
+    example: 'Denmark',
+  })
   @IsString()
-  @IsOptional()
   country: string;
 
+  @ApiProperty({
+    description:
+      'This is the zipCode of the customer - Could be either shipping or billing',
+    type: 'number',
+    example: 9210,
+  })
   @IsNumber()
-  @IsOptional()
   zipCode: number;
 }

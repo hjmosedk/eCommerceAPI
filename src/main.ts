@@ -3,9 +3,11 @@
 import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { resolve } from 'path';
+import { readFileSync } from 'fs';
 
 async function bootstrap() {
-  const allowlist = ['http://192.168.1.135:3000', 'http://192.168.1.135:4200'];
+  const allowlist = process.env.ALLOWLIST?.split(',') || [];
   const corsOptionsDelegate = function (req: any, callback: any) {
     let corsOptions: any;
     if (allowlist.indexOf(req.header('Origin')) !== -1) {
@@ -18,15 +20,18 @@ async function bootstrap() {
 
   const app = await NestFactory.create(AppModule);
 
+  const packageJsonPath = resolve(__dirname, '../..', 'package.json');
+  const packageJsonContent = readFileSync(packageJsonPath, 'utf8');
+  const { version, description, name } = JSON.parse(packageJsonContent);
+
   const config = new DocumentBuilder()
-    .setTitle('eCommerce App')
-    .setDescription(
-      'This is the API for the eCommerce app made by Christian Kubel Højmose',
-    )
-    .setVersion('0.0.2')
+    .setTitle(name)
+    .setDescription(description)
+    .setVersion(version)
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
+
   app.enableCors(corsOptionsDelegate);
   await app.listen(3000);
 }

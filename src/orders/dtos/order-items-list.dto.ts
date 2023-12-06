@@ -20,6 +20,9 @@ export class OrderItemsListDto {
 
   @IsNumber()
   @IsNotEmpty()
-  @ApiProperty({ description: 'This is the price at time of sale' })
+  @ApiProperty({
+    description: 'This is the price at time of sale',
+    example: 25000,
+  })
   salesPrice: number;
 }
