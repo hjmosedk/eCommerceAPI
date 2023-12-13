@@ -5,6 +5,7 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { resolve } from 'path';
 import { readFileSync } from 'fs';
+import { GlobalExceptionFilter } from './globalFunctions/exceptionsHandler/GlobalExceptionFilter';
 
 async function bootstrap() {
   const allowlist = process.env.ALLOWLIST?.split(',') || [];
@@ -19,6 +20,7 @@ async function bootstrap() {
   };
 
   const app = await NestFactory.create(AppModule);
+  app.useGlobalFilters(new GlobalExceptionFilter());
 
   const packageJsonPath = resolve(__dirname, '../..', 'package.json');
   const packageJsonContent = readFileSync(packageJsonPath, 'utf8');
