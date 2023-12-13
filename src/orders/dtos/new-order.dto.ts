@@ -2,13 +2,12 @@ import { ApiProperty } from '@nestjs/swagger';
 import { CustomerDto } from './customer.dto';
 import { OrderItemsListDto } from './order-items-list.dto';
 import { Type } from 'class-transformer';
-import { IsArray, Validate } from 'class-validator';
+import { IsArray, IsOptional, Validate } from 'class-validator';
 
 export class NewOrderDto {
   @ApiProperty({
     description: 'This is the value of the products in the cart',
     type: [OrderItemsListDto],
-    isArray: true,
   })
   @IsArray()
   @Validate((value: any) => {
@@ -18,7 +17,7 @@ export class NewOrderDto {
     return true;
   })
   @Type(() => OrderItemsListDto)
-  items: OrderItemsListDto[];
+  orderItems: OrderItemsListDto[];
 
   @ApiProperty({
     description:
@@ -33,4 +32,12 @@ export class NewOrderDto {
   })
   @Type(() => CustomerDto)
   customer: CustomerDto;
+
+  @IsOptional()
+  @ApiProperty({
+    description: 'This is any notes associated with the order',
+    example: 'Place at door!',
+    required: false,
+  })
+  orderNotes: string;
 }

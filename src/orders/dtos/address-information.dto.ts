@@ -1,8 +1,8 @@
 import { IsString, IsNumber, IsOptional } from 'class-validator';
-import { Address } from '../entities/order.entity';
+import { AddressInformation } from '../entities/addressInformation.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
-export class AddressDto implements Address {
+export class AddressDto implements AddressInformation {
   @ApiProperty({
     description:
       'This is the address line for the customer, this could be either shipping or billing',

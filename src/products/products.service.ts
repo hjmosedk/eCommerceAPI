@@ -38,6 +38,7 @@ export class ProductsService {
 
   async getOne(id: number) {
     if (!id) {
+      console.log('Id Not Found !');
       return null;
     }
 

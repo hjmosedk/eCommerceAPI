@@ -5,12 +5,12 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Order, OrderStatus, Customer } from './entities/order.entity';
+import { Order, OrderStatus } from './entities/order.entity';
 import { Repository, UpdateResult } from 'typeorm';
 import { OrderItem } from './entities/orderItem.entity';
 import { ProductsService } from '../products/products.service';
-import { OrderItemsListDto } from './dtos/order-items-list.dto';
 import typeGuards from './typeGuards/type.guards';
+import { NewOrderDto } from './dtos/new-order.dto';
 
 @Injectable()
 export class OrderService {
@@ -38,7 +38,7 @@ export class OrderService {
     const orders = await this.getOrderAndProductInformation().getMany();
 
     if (!orders) {
-      throw new NotFoundException('Database does not have any products');
+      return null;
     }
 
     return orders;
@@ -76,48 +76,20 @@ export class OrderService {
     return order;
   }
 
-  async createOne(
-    items: OrderItemsListDto[],
-    customer: Customer,
-  ): Promise<Order> {
-    if (!items || !customer) {
+  async createOne(newOrder: NewOrderDto): Promise<Order> {
+    const { customer, orderItems: cartItems } = newOrder;
+
+    if (!cartItems || !customer) {
       throw new BadRequestException('Items or customer missing');
     }
 
-    const { personalInformation, shippingAddress, billingAddress, notes } =
-      customer;
-    const { firstName, lastName, middleName, email, phone } =
-      personalInformation;
-    const {
-      address: bilAdd,
-      address2nd: billAdd2nd,
-      city: billCity,
-      zipCode: billZip,
-      country: billCountry,
-    } = billingAddress;
-    const { address2nd, address, city, country, zipCode } = shippingAddress;
-
     const order = this.orderRepo.create({
-      customerFirstName: firstName,
-      customerMiddleName: middleName,
-      customerLastName: lastName,
-      customerEmail: email,
-      customerPhone: phone,
-      customerShippingNotes: notes,
-      customerBillingAddress: bilAdd,
-      customerBilling2ndAddress: billAdd2nd,
-      customerBillingCity: billCity,
-      customerBillingCountry: billCountry,
-      customerBillingZipCode: billZip,
-      customerShipping2ndAddress: address2nd,
-      customerShippingAddress: address,
-      customerShippingCity: city,
-      customerShippingCountry: country,
-      customerShippingZipCode: zipCode,
+      customer,
     });
+
     const orderItems: OrderItem[] = [];
 
-    for (const { productId, orderedQuantity, salesPrice } of items) {
+    for (const { productId, orderedQuantity, salesPrice } of cartItems) {
       try {
         const orderProduct = await this.productService.getOne(productId);
         if (!orderProduct) {
@@ -128,17 +100,18 @@ export class OrderService {
         itemsInOrder.productId = productId;
         itemsInOrder.orderedQuantity = orderedQuantity;
         itemsInOrder.salesPrice = salesPrice;
-        this.orderItemRepo.save(itemsInOrder);
-
         orderItems.push(itemsInOrder);
+        this.orderItemRepo.save(itemsInOrder);
       } catch (error) {
+        if (error.status === 404) {
+          throw error;
+        }
         throw new Error(`Not able to create order - Error CKH001`);
       }
     }
 
     order.orderItems = orderItems;
     const { id } = await this.orderRepo.save(order);
-
     return await this.getOne(id);
   }
 

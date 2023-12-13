@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { CustomerInfo } from '../entities/order.entity';
+import { PersonalInformation } from '../entities/personalInformation.entity';
+
 import {
   IsDefined,
   IsEmail,
@@ -8,7 +9,7 @@ import {
   IsString,
 } from 'class-validator';
 
-export class CustomerInformationDto implements CustomerInfo {
+export class CustomerInformationDto implements PersonalInformation {
   @ApiProperty({
     description: 'This is the first name of the customer',
     type: 'string',

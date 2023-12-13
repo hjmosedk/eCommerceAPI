@@ -1,11 +1,5 @@
-import {
-  IsDefined,
-  IsNotEmpty,
-  IsOptional,
-  IsString,
-  Validate,
-} from 'class-validator';
-import { Customer } from '../entities/order.entity';
+import { IsDefined, IsNotEmpty, IsOptional, Validate } from 'class-validator';
+import { Customer } from '../entities/customer.entity';
 import { Type } from 'class-transformer';
 import { CustomerInformationDto } from './customer-information.dto';
 import { AddressDto } from './address-information.dto';
@@ -56,8 +50,4 @@ export class CustomerDto implements Customer {
   })
   @Type(() => AddressDto)
   billingAddress: AddressDto;
-
-  @IsString()
-  @IsOptional()
-  notes: string;
 }

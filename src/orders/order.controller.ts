@@ -52,10 +52,9 @@ export class OrderController {
     description: 'This endpoint will create a order, and return said order',
   })
   async createNewOrder(@Body() body: NewOrderDto) {
-    const newOrder = await this.orderService.createOne(
-      body.items,
-      body.customer,
-    );
+    console.log(body);
+
+    const newOrder = await this.orderService.createOne(body);
     return newOrder;
   }
 
