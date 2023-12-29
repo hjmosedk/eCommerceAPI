@@ -1,8 +1,14 @@
 import { CurrencyType, Product } from '../src/products/entities/product.entity';
+import { Order, OrderStatus } from '../src/orders/entities/order.entity';
+import { Customer } from 'src/orders/entities/customer.entity';
+import { OrderItem } from '../src/orders/entities/orderItem.entity';
+import { OrderItemsListDto } from 'src/orders/dtos/order-items-list.dto';
 
 type newProduct = Omit<Product, 'id'>;
 
 type wrongProduct = Partial<Product>;
+
+type newOrder = Omit<Order, 'id'>;
 
 export const diamondRingItem: newProduct = {
   name: 'Diamond Ring',
@@ -152,3 +158,90 @@ export const fakeTestProducts = [
   fakeCheecburgerItem,
   fakeGlovesItem,
 ];
+
+export const FakeCustomer: Customer = {
+  personalInformation: {
+    firstName: 'Test',
+    middleName: 'T.',
+    lastName: 'TestGuy',
+    email: 'Test@test.dk',
+    phone: '123456789',
+  },
+  shippingAddress: {
+    address: 'TestStreet',
+    address2nd: 'TestTest',
+    city: 'Test Town',
+    country: 'Denmark',
+    zipCode: 4000,
+  },
+  billingAddress: {
+    address: 'TestStreet',
+    address2nd: 'TestTest',
+    city: 'Test Town',
+    country: 'Denmark',
+    zipCode: 4000,
+  },
+};
+
+export const fakeOrderWithReceivedStatus: Order = {
+  id: 1,
+  orderItems: [],
+  orderDate: new Date(Date.now()),
+  lastChange: new Date(Date.now()),
+  customer: FakeCustomer,
+  orderStatus: OrderStatus.RECEIVED,
+  orderNotes: null,
+};
+
+export const fakeOrderWithConfirmedStatus: Order = {
+  id: 2,
+  orderItems: [],
+  orderDate: new Date(Date.now()),
+  lastChange: new Date(Date.now()),
+  customer: FakeCustomer,
+  orderStatus: OrderStatus.CONFIRMED,
+  orderNotes: null,
+};
+
+export const fakeDiamondRingOrderItem: OrderItem = {
+  id: 25,
+  productId: fakeDiamondRingItem.id,
+  orderedQuantity: 1,
+  salesPrice: fakeDiamondRingItem.price,
+  product: fakeDiamondRingItem,
+  order: fakeOrderWithReceivedStatus,
+};
+
+export const fakeCheecburgerOrderItem: OrderItem = {
+  id: 1,
+  productId: fakeCheecburgerItem.id,
+  orderedQuantity: 1,
+  salesPrice: fakeCheecburgerItem.price,
+  product: fakeCheecburgerItem,
+  order: fakeOrderWithReceivedStatus,
+};
+
+fakeOrderWithReceivedStatus.orderItems = [
+  fakeDiamondRingOrderItem,
+  fakeCheecburgerOrderItem,
+];
+
+fakeOrderWithConfirmedStatus.orderItems = [
+  fakeDiamondRingOrderItem,
+  fakeCheecburgerOrderItem,
+];
+
+export const FakeOrderList: Order[] = [
+  fakeOrderWithReceivedStatus,
+  fakeOrderWithConfirmedStatus,
+];
+
+export const FakeDiamondCartItem: OrderItemsListDto = {
+  orderedQuantity: 1,
+  productId: 1,
+  salesPrice: 250000,
+};
+
+export const fakeNewOrder: newOrder = fakeOrderWithReceivedStatus;
+
+export const fakeCart: OrderItemsListDto[] = [FakeDiamondCartItem];

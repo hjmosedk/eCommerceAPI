@@ -60,6 +60,21 @@ describe('ProductsService', () => {
       expect(result.length).toBe(1);
       expect(productsRepositoryFindSpy).toHaveBeenCalled();
     });
+    test('No product in database returns null', async () => {
+      const productRepositoryFindSpy = jest
+        .spyOn(productRepository, 'find')
+        .mockResolvedValue(null);
+
+      const resultActiveProducts = await productService.getActiveProducts();
+      const resultAllProduct = await productService.getAll();
+
+      expect.assertions(4);
+
+      expect(resultActiveProducts).toEqual(resultAllProduct);
+      expect(productRepositoryFindSpy).toHaveBeenCalled();
+      expect(resultActiveProducts).toBe(null);
+      expect(resultAllProduct).toBe(null);
+    });
     test('A product is returned when :ID is called', async () => {
       const productRepositoryFindOneSpy = jest
         .spyOn(productRepository, 'findOne')
@@ -69,7 +84,9 @@ describe('ProductsService', () => {
 
       expect.assertions(2);
       expect(result).toBe(fakeDiamondRingItem);
-      expect(productRepositoryFindOneSpy).toBeCalledWith({ where: { id: 1 } });
+      expect(productRepositoryFindOneSpy).toHaveBeenCalledWith({
+        where: { id: 1 },
+      });
     });
     test('Wrong ID returns an error', async () => {
       const productRepositoryFindOneErrorSpy = jest
@@ -80,7 +97,7 @@ describe('ProductsService', () => {
 
       const noProduct = await productService.getOne(null);
       expect(noProduct).toBe(null);
-      expect(productRepositoryFindOneErrorSpy).not.toBeCalled();
+      expect(productRepositoryFindOneErrorSpy).not.toHaveBeenCalled();
     });
   });
 
@@ -122,7 +139,7 @@ describe('ProductsService', () => {
         expect(error.message).toBe('Product does not exist');
       }
 
-      expect(productRepositoryFindOneSpy).toBeCalledWith({
+      expect(productRepositoryFindOneSpy).toHaveBeenCalledWith({
         where: { id: productId },
       });
     });

@@ -44,8 +44,9 @@ Content-Type: application/json
         "country": "Denmark", 
         "zipCode": 7500
       },
-      "note": "Here is a note!"
-    }
+    },
+    "note": "Here is a note!"
+    
 }
 
 ####
