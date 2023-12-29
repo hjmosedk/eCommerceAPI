@@ -191,6 +191,7 @@ export const fakeOrderWithReceivedStatus: Order = {
   customer: FakeCustomer,
   orderStatus: OrderStatus.RECEIVED,
   orderNotes: null,
+  updateLastChange: () => {},
 };
 
 export const fakeOrderWithConfirmedStatus: Order = {
@@ -201,6 +202,7 @@ export const fakeOrderWithConfirmedStatus: Order = {
   customer: FakeCustomer,
   orderStatus: OrderStatus.CONFIRMED,
   orderNotes: null,
+  updateLastChange: () => {},
 };
 
 export const fakeDiamondRingOrderItem: OrderItem = {

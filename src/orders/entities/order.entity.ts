@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDefined, IsOptional } from 'class-validator';
 import {
+  BeforeUpdate,
   Column,
   Entity,
   JoinColumn,
@@ -45,6 +46,11 @@ export class Order {
   })
   lastChange: Date;
 
+  @BeforeUpdate()
+  updateLastChange() {
+    this.lastChange = new Date();
+  }
+
   @Column({ type: 'json' })
   @IsDefined()
   @ApiProperty({
@@ -53,6 +59,7 @@ export class Order {
   })
   customer: Customer;
 
+  @Column({ type: String, default: OrderStatus.RECEIVED })
   @IsDefined()
   @ApiProperty({
     description:
@@ -60,6 +67,7 @@ export class Order {
   })
   orderStatus: string;
 
+  @Column({ type: String, default: null })
   @IsOptional()
   @ApiProperty({
     description: 'This is any information associated with the order',

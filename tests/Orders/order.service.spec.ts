@@ -329,7 +329,10 @@ describe('OrderService', () => {
       }
     });
     test('OrderStatus is correctly updated', async () => {
-      const testOrderToBeUpdated = { ...fakeOrderWithReceivedStatus };
+      const testOrderToBeUpdated = {
+        ...fakeOrderWithReceivedStatus,
+        updateLastChange: () => {},
+      };
 
       expect.assertions(4);
 
@@ -345,10 +348,9 @@ describe('OrderService', () => {
         .spyOn(orderRepository, 'find')
         .mockResolvedValue([testOrderToBeUpdated]);
 
-      jest.spyOn(orderRepository, 'update').mockResolvedValue({
-        affected: 1,
-        raw: { ...testOrderToBeUpdated, orderStatus: OrderStatus.PACKED },
-        generatedMaps: null,
+      jest.spyOn(orderRepository, 'save').mockResolvedValue({
+        ...testOrderToBeUpdated,
+        orderStatus: OrderStatus.PACKED.toLowerCase(),
       });
 
       const newOrder = await orderService.getOne(testOrderToBeUpdated.id);

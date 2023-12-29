@@ -1,12 +1,12 @@
 import {
   BadRequestException,
   Injectable,
-  InternalServerErrorException,
+  //InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order, OrderStatus } from './entities/order.entity';
-import { Repository, UpdateResult } from 'typeorm';
+import { Repository /*UpdateResult */ } from 'typeorm';
 import { OrderItem } from './entities/orderItem.entity';
 import { ProductsService } from '../products/products.service';
 import typeGuards from './typeGuards/type.guards';
@@ -132,6 +132,12 @@ export class OrderService {
     const newOrderStatus = newStatus.toLowerCase();
     order.orderStatus = newOrderStatus;
 
+    const updatedOrder = await this.orderRepo.save(order);
+    return updatedOrder;
+
+    /*
+    order.updateLastChange();
+
     const updatedOrder: UpdateResult = await this.orderRepo.update(
       { id: orderId },
       { orderStatus: newOrderStatus },
@@ -141,6 +147,6 @@ export class OrderService {
       return order;
     } else {
       throw new InternalServerErrorException('Failed to update order status');
-    }
+    }*/
   }
 }
