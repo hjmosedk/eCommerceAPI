@@ -14,7 +14,7 @@ import { testProducts, goldWatchItem, wrongGlove } from '../testObjects';
 import { Product } from '../../src/products/entities/product.entity';
 import { DataSource } from 'typeorm';
 
-describe('e2e test for products module', () => {
+describe('IntegrationsTest for products module', () => {
   let app: INestApplication;
   let productService: ProductsService;
 
@@ -36,7 +36,7 @@ describe('e2e test for products module', () => {
     await app.close();
   });
 
-  test('get all products from the /products endpoint, GET test', async () => {
+  test('Get all products from the /products endpoint, GET test', async () => {
     expect.assertions(1);
     //* Ensure there is products in the endpoint
     const products = await request(app.getHttpServer())
@@ -47,7 +47,7 @@ describe('e2e test for products module', () => {
     expect(products.body.length).toBe(1);
   });
 
-  test('get all products from the /products/all endpoint, GET test', async () => {
+  test('Get all products from the /products/all endpoint, GET test', async () => {
     expect.assertions(1);
     //* Ensure there is products in the endpoint
     const products = await request(app.getHttpServer())
@@ -58,7 +58,7 @@ describe('e2e test for products module', () => {
     expect(products.body.length).toBe(3);
   });
 
-  test('create a new product from the /products endpoint, POST test', async () => {
+  test('Create a new product from the /products endpoint, POST test', async () => {
     expect.assertions(3);
 
     //* Ensure we can add a new product to the database
@@ -83,7 +83,7 @@ describe('e2e test for products module', () => {
     );
   });
 
-  test('get one product by ID from the /products/id endpoint, GET test', async () => {
+  test('Get one product by ID from the /products/id endpoint, GET test', async () => {
     expect.assertions(2);
     //* Generate a random id to make sure all id in the array can be found
     const id = Math.floor(Math.random() * 4) + 1;
@@ -103,7 +103,7 @@ describe('e2e test for products module', () => {
     expect(controlProduct).toEqual(foundProduct.body);
   });
 
-  test('update a product from ID via the /products/id endpoint, PATCH test', async () => {
+  test('Update a product from ID via the /products/id endpoint, PATCH test', async () => {
     expect.assertions(4);
 
     //* We must first get a product from the database, to ensure we can update it
@@ -141,7 +141,7 @@ describe('e2e test for products module', () => {
     expect(updatedProductAfterUpdate).toEqual(updatedData);
   });
 
-  test('negative test - some test to ensure the server handles wrong items', async () => {
+  test('Negative test - some test to ensure the server handles wrong items', async () => {
     const productDatabase = app.get(DataSource).getRepository(Product);
     await productDatabase.clear();
     await request(app.getHttpServer()).get('/products').expect(404);
