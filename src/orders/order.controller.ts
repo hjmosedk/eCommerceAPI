@@ -82,7 +82,7 @@ export class OrderController {
     description:
       'This endpoint will allow the user to change the status of the orders',
   })
-  async updateUserStatus(
+  async updateStatus(
     @Param('id') id: string,
     @Query('status') status: OrderStatus,
   ) {
