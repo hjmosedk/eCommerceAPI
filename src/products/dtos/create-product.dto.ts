@@ -3,7 +3,6 @@ import {
   IsNumber,
   IsPositive,
   IsString,
-  Length,
   Min,
   IsEnum,
   IsNotEmpty,
@@ -22,12 +21,11 @@ export class CreateProductDto {
   name: string;
 
   @IsString()
-  @Length(3)
   @IsNotEmpty()
   @ApiProperty({
     description:
       'This is the SKU of the product - Must be unique for each product, and cannot be changed after first creation',
-    example: 'GLW1',
+    example: 'GLW-1',
   })
   sku: string;
 
@@ -53,8 +51,8 @@ export class CreateProductDto {
   @Min(0)
   @IsNotEmpty()
   @ApiProperty({
-    description: 'This is the name of the new product',
-    example: 'Gloves',
+    description: 'This is the price of the product',
+    example: 25000,
   })
   price: number;
 
@@ -77,13 +75,18 @@ export class CreateProductDto {
   })
   quantity: number;
 
-  @ApiProperty({ description: 'This is the image file from the form' })
+  @ApiProperty({
+    description:
+      'This is a reference to an image id, found on the server - It must be an uuid',
+    example: '66de3cfd-3830-47d2-8ce3-bd622a6dbcf4',
+  })
   @IsString()
   image: string;
 
   @ApiProperty({
     description:
       'This is the information about the percentage save on the product',
+    example: 0,
   })
   @IsNumber()
   percentage: number;
@@ -91,14 +94,16 @@ export class CreateProductDto {
   @ApiProperty({
     description:
       'This is the information about if the product is on sale or not',
+    example: false,
   })
   @IsBoolean()
   onSale: boolean;
 
-  @IsString()
+  @IsBoolean()
   @ApiProperty({
     description:
       'This property is used to define if the product is public or not public (shows up on the main page or only in the admin page)',
+    example: true,
   })
   isPublic: boolean;
 }

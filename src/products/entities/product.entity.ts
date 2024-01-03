@@ -38,7 +38,7 @@ export class Product {
   @ApiProperty({
     description:
       'This is the SKU of the product, it is a text - The name is required',
-    example: 'GLW1',
+    example: 'GLW-1',
   })
   sku: string;
 

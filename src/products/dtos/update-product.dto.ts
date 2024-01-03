@@ -46,8 +46,8 @@ export class UpdateProductDto {
   @IsOptional()
   @ApiProperty({
     required: false,
-    description: 'This is the name of the new product',
-    example: 'Gloves',
+    description: 'This is the price on the new products',
+    example: 25000,
   })
   price: number;
 
@@ -68,11 +68,14 @@ export class UpdateProductDto {
   @ApiProperty({
     required: false,
     description: 'This is the number of items',
-    example: '10',
+    example: 10,
   })
   quantity: number;
 
-  @ApiProperty({ description: 'This is the image file from the form' })
+  @ApiProperty({
+    description: 'This is the image file from the form',
+    example: '66de3cfd-3830-47d2-8ce3-bd622a6dbcf4',
+  })
   @IsString()
   @IsOptional()
   image: string;
@@ -95,11 +98,12 @@ export class UpdateProductDto {
   })
   onSale: boolean;
 
-  @IsString()
+  @IsBoolean()
   @IsOptional()
   @ApiProperty({
     description:
       'This property is used to define if the product is public or not public (shows up on the main page or only in the admin page)',
+    example: true,
   })
   isPublic: boolean;
 
