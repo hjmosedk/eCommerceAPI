@@ -3,6 +3,7 @@ notes.md
 .dcignore
 env.development
 env.test
+env.*
 
 # compiled output
 /dist
