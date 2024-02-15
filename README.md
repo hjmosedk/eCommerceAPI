@@ -34,7 +34,7 @@ npm start test:e2e
 
 ## Usage
 
-The API have only been tested with the corresponding frontend, on node v18 and Debian 12 Bookworm.
+The API have only been tested with the corresponding frontend, on node v20 and Debian 12 Bookworm.
 
 ## Documentation
 
