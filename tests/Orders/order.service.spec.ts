@@ -345,8 +345,8 @@ describe('OrderService', () => {
         .mockReturnValue(queryBuilderMock as any);
 
       jest
-        .spyOn(orderRepository, 'find')
-        .mockResolvedValue([testOrderToBeUpdated]);
+        .spyOn(orderRepository, 'findOne')
+        .mockResolvedValue(testOrderToBeUpdated);
 
       jest.spyOn(orderRepository, 'save').mockResolvedValue({
         ...testOrderToBeUpdated,
