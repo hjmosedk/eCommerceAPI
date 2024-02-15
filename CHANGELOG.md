@@ -2,6 +2,35 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://codeberg.org/hjmosedk/eCommerceAPI/compare/v0.2.0...v0.3.0) (2024-02-15)
+
+
+### Features
+
+* **errorhandling:** refined global error handling ([83246ce](https://codeberg.org/hjmosedk/eCommerceAPI/commits/83246ce8dd309f51456f0b73f865b241f89cf117))
+* **orders:** the basic features of the order module is now implemented ([bafdca8](https://codeberg.org/hjmosedk/eCommerceAPI/commits/bafdca828265fea454096c55dccedc63795be2d6))
+
+
+### Bug Fixes
+
+* **orderController:** fixed a bug in the name of the method ([4bb49e1](https://codeberg.org/hjmosedk/eCommerceAPI/commits/4bb49e18f4a1001500b59becc1a30c529c0c8e06))
+* **productDTO:** fixed the dto, it now accepts booleans in isPublic ([e51d669](https://codeberg.org/hjmosedk/eCommerceAPI/commits/e51d669edde037a1f6827bfc21e0205c0a9c429a))
+* **test:** fixed a bug in the tests, they should now all pass ([e18d924](https://codeberg.org/hjmosedk/eCommerceAPI/commits/e18d92424a02fa817cab477627093252d0c55c08))
+
+
+### Documentation
+
+* **dtos:** adjusted DTOs for swagger, and updated the documnentation for these ([448bf23](https://codeberg.org/hjmosedk/eCommerceAPI/commits/448bf233f9015215fe5e9a9c10c03f15d069b1a0))
+
+
+### Test
+
+* **orderController:** the test suite for order controller is now completed ([06a44e1](https://codeberg.org/hjmosedk/eCommerceAPI/commits/06a44e1e4d37b7d0da0cb0b82d2d26e44fa7a8c0))
+* **OrderService:** added the order service test to the test battery ([d9cbac8](https://codeberg.org/hjmosedk/eCommerceAPI/commits/d9cbac8b1586c8ad0f9dd1dbf01597a1aa0b3c02))
+* **orderService:** adjusted code and test to account for save instead of update ([3288515](https://codeberg.org/hjmosedk/eCommerceAPI/commits/3288515d9ff64032861d579bbc3676ffe44d1d3d))
+* **orders:** moved the test to align with other tests ([8e3f282](https://codeberg.org/hjmosedk/eCommerceAPI/commits/8e3f2828e882288b49c339e1d494135fc4ac2b64))
+* **orders:** order end2end test now implemented ([58a4892](https://codeberg.org/hjmosedk/eCommerceAPI/commits/58a48921e384cb23492541b34d19acfcf63bebb5))
+
 ## [0.2.0](https://codeberg.org/hjmosedk/eCommerceAPI/compare/v0.1.0...v0.2.0) (2023-09-20)
 
 
