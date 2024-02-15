@@ -35,7 +35,7 @@ export class OrderItem {
   order: Order;
 
   @ManyToOne(() => Product, (product) => product.orderItems)
-  @JoinColumn()
+  @JoinColumn({ name: 'productId' })
   product: Product;
 
   constructor(partial: Partial<Order> = {}) {

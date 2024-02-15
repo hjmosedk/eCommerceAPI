@@ -1,39 +1,38 @@
 /* istanbul ignore file */
-// Testing dependencies
-import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
 // NestJS dependencies, to ensure the app works
-import { INestApplication, ValidationPipe } from '@nestjs/common';
-import { AppModule } from '../../src/app.module';
-
-// Services to be used for testing
-import { ProductsService } from '../../src/products/products.service';
+import { INestApplication } from '@nestjs/common';
 
 // Test objects
 import { testProducts, goldWatchItem, wrongGlove } from '../testObjects';
 import { Product } from '../../src/products/entities/product.entity';
 import { DataSource } from 'typeorm';
 
+import {
+  setupDatabase,
+  teardownDatabase,
+  addProductsToDataBase,
+  clearDatabase,
+} from './test-setup';
+
 describe('IntegrationsTest for products module', () => {
   let app: INestApplication;
-  let productService: ProductsService;
 
   beforeAll(async () => {
-    const moduleFixture: TestingModule = await Test.createTestingModule({
-      imports: [AppModule],
-    }).compile();
+    if (app) {
+      return app;
+    }
+    app = await setupDatabase();
+    //app = setupApp;
+  });
 
-    app = moduleFixture.createNestApplication();
-    app.useGlobalPipes(new ValidationPipe());
-    await app.init();
-    productService = app.get(ProductsService);
-
-    //* Add a list of products to the database
-    await productService.createMany(testProducts);
+  beforeEach(async () => {
+    await clearDatabase(app);
+    await addProductsToDataBase(app, testProducts);
   });
 
   afterAll(async () => {
-    await app.close();
+    await teardownDatabase(app);
   });
 
   test('Get all products from the /products endpoint, GET test', async () => {
@@ -43,8 +42,8 @@ describe('IntegrationsTest for products module', () => {
       .get('/products')
       .expect(200);
 
-    //* Since we added three products, there should be three products in the endpoint.
-    expect(products.body.length).toBe(1);
+    //* Only two product are both public and have quantity > 0.
+    expect(products.body.length).toBe(2);
   });
 
   test('Get all products from the /products/all endpoint, GET test', async () => {
@@ -54,17 +53,20 @@ describe('IntegrationsTest for products module', () => {
       .get('/products/all')
       .expect(200);
 
-    //* Since we added three products, there should be three products in the endpoint.
-    expect(products.body.length).toBe(3);
+    //* Since we added four products, there should be four products in the endpoint.
+    expect(products.body.length).toBe(4);
   });
 
   test('Create a new product from the /products endpoint, POST test', async () => {
+    const newTestItem = { ...goldWatchItem };
+    delete newTestItem.orderItems;
+
     expect.assertions(3);
 
     //* Ensure we can add a new product to the database
     const newProduct = await request(app.getHttpServer())
       .post('/products')
-      .send(goldWatchItem)
+      .send(newTestItem)
       .expect(201);
 
     //* As the server response, the ID should now be defined.
@@ -75,32 +77,34 @@ describe('IntegrationsTest for products module', () => {
       .get('/products/all')
       .expect(200);
 
-    //* Since we added a product, the length should be 4
-    expect(products.body.length).toBe(4);
+    //* Since we added a product, the length should be 5
+    expect(products.body.length).toBe(5);
     //* Here we ensure the product added is the product we just added
     expect(products.body).toEqual(
-      expect.arrayContaining([expect.objectContaining(goldWatchItem)]),
+      expect.arrayContaining([expect.objectContaining(newTestItem)]),
     );
   });
 
   test('Get one product by ID from the /products/id endpoint, GET test', async () => {
     expect.assertions(2);
+    const productList = await request(app.getHttpServer())
+      .get('/products')
+      .expect(200);
+    const productListLength = productList.body.length;
+
     //* Generate a random id to make sure all id in the array can be found
-    const id = Math.floor(Math.random() * 4) + 1;
+    const randomId = Math.floor(Math.random() * productListLength);
     //* Creates a list, to ensure the product found is viable
-    const productList = testProducts;
-    productList.push(goldWatchItem);
+
+    const productId = productList.body[randomId].id;
 
     const foundProduct = await request(app.getHttpServer())
-      .get(`/products/${id}`)
+      .get(`/products/${productId}`)
       .expect(200);
-
     //* if a product is found, it should be defined!
     expect(foundProduct.body).toBeDefined();
 
-    const controlProduct: Product = { ...productList[id - 1], id: id };
-
-    expect(controlProduct).toEqual(foundProduct.body);
+    expect(productList.body[randomId]).toEqual(foundProduct.body);
   });
 
   test('Update a product from ID via the /products/id endpoint, PATCH test', async () => {
@@ -108,10 +112,12 @@ describe('IntegrationsTest for products module', () => {
 
     //* We must first get a product from the database, to ensure we can update it
     const updatedProductResponse = await request(app.getHttpServer())
-      .get('/products/2')
+      .get('/products')
       .expect(200);
 
-    const updatedProduct = updatedProductResponse.body;
+    const updatedProduct = updatedProductResponse.body[0];
+
+    const { id } = updatedProduct;
 
     //* Update the wanted product
     const updatedData = {
@@ -121,7 +127,7 @@ describe('IntegrationsTest for products module', () => {
     };
 
     const productUpdate = await request(app.getHttpServer())
-      .patch('/products/2')
+      .patch(`/products/${id}`)
       .send(updatedData)
       .expect(200);
 
@@ -132,7 +138,7 @@ describe('IntegrationsTest for products module', () => {
 
     //* Ensure the updated product is "correctly updated"
     const updatedProductAfterUpdateResponse = await request(app.getHttpServer())
-      .get('/products/2')
+      .get(`/products/${id}`)
       .expect(200);
 
     const updatedProductAfterUpdate = updatedProductAfterUpdateResponse.body;
@@ -143,7 +149,7 @@ describe('IntegrationsTest for products module', () => {
 
   test('Negative test - some test to ensure the server handles wrong items', async () => {
     const productDatabase = app.get(DataSource).getRepository(Product);
-    await productDatabase.clear();
+    await productDatabase.delete({});
     await request(app.getHttpServer()).get('/products').expect(404);
     await request(app.getHttpServer()).get('/products/1').expect(404);
     await request(app.getHttpServer())

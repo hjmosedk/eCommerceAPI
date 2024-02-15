@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order, OrderStatus } from './entities/order.entity';
-import { Repository /*UpdateResult */ } from 'typeorm';
+import { Repository /*UpdateResult*/ } from 'typeorm';
 import { OrderItem } from './entities/orderItem.entity';
 import { ProductsService } from '../products/products.service';
 import typeGuards from './typeGuards/type.guards';
@@ -45,16 +45,17 @@ export class OrderService {
   }
 
   async getOrderByStatus(status: OrderStatus): Promise<Order[]> {
+    //const submittedStatus = status.toUpperCase();
+
     if (!typeGuards.isOrderStatus(status)) {
       throw new BadRequestException('Status it not a valid value');
     }
 
     // * To ensure best practice both in postgres and typescript
-    const postgresqlStatus = status.toLowerCase();
+    //const postgresqlStatus = status.toLowerCase();
     const orders = await this.getOrderAndProductInformation()
-      .where('order.orderStatus = :status', { status: postgresqlStatus })
+      .where('order.orderStatus = :status', { status: status })
       .getMany();
-
     if (!orders || orders.length === 0) {
       throw new NotFoundException('No orders in system');
     }
@@ -124,20 +125,17 @@ export class OrderService {
       throw new BadRequestException('New Status is not accepted');
     }
 
-    const order = await this.getOne(orderId);
+    const order = await this.orderRepo.findOne({ where: { id: orderId } });
     if (!order) {
       throw new NotFoundException('Order not found in system');
     }
-
-    const newOrderStatus = newStatus.toLowerCase();
+    const newOrderStatus = newStatus.toUpperCase();
     order.orderStatus = newOrderStatus;
-
+    //order.updateLastChange();
     const updatedOrder = await this.orderRepo.save(order);
+
     return updatedOrder;
-
     /*
-    order.updateLastChange();
-
     const updatedOrder: UpdateResult = await this.orderRepo.update(
       { id: orderId },
       { orderStatus: newOrderStatus },

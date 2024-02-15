@@ -4,7 +4,7 @@ import { Customer } from 'src/orders/entities/customer.entity';
 import { OrderItem } from '../src/orders/entities/orderItem.entity';
 import { OrderItemsListDto } from 'src/orders/dtos/order-items-list.dto';
 
-type newProduct = Omit<Product, 'id'>;
+export type newProduct = Omit<Product, 'id'>;
 
 type wrongProduct = Partial<Product>;
 
@@ -70,10 +70,26 @@ export const goldWatchItem: newProduct = {
   orderItems: [],
 };
 
+export const pokemonFolder: newProduct = {
+  name: 'Pokemon Folder',
+  sku: 'PKE-1',
+  description: 'This is a folder to store pokemon card',
+  category: 'Games',
+  price: 25000,
+  currency: CurrencyType.DKK,
+  image: 'c30efd05-1c26-486f-aa5a-5eb1289a381c',
+  quantity: 25,
+  percentage: 0,
+  onSale: false,
+  isPublic: true,
+  orderItems: [],
+};
+
 export const testProducts: newProduct[] = [
   diamondRingItem,
   glovesItem,
   cheecburgerItem,
+  pokemonFolder,
 ];
 
 export const wrongGlove: wrongProduct = {

@@ -5,6 +5,13 @@ Content-Type: application/json
 
 ####
 
+PATCH http://192.168.1.135:3000/orders/1?status=RECEIVED
+Content-Type: application/json
+
+{}
+
+####
+
 POST http://192.168.1.135:3000/orders
 Content-Type: application/json
 
