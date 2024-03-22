@@ -21,10 +21,10 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "cross-env NODE_ENV=test jest --config tests/e2e/jest-e2e.json --verbose --runInBand",
     "prepare": "husky",
-    "release": "standard-version",
-    "release:minor": "standard-version --release-as minor",
-    "release:patch": "standard-version --release-as patch",
-    "release:major": "standard-version --release-as major"
+    "release": "standard-version --sign",
+    "release:minor": "standard-version --release-as minor --sign",
+    "release:patch": "standard-version --release-as patch --sign",
+    "release:major": "standard-version --release-as major --sign"
   },
   "dependencies": {
     "@commitlint/cli": "^19.2.1",
