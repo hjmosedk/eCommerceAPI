@@ -90,7 +90,11 @@ export class OrderService {
 
     const orderItems: OrderItem[] = [];
 
-    for (const { productId, orderedQuantity, salesPrice } of cartItems) {
+    for (const {
+      id: productId,
+      salesQuantity: orderedQuantity,
+      price: salesPrice,
+    } of cartItems) {
       try {
         const orderProduct = await this.productService.getOne(productId);
         if (!orderProduct) {

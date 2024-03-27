@@ -255,9 +255,9 @@ export const FakeOrderList: Order[] = [
 ];
 
 export const FakeDiamondCartItem: OrderItemsListDto = {
-  orderedQuantity: 1,
-  productId: 1,
-  salesPrice: 250000,
+  salesQuantity: 1,
+  id: 1,
+  price: 250000,
 };
 
 export const fakeNewOrder: newOrder = fakeOrderWithReceivedStatus;

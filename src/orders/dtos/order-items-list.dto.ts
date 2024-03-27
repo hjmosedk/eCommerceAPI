@@ -8,7 +8,7 @@ export class OrderItemsListDto {
     description: 'This is the quantity of the item in the order',
     example: 6,
   })
-  orderedQuantity: number;
+  salesQuantity: number;
 
   @IsNumber()
   @IsNotEmpty()
@@ -16,7 +16,7 @@ export class OrderItemsListDto {
     description: 'This is the product id of the product to be ordered',
     example: 25,
   })
-  productId: number;
+  id: number;
 
   @IsNumber()
   @IsNotEmpty()
@@ -24,5 +24,5 @@ export class OrderItemsListDto {
     description: 'This is the price at time of sale',
     example: 25000,
   })
-  salesPrice: number;
+  price: number;
 }
