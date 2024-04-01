@@ -1,7 +1,7 @@
-import { OrderStatus } from '../entities/order.entity';
+import { ecommerce } from 'ckh-typings';
 
-const isOrderStatus = (value: any): value is OrderStatus => {
-  return Object.values(OrderStatus).includes(value);
+const isOrderStatus = (value: any): value is ecommerce.OrderStatus => {
+  return Object.values(ecommerce.OrderStatus).includes(value);
 };
 
 export default {

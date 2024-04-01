@@ -1,3 +1,4 @@
+import { ecommerce } from 'ckh-typings';
 import {
   IsInt,
   IsNumber,
@@ -9,9 +10,8 @@ import {
   IsBoolean,
 } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { CurrencyType } from '../entities/product.entity';
 
-export class CreateProductDto {
+export class CreateProductDto implements Omit<ecommerce.ProductModel, 'id'> {
   @IsString()
   @IsNotEmpty()
   @ApiProperty({
@@ -58,13 +58,13 @@ export class CreateProductDto {
 
   @IsString()
   @IsNotEmpty()
-  @IsEnum(CurrencyType)
+  @IsEnum(ecommerce.CurrencyType)
   @ApiProperty({
     description:
       'This is the currency of the price - This is important, and must never be empty, as it is required to calculate the price - any of the following values are valid: DKK, USD, EUR, and GBP - At this time, it is not support to change between currency',
     example: 'DKK',
   })
-  currency: CurrencyType;
+  currency: ecommerce.CurrencyType;
 
   @IsInt()
   @IsNotEmpty()

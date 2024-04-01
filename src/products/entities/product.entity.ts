@@ -1,3 +1,4 @@
+import { ecommerce } from 'ckh-typings';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsDefined } from 'class-validator';
 import { OrderItem } from '../../orders/entities/orderItem.entity';
@@ -9,15 +10,8 @@ import {
   JoinColumn,
 } from 'typeorm';
 
-export enum CurrencyType {
-  DKK = 'DKK',
-  USD = 'USD',
-  EUR = 'EUR',
-  GBP = 'GBP',
-}
-
-@Entity()
-export class Product {
+@Entity('Product')
+export class Product implements ecommerce.ProductModel {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     description: 'This is the main ID of the product',
@@ -77,7 +71,7 @@ export class Product {
       'This is the currency used for this product - This will always defaults to DKK',
     example: 'DKK',
   })
-  currency: CurrencyType;
+  currency: ecommerce.CurrencyType;
 
   @Column({ type: 'text' })
   @ApiProperty({

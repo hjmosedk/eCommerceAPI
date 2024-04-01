@@ -13,8 +13,9 @@ import {
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { NewOrderDto } from './dtos/new-order.dto';
-import { OrderStatus } from './entities/order.entity';
 import typeGuards from './typeGuards/type.guards';
+
+import { ecommerce } from 'ckh-typings';
 
 @ApiTags('Orders endpoints')
 @Controller('orders')
@@ -27,7 +28,7 @@ export class OrderController {
       'This endpoint will return all orders in the system, the query params allows for the API to sort on order status',
   })
   @ApiQuery({ name: 'status', required: false })
-  async getAll(@Query('status') status: OrderStatus = null) {
+  async getAll(@Query('status') status: ecommerce.OrderStatus = null) {
     if (status) {
       if (!typeGuards.isOrderStatus(status)) {
         throw new BadRequestException('Status is not correct');
@@ -82,7 +83,7 @@ export class OrderController {
   })
   async updateStatus(
     @Param('id') id: string,
-    @Query('status') status: OrderStatus,
+    @Query('status') status: ecommerce.OrderStatus,
   ) {
     if (!status || !id) {
       throw new BadRequestException(

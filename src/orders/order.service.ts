@@ -5,12 +5,13 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Order, OrderStatus } from './entities/order.entity';
+import { Order } from './entities/order.entity';
 import { Repository /*UpdateResult*/ } from 'typeorm';
 import { OrderItem } from './entities/orderItem.entity';
 import { ProductsService } from '../products/products.service';
 import typeGuards from './typeGuards/type.guards';
 import { NewOrderDto } from './dtos/new-order.dto';
+import { ecommerce } from 'ckh-typings';
 
 @Injectable()
 export class OrderService {
@@ -44,7 +45,7 @@ export class OrderService {
     return orders;
   }
 
-  async getOrderByStatus(status: OrderStatus): Promise<Order[]> {
+  async getOrderByStatus(status: ecommerce.OrderStatus): Promise<Order[]> {
     //const submittedStatus = status.toUpperCase();
 
     if (!typeGuards.isOrderStatus(status)) {
@@ -90,21 +91,17 @@ export class OrderService {
 
     const orderItems: OrderItem[] = [];
 
-    for (const {
-      id: productId,
-      salesQuantity: orderedQuantity,
-      price: salesPrice,
-    } of cartItems) {
+    for (const { id, salesQuantity, price } of cartItems) {
       try {
-        const orderProduct = await this.productService.getOne(productId);
+        const orderProduct = await this.productService.getOne(id);
         if (!orderProduct) {
           throw new NotFoundException('Product is not in store');
         }
 
         const itemsInOrder = new OrderItem();
-        itemsInOrder.productId = productId;
-        itemsInOrder.orderedQuantity = orderedQuantity;
-        itemsInOrder.salesPrice = salesPrice;
+        itemsInOrder.productId = id;
+        itemsInOrder.salesQuantity = salesQuantity;
+        itemsInOrder.price = price;
         orderItems.push(itemsInOrder);
         this.orderItemRepo.save(itemsInOrder);
       } catch (error) {
@@ -120,7 +117,10 @@ export class OrderService {
     return await this.getOne(id);
   }
 
-  async changeStatus(orderId: number, newStatus: OrderStatus): Promise<Order> {
+  async changeStatus(
+    orderId: number,
+    newStatus: ecommerce.OrderStatus,
+  ): Promise<Order> {
     if (!orderId || !newStatus) {
       throw new BadRequestException('Id or status missing');
     }
@@ -134,7 +134,7 @@ export class OrderService {
       throw new NotFoundException('Order not found in system');
     }
     const newOrderStatus = newStatus.toUpperCase();
-    order.orderStatus = newOrderStatus;
+    order.orderStatus = newOrderStatus as ecommerce.OrderStatus;
     //order.updateLastChange();
     const updatedOrder = await this.orderRepo.save(order);
 

@@ -12,8 +12,9 @@ import {
   InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
-import { OrderStatus } from '../../src/orders/entities/order.entity';
 import { NewOrderDto } from '../../src/orders/dtos/new-order.dto';
+
+import { ecommerce } from 'ckh-typings';
 
 describe('OrderController', () => {
   let controller: OrderController;
@@ -24,7 +25,7 @@ describe('OrderController', () => {
   ];
   const newOrderStatus = {
     ...fakeOrderWithReceivedStatus,
-    orderStatus: OrderStatus.PACKED,
+    orderStatus: ecommerce.OrderStatus.PACKED,
     updateLastChange: () => {},
   };
 
@@ -47,7 +48,7 @@ describe('OrderController', () => {
         return Promise.resolve(fakeOrderWithReceivedStatus);
       },
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      changeStatus: (_id: number, _newStatus: OrderStatus) => {
+      changeStatus: (_id: number, _newStatus: ecommerce.OrderStatus) => {
         return Promise.resolve(newOrderStatus);
       },
     };
@@ -92,7 +93,7 @@ describe('OrderController', () => {
       expect.assertions(2);
 
       try {
-        await controller.getAll('Hello World' as OrderStatus);
+        await controller.getAll('Hello World' as ecommerce.OrderStatus);
         expect(false).toBe(true); // Type casting is used, to ensure the typescript compline check does
       } catch (error) {
         expect(error).toBeInstanceOf(BadRequestException);
@@ -100,10 +101,14 @@ describe('OrderController', () => {
       }
     });
     test('Sort on status works as expected', async () => {
-      const filteredOrder = await controller.getAll(OrderStatus.CONFIRMED);
+      const filteredOrder = await controller.getAll(
+        ecommerce.OrderStatus.CONFIRMED,
+      );
       expect.assertions(2);
       expect(filteredOrder.length).toBe(1);
-      expect(filteredOrder[0].orderStatus).toBe(OrderStatus.CONFIRMED);
+      expect(filteredOrder[0].orderStatus).toBe(
+        ecommerce.OrderStatus.CONFIRMED,
+      );
     });
   });
   describe('POST, does the functions works as expected?', () => {
@@ -118,7 +123,7 @@ describe('OrderController', () => {
       const newOrder = await controller.createNewOrder(fakeNewOrder);
       expect(newOrder).toBeDefined();
       expect(newOrder.id).toBe(1);
-      expect(newOrder.orderStatus).toBe(OrderStatus.RECEIVED);
+      expect(newOrder.orderStatus).toBe(ecommerce.OrderStatus.RECEIVED);
     });
   });
   describe('GET/:ID works as expected', () => {
@@ -154,7 +159,7 @@ describe('OrderController', () => {
       expect.assertions(2);
 
       try {
-        await controller.updateStatus(null, OrderStatus.PACKED);
+        await controller.updateStatus(null, ecommerce.OrderStatus.PACKED);
         expect(false).toBe(true);
       } catch (error) {
         expect(error).toBeInstanceOf(BadRequestException);
@@ -178,13 +183,18 @@ describe('OrderController', () => {
     });
     test('For some reason the order is not updated and an error is thrown', async () => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      fakeOrderService.changeStatus = (_id: number, _status: OrderStatus) => {
+      fakeOrderService.changeStatus = (
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        _id: number,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        _status: ecommerce.OrderStatus,
+      ) => {
         return Promise.resolve(null);
       };
 
       expect.assertions(2);
       try {
-        await controller.updateStatus('1', OrderStatus.PACKED);
+        await controller.updateStatus('1', ecommerce.OrderStatus.PACKED);
         expect(false).toBe(true);
       } catch (error) {
         expect(error).toBeInstanceOf(InternalServerErrorException);
@@ -194,11 +204,11 @@ describe('OrderController', () => {
     test('order updated correct', async () => {
       const updatedOrder = await controller.updateStatus(
         '1',
-        OrderStatus.PACKED,
+        ecommerce.OrderStatus.PACKED,
       );
       expect(updatedOrder).toBeDefined();
       expect(updatedOrder.id).toBe(1);
-      expect(updatedOrder.orderStatus).toBe(OrderStatus.PACKED);
+      expect(updatedOrder.orderStatus).toBe(ecommerce.OrderStatus.PACKED);
     });
   });
 });

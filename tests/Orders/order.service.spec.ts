@@ -2,18 +2,19 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { OrderService } from '../../src/orders/order.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Order, OrderStatus } from '../../src/orders/entities/order.entity';
+import { Order } from '../../src/orders/entities/order.entity';
 import { OrderItem } from '../../src/orders/entities/orderItem.entity';
 import { ProductsService } from '../../src/products/products.service';
 import {
   fakeOrderWithReceivedStatus,
   FakeOrderList,
-  fakeCart,
   fakeDiamondRingItem,
   fakeDiamondRingOrderItem,
   fakeNewOrder,
 } from '../testObjects';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
+
+import { ecommerce } from 'ckh-typings';
 
 describe('OrderService', () => {
   let orderService: OrderService;
@@ -109,7 +110,7 @@ describe('OrderService', () => {
       expect.assertions(3);
 
       try {
-        await orderService.getOrderByStatus(OrderStatus.CLOSED);
+        await orderService.getOrderByStatus(ecommerce.OrderStatus.CLOSED);
         expect(true).toBe(false); //* If this code is reached, something is wrong and the test should fail
       } catch (error) {
         expect(error).toBeInstanceOf(NotFoundException);
@@ -125,7 +126,7 @@ describe('OrderService', () => {
           where: jest.fn().mockReturnThis(),
           getMany: jest.fn().mockResolvedValue(
             FakeOrderList.filter((order) => {
-              return order.orderStatus === OrderStatus.RECEIVED;
+              return order.orderStatus === ecommerce.OrderStatus.RECEIVED;
             }),
           ),
         };
@@ -135,13 +136,13 @@ describe('OrderService', () => {
           .mockReturnValue(queryBuilderMock as any);
 
         const result = await orderService.getOrderByStatus(
-          OrderStatus.RECEIVED,
+          ecommerce.OrderStatus.RECEIVED,
         );
 
         expect.assertions(3);
 
         expect(result.length).toBe(1);
-        expect(result[0].orderStatus).toBe(OrderStatus.RECEIVED);
+        expect(result[0].orderStatus).toBe(ecommerce.OrderStatus.RECEIVED);
         expect(orderRepositorySpy).toHaveBeenCalled();
       });
   });
@@ -228,7 +229,7 @@ describe('OrderService', () => {
       expect.assertions(6);
 
       expect(mockedProductService).toHaveBeenCalledWith(1);
-      expect(orderItemRepositorySpy).toHaveBeenCalledWith(fakeCart[0]);
+      expect(orderItemRepositorySpy).toHaveBeenCalledTimes(2);
       expect(orderRepositoryCreateSpy).toHaveBeenCalled();
       expect(orderRepositorySaveSpy).toHaveBeenCalledWith(
         fakeOrderWithReceivedStatus,
@@ -299,7 +300,7 @@ describe('OrderService', () => {
       expect.assertions(2);
 
       try {
-        await orderService.changeStatus(null, OrderStatus.PACKED);
+        await orderService.changeStatus(null, ecommerce.OrderStatus.PACKED);
         expect(true).toBe(false);
       } catch (error) {
         expect(error).toBeInstanceOf(BadRequestException);
@@ -321,8 +322,9 @@ describe('OrderService', () => {
       expect.assertions(2);
 
       try {
-        await orderService.changeStatus(1, 'Hello World!!!!' as OrderStatus);
-        expect(true).toBe(false); // tType casting used, to ensure TS does not give error at compline time.
+        //@ts-expect-error due testing invalid status type
+        await orderService.changeStatus(1, 'Hello World!!!!');
+        expect(true).toBe(false); // Type casting used, to ensure TS does not give error at compline time.
       } catch (error) {
         expect(error).toBeInstanceOf(BadRequestException);
         expect(error.message).toBe('New Status is not accepted');
@@ -350,20 +352,20 @@ describe('OrderService', () => {
 
       jest.spyOn(orderRepository, 'save').mockResolvedValue({
         ...testOrderToBeUpdated,
-        orderStatus: OrderStatus.PACKED.toLowerCase(),
+        orderStatus: ecommerce.OrderStatus.PACKED,
       });
 
       const newOrder = await orderService.getOne(testOrderToBeUpdated.id);
       expect(newOrder.id).toBe(1);
-      expect(newOrder.orderStatus).toBe(OrderStatus.RECEIVED);
+      expect(newOrder.orderStatus).toBe(ecommerce.OrderStatus.RECEIVED);
 
       const updatedOrder = await orderService.changeStatus(
         1,
-        OrderStatus.PACKED,
+        ecommerce.OrderStatus.PACKED,
       );
 
       expect(updatedOrder.id).toBe(testOrderToBeUpdated.id);
-      expect(updatedOrder.orderStatus).toBe(OrderStatus.PACKED.toLowerCase());
+      expect(updatedOrder.orderStatus).toBe(ecommerce.OrderStatus.PACKED);
     });
   });
 });

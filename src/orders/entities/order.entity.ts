@@ -11,17 +11,10 @@ import {
 import { OrderItem } from './orderItem.entity';
 import { Customer } from './customer.entity';
 
-export enum OrderStatus {
-  RECEIVED = 'RECEIVED',
-  RESERVED = 'RESERVED',
-  CONFIRMED = 'CONFIRMED',
-  PACKED = 'PACKED',
-  SHIPPED = 'SHIPPED',
-  CLOSED = 'CLOSED',
-}
+import { ecommerce } from 'ckh-typings';
 
-@Entity()
-export class Order {
+@Entity('order')
+export class Order implements ecommerce.OrderModel {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     description: 'This is the main ID of the product',
@@ -59,13 +52,13 @@ export class Order {
   })
   customer: Customer;
 
-  @Column({ type: String, default: OrderStatus.RECEIVED })
+  @Column({ type: String, default: ecommerce.OrderStatus.RECEIVED })
   @IsDefined()
   @ApiProperty({
     description:
       'This is a representation of the status of the order in the system',
   })
-  orderStatus: string;
+  orderStatus: ecommerce.OrderStatus;
 
   @Column({ type: String, default: null })
   @IsOptional()

@@ -10,9 +10,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsDefined } from 'class-validator';
 import { Order } from './order.entity';
 import { Product } from '../../products/entities/product.entity';
+import { ecommerce } from 'ckh-typings';
 
-@Entity()
-export class OrderItem {
+@Entity('orderItem')
+export class OrderItem implements ecommerce.OrderItemModel {
   @PrimaryGeneratedColumn()
   id: number;
 
@@ -24,12 +25,12 @@ export class OrderItem {
   @Column({ type: 'int', update: false })
   @IsDefined()
   @ApiProperty({ description: 'This is the quantity ordered' })
-  orderedQuantity: number;
+  salesQuantity: number;
 
   @Column({ type: 'int', update: false })
   @IsDefined()
   @ApiProperty({ description: 'This it the sales price of the product' })
-  salesPrice: number;
+  price: number;
 
   @ManyToOne(() => Order, (order) => order.id)
   order: Order;
