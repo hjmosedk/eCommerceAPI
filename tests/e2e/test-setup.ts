@@ -5,11 +5,7 @@ import { AppModule } from '../../src/app.module';
 // Services to be used for testing
 import { ProductsService } from '../../src/products/products.service';
 import { newProduct } from '../testObjects';
-//import { OrderService } from '../../src/orders/order.service';
 import { DataSource } from 'typeorm';
-//import { Product } from 'src/products/entities/product.entity';
-//import { Product } from '../../src/products/entities/product.entity';
-//import { Order } from '../../src/orders/entities/order.entity';
 
 export const setupDatabase = async () => {
   const moduleFixture: TestingModule = await Test.createTestingModule({
