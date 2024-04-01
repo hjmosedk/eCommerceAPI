@@ -1,6 +1,6 @@
 {
   "name": "ecommerance-api",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "This is a ecommerance backend made with nestjs for learning and educational purposes. It is not expected to be used in production.",
   "author": "Christian Kubel Højmose",
   "private": true,

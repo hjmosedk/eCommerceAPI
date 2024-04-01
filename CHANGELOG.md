@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
 
+## [0.5.1](https://github.com/hjmosedk/eCommerceAPI/compare/v0.5.0...v0.5.1) (2024-04-01)
+
+
+### Minor Changes
+
+* **deps:** updated all deps ([857d180](https://github.com/hjmosedk/eCommerceAPI/commits/857d1809cb753a0058dd490da6bd24dbced4fc45))
+
+
+### Documentation
+
+* **versioning:** added more info to changelog ([7be7675](https://github.com/hjmosedk/eCommerceAPI/commits/7be767599e8f696cb5c8b8cb16011dd7c80733a8))
+
 ## [0.5.0](https://github.com/hjmosedk/eCommerceAPI/compare/v0.4.0...v0.5.0) (2024-04-01)
 
 
