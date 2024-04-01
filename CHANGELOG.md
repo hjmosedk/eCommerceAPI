@@ -1,6 +1,13 @@
 # Changelog
 
-All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
+All notable changes to this project will be documented in this file. See [commit-and-tag-version](https://github.com/absolute-version/commit-and-tag-version) for commit guidelines.
+
+## [0.5.0](https://github.com/hjmosedk/eCommerceAPI/compare/v0.4.0...v0.5.0) (2024-04-01)
+
+
+### Test
+
+* **ordere2e:** fixed a small bug in the test ([05380c8](https://github.com/hjmosedk/eCommerceAPI/commits/05380c84087645d50b6a06fdcd0977ae069010d0))
 
 ## [0.4.0](https://codeberg.org/hjmosedk/eCommerceAPI/compare/v0.3.3...v0.4.0) (2024-04-01)
 
