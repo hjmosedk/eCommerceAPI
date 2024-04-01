@@ -9,6 +9,6 @@
     { "type": "perf", "hidden": true },
     { "type": "test", "section": "Test" }
   ],
-  "commitUrlFormat": "https://codeberg.org/hjmosedk/eCommerceAPI/commits/{{hash}}",
-  "compareUrlFormat": "https://codeberg.org/hjmosedk/eCommerceAPI/compare/{{previousTag}}...{{currentTag}}"
+  "commitUrlFormat": "https://github.com/hjmosedk/eCommerceAPI/commits/{{hash}}",
+  "compareUrlFormat": "https://github.com/hjmosedk/eCommerceAPI/compare/{{previousTag}}...{{currentTag}}"
 }
