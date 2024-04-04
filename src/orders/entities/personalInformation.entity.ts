@@ -1,9 +1,10 @@
 import { Entity, Column } from 'typeorm';
 import { IsDefined, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Ecommerce } from 'ckh-typings';
 
-@Entity()
-export class PersonalInformation {
+@Entity('PersonalInformation')
+export class PersonalInformation implements Ecommerce.PersonalInformationModel {
   @Column({ type: 'text' })
   @IsDefined()
   @ApiProperty({

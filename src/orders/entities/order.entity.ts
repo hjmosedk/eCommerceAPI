@@ -11,10 +11,10 @@ import {
 import { OrderItem } from './orderItem.entity';
 import { Customer } from './customer.entity';
 
-import { ecommerce } from 'ckh-typings';
+import { Ecommerce } from 'ckh-typings';
 
 @Entity('order')
-export class Order implements ecommerce.OrderModel {
+export class Order implements Ecommerce.OrderModel {
   @PrimaryGeneratedColumn()
   @ApiProperty({
     description: 'This is the main ID of the product',
@@ -52,13 +52,13 @@ export class Order implements ecommerce.OrderModel {
   })
   customer: Customer;
 
-  @Column({ type: String, default: ecommerce.OrderStatus.RECEIVED })
+  @Column({ type: String, default: Ecommerce.OrderStatus.RECEIVED })
   @IsDefined()
   @ApiProperty({
     description:
       'This is a representation of the status of the order in the system',
   })
-  orderStatus: ecommerce.OrderStatus;
+  orderStatus: Ecommerce.OrderStatus;
 
   @Column({ type: String, default: null })
   @IsOptional()

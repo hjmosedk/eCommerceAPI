@@ -10,10 +10,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsDefined } from 'class-validator';
 import { Order } from './order.entity';
 import { Product } from '../../products/entities/product.entity';
-import { ecommerce } from 'ckh-typings';
+import { Ecommerce } from 'ckh-typings';
 
 @Entity('orderItem')
-export class OrderItem implements ecommerce.OrderItemModel {
+export class OrderItem implements Ecommerce.OrderItemModel {
   @PrimaryGeneratedColumn()
   id: number;
 

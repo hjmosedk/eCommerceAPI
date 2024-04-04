@@ -2,8 +2,10 @@ import { Entity, Column } from 'typeorm';
 import { IsDefined, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-@Entity()
-export class AddressInformation {
+import { Ecommerce } from 'ckh-typings';
+
+@Entity('Address')
+export class AddressInformation implements Ecommerce.AddressModel {
   @Column({ type: 'text' })
   @IsDefined()
   @ApiProperty({

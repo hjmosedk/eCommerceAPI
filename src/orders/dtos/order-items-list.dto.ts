@@ -1,10 +1,10 @@
 import { IsNumber, IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 
-import { ecommerce } from 'ckh-typings';
+import { Ecommerce } from 'ckh-typings';
 
 export class OrderItemsListDto
-  implements Omit<ecommerce.OrderItemModel, 'productId' | 'product'>
+  implements Omit<Ecommerce.OrderItemModel, 'productId' | 'product'>
 {
   @IsNumber()
   @IsNotEmpty()

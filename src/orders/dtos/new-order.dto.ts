@@ -4,10 +4,10 @@ import { OrderItemsListDto } from './order-items-list.dto';
 import { Type } from 'class-transformer';
 import { IsArray, IsOptional, Validate } from 'class-validator';
 
-import { ecommerce } from 'ckh-typings';
+import { Ecommerce } from 'ckh-typings';
 
 export class NewOrderDto
-  implements Pick<ecommerce.OrderModel, 'orderNotes' | 'customer'>
+  implements Pick<Ecommerce.OrderModel, 'orderNotes' | 'customer'>
 {
   @ApiProperty({
     description: 'This is the value of the products in the cart',

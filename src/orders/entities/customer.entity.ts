@@ -3,9 +3,10 @@ import { IsDefined, IsOptional } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
 import { PersonalInformation } from './personalInformation.entity';
 import { AddressInformation } from './addressInformation.entity';
+import { Ecommerce } from 'ckh-typings';
 
-@Entity()
-export class Customer {
+@Entity('Customer')
+export class Customer implements Ecommerce.CustomerModel {
   @Column({ type: 'json' })
   @IsDefined()
   @ApiProperty({
