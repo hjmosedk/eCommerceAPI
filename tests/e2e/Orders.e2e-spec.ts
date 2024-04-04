@@ -20,7 +20,7 @@ import { Customer } from 'src/orders/entities/customer.entity';
 import { OrderItem } from '../../src/orders/entities/orderItem.entity';
 import { Order } from '../../src/orders/entities/order.entity';
 
-import { ecommerce } from 'ckh-typings';
+import { Ecommerce } from 'ckh-typings';
 
 const getItemsForOrder = async (
   app: INestApplication,
@@ -41,7 +41,7 @@ const getItemsForOrder = async (
   const itemsForOrder: Product[] = orderItems.body.slice(0, endIndex);
   const allItems = [];
   itemsForOrder.forEach((product) => {
-    const orderItem: Omit<ecommerce.OrderItemModel, 'productId' | 'product'> = {
+    const orderItem: Omit<Ecommerce.OrderItemModel, 'productId' | 'product'> = {
       salesQuantity: Math.floor(Math.random() * 10) + 1,
       id: product.id,
       price: product.price,
@@ -110,11 +110,11 @@ describe('IntegrationsTest for orders module', () => {
     expect.assertions(1);
 
     await request(app.getHttpServer())
-      .get(`/orders?status=${ecommerce.OrderStatus.SHIPPED}`)
+      .get(`/orders?status=${Ecommerce.OrderStatus.SHIPPED}`)
       .expect(404);
 
     const orders = await request(app.getHttpServer())
-      .get(`/orders?status=${ecommerce.OrderStatus.RECEIVED}`)
+      .get(`/orders?status=${Ecommerce.OrderStatus.RECEIVED}`)
       .expect(200);
 
     expect(orders.body.length).toBe(2);
@@ -155,7 +155,7 @@ describe('IntegrationsTest for orders module', () => {
     const orderId = orderInDatabase.body[randomId].id;
 
     const updatedOrder = await request(app.getHttpServer())
-      .patch(`/orders/${orderId}?status=${ecommerce.OrderStatus.CLOSED}`)
+      .patch(`/orders/${orderId}?status=${Ecommerce.OrderStatus.CLOSED}`)
       .expect(200);
 
     expect(orderInDatabase.body[randomId].orderStatus).not.toBe(

@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { NewOrderDto } from '../../src/orders/dtos/new-order.dto';
 
-import { ecommerce } from 'ckh-typings';
+import { Ecommerce } from 'ckh-typings';
 
 describe('OrderController', () => {
   let controller: OrderController;
@@ -25,7 +25,7 @@ describe('OrderController', () => {
   ];
   const newOrderStatus = {
     ...fakeOrderWithReceivedStatus,
-    orderStatus: ecommerce.OrderStatus.PACKED,
+    orderStatus: Ecommerce.OrderStatus.PACKED,
     updateLastChange: () => {},
   };
 
@@ -48,7 +48,7 @@ describe('OrderController', () => {
         return Promise.resolve(fakeOrderWithReceivedStatus);
       },
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      changeStatus: (_id: number, _newStatus: ecommerce.OrderStatus) => {
+      changeStatus: (_id: number, _newStatus: Ecommerce.OrderStatus) => {
         return Promise.resolve(newOrderStatus);
       },
     };
@@ -93,7 +93,7 @@ describe('OrderController', () => {
       expect.assertions(2);
 
       try {
-        await controller.getAll('Hello World' as ecommerce.OrderStatus);
+        await controller.getAll('Hello World' as Ecommerce.OrderStatus);
         expect(false).toBe(true); // Type casting is used, to ensure the typescript compline check does
       } catch (error) {
         expect(error).toBeInstanceOf(BadRequestException);
@@ -102,12 +102,12 @@ describe('OrderController', () => {
     });
     test('Sort on status works as expected', async () => {
       const filteredOrder = await controller.getAll(
-        ecommerce.OrderStatus.CONFIRMED,
+        Ecommerce.OrderStatus.CONFIRMED,
       );
       expect.assertions(2);
       expect(filteredOrder.length).toBe(1);
       expect(filteredOrder[0].orderStatus).toBe(
-        ecommerce.OrderStatus.CONFIRMED,
+        Ecommerce.OrderStatus.CONFIRMED,
       );
     });
   });
@@ -123,7 +123,7 @@ describe('OrderController', () => {
       const newOrder = await controller.createNewOrder(fakeNewOrder);
       expect(newOrder).toBeDefined();
       expect(newOrder.id).toBe(1);
-      expect(newOrder.orderStatus).toBe(ecommerce.OrderStatus.RECEIVED);
+      expect(newOrder.orderStatus).toBe(Ecommerce.OrderStatus.RECEIVED);
     });
   });
   describe('GET/:ID works as expected', () => {
@@ -159,7 +159,7 @@ describe('OrderController', () => {
       expect.assertions(2);
 
       try {
-        await controller.updateStatus(null, ecommerce.OrderStatus.PACKED);
+        await controller.updateStatus(null, Ecommerce.OrderStatus.PACKED);
         expect(false).toBe(true);
       } catch (error) {
         expect(error).toBeInstanceOf(BadRequestException);
@@ -187,14 +187,14 @@ describe('OrderController', () => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
         _id: number,
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        _status: ecommerce.OrderStatus,
+        _status: Ecommerce.OrderStatus,
       ) => {
         return Promise.resolve(null);
       };
 
       expect.assertions(2);
       try {
-        await controller.updateStatus('1', ecommerce.OrderStatus.PACKED);
+        await controller.updateStatus('1', Ecommerce.OrderStatus.PACKED);
         expect(false).toBe(true);
       } catch (error) {
         expect(error).toBeInstanceOf(InternalServerErrorException);
@@ -204,11 +204,11 @@ describe('OrderController', () => {
     test('order updated correct', async () => {
       const updatedOrder = await controller.updateStatus(
         '1',
-        ecommerce.OrderStatus.PACKED,
+        Ecommerce.OrderStatus.PACKED,
       );
       expect(updatedOrder).toBeDefined();
       expect(updatedOrder.id).toBe(1);
-      expect(updatedOrder.orderStatus).toBe(ecommerce.OrderStatus.PACKED);
+      expect(updatedOrder.orderStatus).toBe(Ecommerce.OrderStatus.PACKED);
     });
   });
 });

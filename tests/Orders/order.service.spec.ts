@@ -14,7 +14,7 @@ import {
 } from '../testObjects';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 
-import { ecommerce } from 'ckh-typings';
+import { Ecommerce } from 'ckh-typings';
 
 describe('OrderService', () => {
   let orderService: OrderService;
@@ -110,7 +110,7 @@ describe('OrderService', () => {
       expect.assertions(3);
 
       try {
-        await orderService.getOrderByStatus(ecommerce.OrderStatus.CLOSED);
+        await orderService.getOrderByStatus(Ecommerce.OrderStatus.CLOSED);
         expect(true).toBe(false); //* If this code is reached, something is wrong and the test should fail
       } catch (error) {
         expect(error).toBeInstanceOf(NotFoundException);
@@ -126,7 +126,7 @@ describe('OrderService', () => {
           where: jest.fn().mockReturnThis(),
           getMany: jest.fn().mockResolvedValue(
             FakeOrderList.filter((order) => {
-              return order.orderStatus === ecommerce.OrderStatus.RECEIVED;
+              return order.orderStatus === Ecommerce.OrderStatus.RECEIVED;
             }),
           ),
         };
@@ -136,13 +136,13 @@ describe('OrderService', () => {
           .mockReturnValue(queryBuilderMock as any);
 
         const result = await orderService.getOrderByStatus(
-          ecommerce.OrderStatus.RECEIVED,
+          Ecommerce.OrderStatus.RECEIVED,
         );
 
         expect.assertions(3);
 
         expect(result.length).toBe(1);
-        expect(result[0].orderStatus).toBe(ecommerce.OrderStatus.RECEIVED);
+        expect(result[0].orderStatus).toBe(Ecommerce.OrderStatus.RECEIVED);
         expect(orderRepositorySpy).toHaveBeenCalled();
       });
   });
@@ -300,7 +300,7 @@ describe('OrderService', () => {
       expect.assertions(2);
 
       try {
-        await orderService.changeStatus(null, ecommerce.OrderStatus.PACKED);
+        await orderService.changeStatus(null, Ecommerce.OrderStatus.PACKED);
         expect(true).toBe(false);
       } catch (error) {
         expect(error).toBeInstanceOf(BadRequestException);
@@ -322,8 +322,10 @@ describe('OrderService', () => {
       expect.assertions(2);
 
       try {
-        //@ts-expect-error due testing invalid status type
-        await orderService.changeStatus(1, 'Hello World!!!!');
+        await orderService.changeStatus(
+          1,
+          'Hello World!!!!' as Ecommerce.OrderStatus,
+        );
         expect(true).toBe(false); // Type casting used, to ensure TS does not give error at compline time.
       } catch (error) {
         expect(error).toBeInstanceOf(BadRequestException);
@@ -352,20 +354,20 @@ describe('OrderService', () => {
 
       jest.spyOn(orderRepository, 'save').mockResolvedValue({
         ...testOrderToBeUpdated,
-        orderStatus: ecommerce.OrderStatus.PACKED,
+        orderStatus: Ecommerce.OrderStatus.PACKED,
       });
 
       const newOrder = await orderService.getOne(testOrderToBeUpdated.id);
       expect(newOrder.id).toBe(1);
-      expect(newOrder.orderStatus).toBe(ecommerce.OrderStatus.RECEIVED);
+      expect(newOrder.orderStatus).toBe(Ecommerce.OrderStatus.RECEIVED);
 
       const updatedOrder = await orderService.changeStatus(
         1,
-        ecommerce.OrderStatus.PACKED,
+        Ecommerce.OrderStatus.PACKED,
       );
 
       expect(updatedOrder.id).toBe(testOrderToBeUpdated.id);
-      expect(updatedOrder.orderStatus).toBe(ecommerce.OrderStatus.PACKED);
+      expect(updatedOrder.orderStatus).toBe(Ecommerce.OrderStatus.PACKED);
     });
   });
 });
