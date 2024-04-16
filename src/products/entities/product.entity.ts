@@ -10,7 +10,7 @@ import {
   JoinColumn,
 } from 'typeorm';
 
-@Entity('Product')
+@Entity('product')
 export class Product implements Ecommerce.ProductModel {
   @PrimaryGeneratedColumn()
   @ApiProperty({
