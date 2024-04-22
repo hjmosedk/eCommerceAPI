@@ -48,5 +48,5 @@ export class AddressDto implements AddressInformation {
     example: 9210,
   })
   @IsNumber()
-  zipCode: number;
+  zipCode: string;
 }

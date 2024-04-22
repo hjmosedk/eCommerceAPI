@@ -189,14 +189,14 @@ export const FakeCustomer: Customer = {
     address2nd: 'TestTest',
     city: 'Test Town',
     country: 'Denmark',
-    zipCode: 4000,
+    zipCode: '4000',
   },
   billingAddress: {
     address: 'TestStreet',
     address2nd: 'TestTest',
     city: 'Test Town',
     country: 'Denmark',
-    zipCode: 4000,
+    zipCode: '4000',
   },
 };
 

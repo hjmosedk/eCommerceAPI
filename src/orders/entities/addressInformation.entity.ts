@@ -28,7 +28,7 @@ export class AddressInformation implements Ecommerce.AddressModel {
     description:
       'This is the information about the zipCode - As it can be used in several places, it is generic here',
   })
-  zipCode: number;
+  zipCode: string;
 
   @Column({ type: 'text' })
   @IsDefined()
