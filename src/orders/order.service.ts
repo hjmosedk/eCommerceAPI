@@ -79,7 +79,7 @@ export class OrderService {
   }
 
   async createOne(newOrder: NewOrderDto): Promise<Order> {
-    const { customer, orderItems: cartItems } = newOrder;
+    const { customer, orderItems: cartItems, orderNotes } = newOrder;
 
     if (!cartItems || !customer) {
       throw new BadRequestException('Items or customer missing');
@@ -87,6 +87,7 @@ export class OrderService {
 
     const order = this.orderRepo.create({
       customer,
+      orderNotes,
     });
 
     const orderItems: OrderItem[] = [];
