@@ -67,6 +67,28 @@ export class Order implements Ecommerce.OrderModel {
   })
   orderNotes: string;
 
+  @Column({ type: String, default: null })
+  @IsDefined()
+  @ApiProperty({
+    description:
+      'This is the total price of the order - This is calculated by the api, it cannot be inputted',
+    example: 25000,
+  })
+  orderTotalPrice: number;
+
+  @Column({
+    type: 'enum',
+    enum: ['DKK', 'USD', 'EUR', 'GBP'],
+    default: 'DKK',
+  })
+  @IsDefined()
+  @ApiProperty({
+    description:
+      'This is the currency used for this product - This will always defaults to DKK',
+    example: 'DKK',
+  })
+  orderCurrency: Ecommerce.CurrencyType;
+
   constructor(partial: Partial<Order> = {}) {
     Object.assign(this, partial);
   }

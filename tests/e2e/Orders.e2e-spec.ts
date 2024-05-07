@@ -57,12 +57,13 @@ const addOrdersToSystem = async (
   app: INestApplication,
   orderItems: OrderItem[],
   customer: Customer,
+  orderCurrency: Ecommerce.CurrencyType,
   orderNotes: string | null,
 ): Promise<void> => {
   try {
     const order = await request(app.getHttpServer())
       .post('/orders')
-      .send({ orderItems, customer, orderNotes });
+      .send({ orderItems, customer, orderCurrency, orderNotes });
 
     if (!order.body) {
       throw new Error('Failed to created order');
@@ -91,8 +92,20 @@ describe('IntegrationsTest for orders module', () => {
     const orderItems2 = await getItemsForOrder(app, 2);
 
     try {
-      await addOrdersToSystem(app, orderItems1, FakeCustomer, null);
-      await addOrdersToSystem(app, orderItems2, FakeCustomer, null);
+      await addOrdersToSystem(
+        app,
+        orderItems1,
+        FakeCustomer,
+        Ecommerce.CurrencyType.DKK,
+        null,
+      );
+      await addOrdersToSystem(
+        app,
+        orderItems2,
+        FakeCustomer,
+        Ecommerce.CurrencyType.DKK,
+        null,
+      );
     } catch (error) {
       fail('No orders where created');
     }

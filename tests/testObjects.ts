@@ -207,6 +207,8 @@ export const fakeOrderWithReceivedStatus: Order = {
   lastChange: new Date(Date.now()),
   customer: FakeCustomer,
   orderStatus: Ecommerce.OrderStatus.RECEIVED,
+  orderCurrency: Ecommerce.CurrencyType.DKK,
+  orderTotalPrice: 25000,
   orderNotes: null,
   updateLastChange: () => {},
 };
@@ -218,6 +220,8 @@ export const fakeOrderWithConfirmedStatus: Order = {
   lastChange: new Date(Date.now()),
   customer: FakeCustomer,
   orderStatus: Ecommerce.OrderStatus.CONFIRMED,
+  orderCurrency: Ecommerce.CurrencyType.DKK,
+  orderTotalPrice: 25000,
   orderNotes: null,
   updateLastChange: () => {},
 };

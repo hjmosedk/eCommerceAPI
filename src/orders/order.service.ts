@@ -12,6 +12,7 @@ import { ProductsService } from '../products/products.service';
 import typeGuards from './typeGuards/type.guards';
 import { NewOrderDto } from './dtos/new-order.dto';
 import { Ecommerce } from 'ckh-typings';
+import * as Dinero from 'dinero.js';
 
 @Injectable()
 export class OrderService {
@@ -79,7 +80,12 @@ export class OrderService {
   }
 
   async createOne(newOrder: NewOrderDto): Promise<Order> {
-    const { customer, orderItems: cartItems, orderNotes } = newOrder;
+    const {
+      customer,
+      orderItems: cartItems,
+      orderNotes,
+      orderCurrency,
+    } = newOrder;
 
     if (!cartItems || !customer) {
       throw new BadRequestException('Items or customer missing');
@@ -88,9 +94,11 @@ export class OrderService {
     const order = this.orderRepo.create({
       customer,
       orderNotes,
+      orderCurrency,
     });
 
     const orderItems: OrderItem[] = [];
+    let orderTotalPrice = Dinero({ amount: 0, currency: orderCurrency });
 
     for (const { id, salesQuantity, price } of cartItems) {
       try {
@@ -105,6 +113,12 @@ export class OrderService {
         itemsInOrder.price = price;
         orderItems.push(itemsInOrder);
         this.orderItemRepo.save(itemsInOrder);
+
+        const itemTotal = Dinero({
+          amount: price,
+          currency: orderCurrency,
+        }).multiply(salesQuantity);
+        orderTotalPrice = orderTotalPrice.add(itemTotal);
       } catch (error) {
         if (error.status === 404) {
           throw error;
@@ -114,6 +128,8 @@ export class OrderService {
     }
 
     order.orderItems = orderItems;
+    order.orderTotalPrice = parseInt(orderTotalPrice.toFormat());
+
     const { id } = await this.orderRepo.save(order);
     return await this.getOne(id);
   }

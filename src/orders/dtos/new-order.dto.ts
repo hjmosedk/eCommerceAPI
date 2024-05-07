@@ -2,9 +2,10 @@ import { ApiProperty } from '@nestjs/swagger';
 import { CustomerDto } from './customer.dto';
 import { OrderItemsListDto } from './order-items-list.dto';
 import { Type } from 'class-transformer';
-import { IsArray, IsOptional, Validate } from 'class-validator';
+import { IsArray, IsOptional, IsString, Validate } from 'class-validator';
 
 import { Ecommerce } from 'ckh-typings';
+import { IsCurrency } from '../typeGuards/custom.validators';
 
 export class NewOrderDto
   implements Pick<Ecommerce.OrderModel, 'orderNotes' | 'customer'>
@@ -36,6 +37,13 @@ export class NewOrderDto
   })
   @Type(() => CustomerDto)
   customer: CustomerDto;
+
+  @ApiProperty({
+    description: 'This is the currency the order have been made in',
+  })
+  @IsString()
+  @IsCurrency({ message: 'Currency is not correct type' })
+  orderCurrency: Ecommerce.CurrencyType;
 
   @IsOptional()
   @ApiProperty({

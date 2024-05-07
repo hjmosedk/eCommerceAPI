@@ -117,6 +117,7 @@ describe('OrderController', () => {
         orderItems: fakeCart,
         customer: FakeCustomer,
         orderNotes: null,
+        orderCurrency: Ecommerce.CurrencyType.DKK,
       };
 
       expect.assertions(3);
