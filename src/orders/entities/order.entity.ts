@@ -67,7 +67,7 @@ export class Order implements Ecommerce.OrderModel {
   })
   orderNotes: string;
 
-  @Column({ type: String, default: null })
+  @Column({ type: 'int', default: 25000, update: false })
   @IsDefined()
   @ApiProperty({
     description:
@@ -80,6 +80,7 @@ export class Order implements Ecommerce.OrderModel {
     type: 'enum',
     enum: ['DKK', 'USD', 'EUR', 'GBP'],
     default: 'DKK',
+    update: false,
   })
   @IsDefined()
   @ApiProperty({
