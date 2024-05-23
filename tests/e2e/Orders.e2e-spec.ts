@@ -107,6 +107,7 @@ describe('IntegrationsTest for orders module', () => {
         null,
       );
     } catch (error) {
+      console.log(error);
       fail('No orders where created');
     }
   });
