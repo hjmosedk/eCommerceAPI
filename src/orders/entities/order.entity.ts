@@ -52,7 +52,7 @@ export class Order implements Ecommerce.OrderModel {
   })
   customer: Customer;
 
-  @Column({ type: String, default: Ecommerce.OrderStatus.RECEIVED })
+  @Column({ type: 'text', default: Ecommerce.OrderStatus.RECEIVED })
   @IsDefined()
   @ApiProperty({
     description:
@@ -60,14 +60,14 @@ export class Order implements Ecommerce.OrderModel {
   })
   orderStatus: Ecommerce.OrderStatus;
 
-  @Column({ type: String, default: null })
+  @Column({ type: 'text', default: null })
   @IsOptional()
   @ApiProperty({
     description: 'This is any information associated with the order',
   })
   orderNotes: string;
 
-  @Column({ type: String, default: null })
+  @Column({ type: 'int', default: null })
   @IsDefined()
   @ApiProperty({
     description:
