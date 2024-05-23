@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { OrderService } from '../../src/orders/order.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { Order } from '../../src/orders/entities/order.entity';
 import { OrderItem } from '../../src/orders/entities/orderItem.entity';
 import { ProductsService } from '../../src/products/products.service';
@@ -13,8 +13,8 @@ import {
   fakeNewOrder,
 } from '../testObjects';
 import { BadRequestException, NotFoundException } from '@nestjs/common';
-
 import { Ecommerce } from 'ckh-typings';
+import { ConnectionMock } from './connectionMock';
 
 describe('OrderService', () => {
   let orderService: OrderService;
@@ -41,6 +41,7 @@ describe('OrderService', () => {
           useValue: { getOne: jest.fn() },
         },
         OrderService,
+        { provide: DataSource, useClass: ConnectionMock },
       ],
     }).compile();
 
@@ -285,11 +286,13 @@ describe('OrderService', () => {
         await orderService.createOne(fakeOrderWithReceivedStatus);
         expect(true).toBe(false);
       } catch (error) {
+        console.log(error.statusCode);
         expect(error).toBeInstanceOf(NotFoundException);
-        expect(error.message).toBe('Product is not in store');
+        expect(error.message).toContain('ID');
+        expect(error.message).toContain('not found');
       }
 
-      expect.assertions(3);
+      expect.assertions(4);
 
       expect(mockedProductService).toHaveBeenCalled();
     });

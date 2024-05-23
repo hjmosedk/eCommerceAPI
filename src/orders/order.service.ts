@@ -1,19 +1,17 @@
 import {
   BadRequestException,
   Injectable,
-  //InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
-import { DataSource, Repository /*UpdateResult*/ } from 'typeorm';
+import { DataSource, Repository } from 'typeorm';
 import { OrderItem } from './entities/orderItem.entity';
 import { ProductsService } from '../products/products.service';
 import typeGuards from './typeGuards/type.guards';
 import { NewOrderDto } from './dtos/new-order.dto';
 import { Ecommerce } from 'ckh-typings';
 import * as Dinero from 'dinero.js';
-import { ApiQuery } from '@nestjs/swagger';
 
 @Injectable()
 export class OrderService {
@@ -114,9 +112,10 @@ export class OrderService {
             `salesQuantity: ${salesQuantity} and/ or price: ${price} must be equal or greater then 1`,
           );
         }
+
         const orderProduct = await this.productService.getOne(id);
         if (!orderProduct) {
-          await queryRunner.rollbackTransaction(); // Rollback the transaction
+          await queryRunner.rollbackTransaction();
           throw new NotFoundException(`Product with ID ${id} not found.`);
         }
 
@@ -145,6 +144,12 @@ export class OrderService {
       return await this.getOne(savedOrder.id);
     } catch (error) {
       await queryRunner.rollbackTransaction();
+      if (
+        error instanceof BadRequestException ||
+        error instanceof NotFoundException
+      ) {
+        throw error;
+      }
       throw new Error(`Failed to create order, ${error.message}`);
     } finally {
       await queryRunner.release();
@@ -169,20 +174,8 @@ export class OrderService {
     }
     const newOrderStatus = newStatus.toUpperCase();
     order.orderStatus = newOrderStatus as Ecommerce.OrderStatus;
-    //order.updateLastChange();
     const updatedOrder = await this.orderRepo.save(order);
 
     return updatedOrder;
-    /*
-    const updatedOrder: UpdateResult = await this.orderRepo.update(
-      { id: orderId },
-      { orderStatus: newOrderStatus },
-    );
-
-    if (updatedOrder.affected === 1) {
-      return order;
-    } else {
-      throw new InternalServerErrorException('Failed to update order status');
-    }*/
   }
 }
