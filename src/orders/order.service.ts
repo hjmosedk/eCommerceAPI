@@ -6,13 +6,14 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Order } from './entities/order.entity';
-import { Repository /*UpdateResult*/ } from 'typeorm';
+import { DataSource, Repository /*UpdateResult*/ } from 'typeorm';
 import { OrderItem } from './entities/orderItem.entity';
 import { ProductsService } from '../products/products.service';
 import typeGuards from './typeGuards/type.guards';
 import { NewOrderDto } from './dtos/new-order.dto';
 import { Ecommerce } from 'ckh-typings';
 import * as Dinero from 'dinero.js';
+import { ApiQuery } from '@nestjs/swagger';
 
 @Injectable()
 export class OrderService {
@@ -20,6 +21,7 @@ export class OrderService {
     @InjectRepository(Order) private orderRepo: Repository<Order>,
     @InjectRepository(OrderItem) private orderItemRepo: Repository<OrderItem>,
     private productService: ProductsService,
+    private dataSource: DataSource,
   ) {}
 
   private getOrderAndProductInformation() {
@@ -80,6 +82,7 @@ export class OrderService {
   }
 
   async createOne(newOrder: NewOrderDto): Promise<Order> {
+    const queryRunner = this.dataSource.createQueryRunner();
     const {
       customer,
       orderItems: cartItems,
@@ -91,20 +94,30 @@ export class OrderService {
       throw new BadRequestException('Items or customer missing');
     }
 
-    const order = this.orderRepo.create({
-      customer,
-      orderNotes,
-      orderCurrency,
-    });
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    const orderItems: OrderItem[] = [];
-    let orderTotalPrice = Dinero({ amount: 0, currency: orderCurrency });
+    try {
+      const order = this.orderRepo.create({
+        customer,
+        orderNotes,
+        orderCurrency,
+      });
 
-    for (const { id, salesQuantity, price } of cartItems) {
-      try {
+      const orderItems: OrderItem[] = [];
+      let orderTotalPrice = Dinero({ amount: 0, currency: orderCurrency });
+
+      for (const { id, salesQuantity, price } of cartItems) {
+        if (salesQuantity <= 0 || price <= 0) {
+          await queryRunner.rollbackTransaction();
+          throw new BadRequestException(
+            `salesQuantity: ${salesQuantity} and/ or price: ${price} must be equal or greater then 1`,
+          );
+        }
         const orderProduct = await this.productService.getOne(id);
         if (!orderProduct) {
-          throw new NotFoundException('Product is not in store');
+          await queryRunner.rollbackTransaction(); // Rollback the transaction
+          throw new NotFoundException(`Product with ID ${id} not found.`);
         }
 
         const itemsInOrder = new OrderItem();
@@ -112,26 +125,30 @@ export class OrderService {
         itemsInOrder.salesQuantity = salesQuantity;
         itemsInOrder.price = price;
         orderItems.push(itemsInOrder);
-        this.orderItemRepo.save(itemsInOrder);
+        await this.orderItemRepo.save(itemsInOrder);
 
         const itemTotal = Dinero({
           amount: price,
           currency: orderCurrency,
         }).multiply(salesQuantity);
         orderTotalPrice = orderTotalPrice.add(itemTotal);
-      } catch (error) {
-        if (error.status === 404) {
-          throw error;
-        }
-        throw new Error(`Not able to create order - Error CKH001`);
       }
+
+      order.orderItems = orderItems;
+      order.orderTotalPrice = orderTotalPrice.toUnit();
+
+      const savedOrder = await this.orderRepo.save(order);
+
+      // Commit the transaction
+      await queryRunner.commitTransaction();
+
+      return await this.getOne(savedOrder.id);
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw new Error(`Failed to create order, ${error.message}`);
+    } finally {
+      await queryRunner.release();
     }
-
-    order.orderItems = orderItems;
-    order.orderTotalPrice = parseInt(orderTotalPrice.toFormat());
-
-    const { id } = await this.orderRepo.save(order);
-    return await this.getOne(id);
   }
 
   async changeStatus(
