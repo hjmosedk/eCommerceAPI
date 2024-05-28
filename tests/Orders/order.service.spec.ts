@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { OrderService } from '../../src/orders/order.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { DataSource, Repository } from 'typeorm';
+import { DataSource, QueryRunner, Repository } from 'typeorm';
 import { Order } from '../../src/orders/entities/order.entity';
 import { OrderItem } from '../../src/orders/entities/orderItem.entity';
 import { ProductsService } from '../../src/products/products.service';
@@ -21,6 +21,8 @@ describe('OrderService', () => {
   let orderRepository: Repository<Order>;
   let orderItemRepository: Repository<OrderItem>;
   let productsService: ProductsService;
+  let dataSource: DataSource;
+  let queryRunner: QueryRunner;
 
   const queryBuilderMock = {
     leftJoin: jest.fn().mockReturnThis(),
@@ -49,6 +51,8 @@ describe('OrderService', () => {
     orderRepository = module.get(getRepositoryToken(Order));
     orderItemRepository = module.get(getRepositoryToken(OrderItem));
     productsService = module.get<ProductsService>(ProductsService);
+    dataSource = module.get<DataSource>(DataSource);
+    queryRunner = dataSource.createQueryRunner();
   });
 
   describe('Initial test, is everything working', () => {

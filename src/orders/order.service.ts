@@ -93,7 +93,12 @@ export class OrderService {
     }
 
     await queryRunner.connect();
-    await queryRunner.startTransaction();
+
+    try {
+      await queryRunner.startTransaction();
+    } catch (error) {
+      throw new Error(`Filed to start transaction: ${error.message}`);
+    }
 
     try {
       const order = this.orderRepo.create({
@@ -143,7 +148,10 @@ export class OrderService {
 
       return await this.getOne(savedOrder.id);
     } catch (error) {
-      await queryRunner.rollbackTransaction();
+      if (queryRunner.isTransactionActive) {
+        await queryRunner.rollbackTransaction();
+      }
+
       if (
         error instanceof BadRequestException ||
         error instanceof NotFoundException

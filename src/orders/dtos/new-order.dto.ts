@@ -40,6 +40,7 @@ export class NewOrderDto
 
   @ApiProperty({
     description: 'This is the currency the order have been made in',
+    example: 'DKK',
   })
   @IsString()
   @IsCurrency({ message: 'Currency is not correct type' })
