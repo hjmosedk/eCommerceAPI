@@ -122,3 +122,12 @@ Content-Type: application/json
   "onSale": false,
   "isPublic": true
 }
+
+####
+
+GET http://192.168.1.135:3000/settings/packOrderMessage HTTP/1.2
+Content-Type: application/json
+
+{
+
+}

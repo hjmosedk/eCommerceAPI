@@ -46,7 +46,7 @@
     "typeorm": "^0.3.20"
   },
   "devDependencies": {
-    "@nestjs/cli": "^10.4.1",
+    "@nestjs/cli": "^10.4.2",
     "@nestjs/schematics": "^10.1.2",
     "@nestjs/testing": "^10.3.10",
     "@types/dinero.js": "^1.9.4",

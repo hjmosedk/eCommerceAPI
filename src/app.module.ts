@@ -11,6 +11,8 @@ import { FilesModule } from './files/files.module';
 import { OrdersModule } from './orders/orders.module';
 import { Order } from './orders/entities/order.entity';
 import { OrderItem } from './orders/entities/orderItem.entity';
+import { SettingsModule } from './settings/settings.module';
+import { systemNotification } from './settings/entities/systemNotification.entity';
 
 @Module({
   imports: [
@@ -24,7 +26,7 @@ import { OrderItem } from './orders/entities/orderItem.entity';
           username: config.get<string>('DATABASE_USERNAME'),
           password: config.get<string>('DATABASE_PASSWORD'),
           database: config.get<string>('DATABASE_NAME'),
-          entities: [Product, Order, OrderItem],
+          entities: [Product, Order, OrderItem, systemNotification],
           synchronize: true,
           dropSchema: process.env.NODE_ENV === 'test' ? true : false,
         };
@@ -37,6 +39,7 @@ import { OrderItem } from './orders/entities/orderItem.entity';
     ProductsModule,
     FilesModule,
     OrdersModule,
+    SettingsModule,
   ],
   controllers: [AppController],
   providers: [
