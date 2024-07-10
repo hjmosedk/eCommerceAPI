@@ -1,4 +1,10 @@
-import { Controller, Get, Param, BadRequestException } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Param,
+  BadRequestException,
+  HttpCode,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
 import { SettingsService } from './settings.service';
 
@@ -6,6 +12,28 @@ import { SettingsService } from './settings.service';
 @Controller('settings')
 export class SettingsController {
   constructor(private settingsService: SettingsService) {}
+
+  @Get('seedData')
+  @HttpCode(204)
+  @ApiOperation({
+    description:
+      'An endpoint to seed data into the database, when setting up the system for the first time',
+  })
+  async seedData() {
+    if (process.env.NODE_ENV === 'production') {
+      return;
+    }
+
+    try {
+      await this.settingsService.seedData();
+    } catch (error) {
+      throw new BadRequestException(
+        `Somethings gone wrong in the seeding ${error.message}`,
+      );
+    }
+
+    return;
+  }
 
   @Get(':title')
   @ApiOperation({

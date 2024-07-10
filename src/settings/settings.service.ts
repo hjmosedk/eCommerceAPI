@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { systemNotification } from './entities/systemNotification.entity';
+import { systemNotificationMessage } from './basedata';
 
 @Injectable()
 export class SettingsService {
@@ -24,5 +25,17 @@ export class SettingsService {
       return null;
     }
     return await this.repo.findOne({ where: { title } });
+  }
+
+  async seedData() {
+    try {
+      this.repo.delete({});
+      for (const message of systemNotificationMessage) {
+        const dbMessage = this.repo.create(message);
+        await this.repo.save(dbMessage);
+      }
+    } catch (error) {
+      throw new Error(`Error in seeding data: ${error.message}`);
+    }
   }
 }
