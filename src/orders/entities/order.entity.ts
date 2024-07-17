@@ -52,11 +52,15 @@ export class Order implements Ecommerce.OrderModel {
   })
   customer: Customer;
 
-  @Column({ type: 'text', default: Ecommerce.OrderStatus.RECEIVED })
+  @Column({
+    type: 'text',
+    default: Ecommerce.OrderStatus.RECEIVED,
+  })
   @IsDefined()
   @ApiProperty({
     description:
       'This is a representation of the status of the order in the system',
+    example: Ecommerce.OrderStatus.CONFIRMED,
   })
   orderStatus: Ecommerce.OrderStatus;
 
@@ -78,8 +82,8 @@ export class Order implements Ecommerce.OrderModel {
 
   @Column({
     type: 'enum',
-    enum: ['DKK', 'USD', 'EUR', 'GBP'],
-    default: 'DKK',
+    enum: Ecommerce.CurrencyType,
+    default: Ecommerce.CurrencyType.DKK,
     update: false,
   })
   @IsDefined()
