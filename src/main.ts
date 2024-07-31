@@ -19,7 +19,12 @@ async function bootstrap() {
     callback(null, corsOptions); // callback expects two parameters: error and options
   };
 
-  const app = await NestFactory.create(AppModule);
+  const httpsOptions = {
+    key: readFileSync('./src/cert/192.168.1.135-key.pem'),
+    cert: readFileSync('./src/cert/192.168.1.135.pem'),
+  };
+
+  const app = await NestFactory.create(AppModule, { httpsOptions });
   app.useGlobalFilters(new GlobalExceptionFilter());
 
   const packageJsonPath = resolve(__dirname, '../..', 'package.json');
