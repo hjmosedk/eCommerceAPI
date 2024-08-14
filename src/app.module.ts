@@ -13,6 +13,7 @@ import { Order } from './orders/entities/order.entity';
 import { OrderItem } from './orders/entities/orderItem.entity';
 import { SettingsModule } from './settings/settings.module';
 import { systemNotification } from './settings/entities/systemNotification.entity';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { systemNotification } from './settings/entities/systemNotification.entit
     FilesModule,
     OrdersModule,
     SettingsModule,
+    PaymentModule,
   ],
   controllers: [AppController],
   providers: [
