@@ -19,7 +19,8 @@ export class PaymentService {
     const paymentIntent = await this.stripe.paymentIntents.create({
       amount: orderPrice,
       currency: OrderCurrency.toLowerCase(),
+      capture_method: 'manual',
     });
-    return paymentIntent.client_secret;
+    return paymentIntent;
   }
 }
