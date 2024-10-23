@@ -211,6 +211,9 @@ export const fakeOrderWithReceivedStatus: Order = {
   orderTotalPrice: 25000,
   orderNotes: null,
   updateLastChange: () => {},
+  paymentStatus: 'awaiting_collection',
+  paymentId: '1234',
+  paymentMethodId: 'SomeString',
 };
 
 export const fakeOrderWithConfirmedStatus: Order = {
@@ -224,6 +227,9 @@ export const fakeOrderWithConfirmedStatus: Order = {
   orderTotalPrice: 25000,
   orderNotes: null,
   updateLastChange: () => {},
+  paymentStatus: 'awaiting_collection',
+  paymentId: '5678',
+  paymentMethodId: 'SomeString',
 };
 
 export const fakeDiamondRingOrderItem: OrderItem = {

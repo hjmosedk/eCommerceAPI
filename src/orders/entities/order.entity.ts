@@ -97,4 +97,28 @@ export class Order implements Ecommerce.OrderModel {
   constructor(partial: Partial<Order> = {}) {
     Object.assign(this, partial);
   }
+
+  @Column({ type: 'text', default: 'noPayment' })
+  @IsDefined()
+  @ApiProperty({
+    description:
+      "This is the property to save the status of the payment. The default is 'noPayment', meaning order have not been payed, and processed yet - This status is equal to the status on the payment intent",
+  })
+  paymentStatus: string;
+
+  @Column({ type: 'text', default: null })
+  @IsOptional()
+  @ApiProperty({
+    description:
+      'This is the ID of the payment, this is used to pay in the future once the order is confirmed',
+  })
+  paymentId: string;
+
+  @Column({ type: 'text', default: null })
+  @IsOptional()
+  @ApiProperty({
+    description:
+      'This is the storage of the paymentIntendPaymentMethodId, for use in paymentIntends',
+  })
+  paymentMethodId: string;
 }

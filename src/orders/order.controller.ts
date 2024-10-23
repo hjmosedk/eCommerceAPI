@@ -36,7 +36,11 @@ export class OrderController {
 
       const orders = await this.orderService.getOrderByStatus(status);
 
-      return orders;
+      return orders.map((order) => {
+        const { paymentId, paymentStatus, ...orderWithoutPaymentIntent } =
+          order;
+        return orderWithoutPaymentIntent;
+      });
     } else {
       const orders = await this.orderService.getAll();
 
@@ -44,7 +48,11 @@ export class OrderController {
         throw new NotFoundException('There is no orders in the system');
       }
 
-      return orders;
+      return orders.map((order) => {
+        const { paymentId, paymentStatus, ...orderWithoutPaymentIntent } =
+          order;
+        return orderWithoutPaymentIntent;
+      });
     }
   }
 
@@ -73,7 +81,9 @@ export class OrderController {
       throw new NotFoundException('Order not found, or does not exists');
     }
 
-    return order;
+    const { paymentId, paymentStatus, ...orderWithoutPaymentDetails } = order;
+
+    return orderWithoutPaymentDetails;
   }
 
   @Patch('/:id')

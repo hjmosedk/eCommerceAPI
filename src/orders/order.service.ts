@@ -86,10 +86,14 @@ export class OrderService {
       orderItems: cartItems,
       orderNotes,
       orderCurrency,
+      paymentStatus,
+      paymentId,
     } = newOrder;
 
-    if (!cartItems || !customer) {
-      throw new BadRequestException('Items or customer missing');
+    if (!cartItems || !customer || !paymentStatus) {
+      throw new BadRequestException(
+        'Items, customer or paymentStatus is missing',
+      );
     }
 
     await queryRunner.connect();
@@ -139,7 +143,9 @@ export class OrderService {
       }
 
       order.orderItems = orderItems;
-      order.orderTotalPrice = orderTotalPrice.toUnit();
+      order.orderTotalPrice = orderTotalPrice.getAmount();
+      order.paymentStatus = paymentStatus;
+      order.paymentId = paymentId;
 
       const savedOrder = await this.orderRepo.save(order);
 

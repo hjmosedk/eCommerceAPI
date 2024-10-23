@@ -1,12 +1,12 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 import { Type } from 'class-transformer';
-import { IsNumber, IsPositive, IsArray, Validate } from 'class-validator';
+import { IsArray, Validate, IsString } from 'class-validator';
 import { Ecommerce } from 'ckh-typings';
 import { OrderItemsListDto } from 'src/orders/dtos/order-items-list.dto';
 import { IsCurrency } from 'src/orders/typeGuards/custom.validators';
 
-export class OrderPriceDTO {
+export class OrderPaymentDTO {
   @ApiProperty({
     description: 'This is the currency and should be one of the acceptable ',
     example: 'DKK',

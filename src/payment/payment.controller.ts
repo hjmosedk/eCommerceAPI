@@ -1,5 +1,5 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { OrderPriceDTO } from './dtos/orderPayment.dto';
+import { OrderPaymentDTO } from './dtos/orderPayment.dto';
 import { PaymentService } from './payment.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import * as Dinero from 'dinero.js';
@@ -13,7 +13,7 @@ export class PaymentController {
   @ApiOperation({
     description: 'This is function returns a payment clientSecret',
   })
-  async paymentIntent(@Body() body: OrderPriceDTO) {
+  async paymentIntent(@Body() body: OrderPaymentDTO) {
     const { orderCurrency, orderItems } = body;
 
     const orderPrice = orderItems.reduce(
@@ -30,11 +30,9 @@ export class PaymentController {
       Dinero({ amount: 0, currency: orderCurrency }),
     );
 
-    const { id, client_secret } = await this.paymentService.createPaymentIntent(
+    return await this.paymentService.createPaymentIntent(
       orderPrice.getAmount(),
       orderCurrency,
     );
-
-    return { id, clientSecret: client_secret };
   }
 }

@@ -20,7 +20,9 @@ export class PaymentService {
       amount: orderPrice,
       currency: OrderCurrency.toLowerCase(),
       capture_method: 'manual',
+      setup_future_usage: 'off_session',
     });
+
     return paymentIntent;
   }
 }
