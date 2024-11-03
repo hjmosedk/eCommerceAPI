@@ -14,6 +14,7 @@ import { OrderItem } from './orders/entities/orderItem.entity';
 import { SettingsModule } from './settings/settings.module';
 import { systemNotification } from './settings/entities/systemNotification.entity';
 import { PaymentModule } from './payment/payment.module';
+import { MessageModule } from './message/message.module';
 
 @Module({
   imports: [
@@ -42,6 +43,7 @@ import { PaymentModule } from './payment/payment.module';
     OrdersModule,
     SettingsModule,
     PaymentModule,
+    MessageModule,
   ],
   controllers: [AppController],
   providers: [
