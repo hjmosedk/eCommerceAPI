@@ -9,7 +9,8 @@
     { "type": "perf", "section": "Performance Adjustments" },
     { "type": "test", "section": "Test" },
     { "type": "build", "section": "Build Pipeline Adjustments" },
-    { "type": "ci", "section": "Technical Adjustment" }
+    { "type": "ci", "section": "Technical Adjustment" },
+    { "type": "wip", "hidden": true }
   ],
   "commitUrlFormat": "https://github.com/hjmosedk/eCommerceAPI/commits/{{hash}}",
   "compareUrlFormat": "https://github.com/hjmosedk/eCommerceAPI/compare/{{previousTag}}...{{currentTag}}"
