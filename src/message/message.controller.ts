@@ -1,6 +1,7 @@
 import { Controller, Get } from '@nestjs/common';
 import { MessageService } from './message.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { emailTemplateTypes } from './entities/templates.enum';
 
 @ApiTags('Messaging')
 @Controller('message')
@@ -9,15 +10,15 @@ export class MessageController {
 
   @ApiOperation({
     description:
-      'This is the endpoint to send e-mails and i will be used for sending confirmation emails and status email to the customer',
+      'This is the endpoint to send e-mails and it will be used for sending confirmation emails and status email to the customer',
   })
   @Get('sendEmail')
   async sendEmail() {
-    await this.messageService.sendMail(
+    await this.messageService.sendInternalMail(
+      '"Customer Support" <support@hjmose.dk>',
       'christian@hjmose.dk',
-      'Test Email',
-      'This is a test email to prove that the email system is working',
+      emailTemplateTypes.newOrder,
+      { userName: 'Christian Kubel Højmose', orderNumber: '1145' },
     );
-    return 'Email sent successfully';
   }
 }

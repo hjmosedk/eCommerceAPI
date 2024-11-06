@@ -20,11 +20,13 @@ async function bootstrap() {
   };
 
   const httpsOptions = {
-    key: readFileSync('./src/cert/192.168.1.135-key.pem'),
-    cert: readFileSync('./src/cert/192.168.1.135.pem'),
+    key: readFileSync(process.env.HTTPS_KEY),
+    cert: readFileSync(process.env.HTTPS_CERT),
   };
 
-  const app = await NestFactory.create(AppModule, { httpsOptions });
+  const app = await NestFactory.create(AppModule, {
+    httpsOptions,
+  });
   app.useGlobalFilters(new GlobalExceptionFilter());
 
   const packageJsonPath = resolve(__dirname, '../..', 'package.json');

@@ -1,13 +1,16 @@
 import { Injectable } from '@nestjs/common';
-import { Transporter, createTransport } from 'nodemailer';
+import { emailTemplateTypes } from './entities/templates.enum';
+import { createTransport, Transporter } from 'nodemailer';
+import { join } from 'path';
+import { readFileSync } from 'fs';
+import { compile } from 'handlebars';
 
 @Injectable()
 export class MessageService {
   private transporter: Transporter;
-
   constructor() {
     this.transporter = createTransport({
-      host: 'smtp.gmail.com',
+      host: process.env.EMAIL_HOST,
       port: 587,
       secure: false,
       auth: {
@@ -16,12 +19,35 @@ export class MessageService {
       },
     });
   }
-  async sendMail(to: string, subject: string, text: string): Promise<void> {
+
+  private async compileTemplate(
+    templateName: string,
+    context: { [key: string]: string },
+  ): Promise<string> {
+    const filePath = join(
+      __dirname,
+      '..',
+      'mail',
+      'templates',
+      `${templateName}.hbs`,
+    );
+    const source = readFileSync(filePath, 'utf-8');
+    const template = compile(source);
+    return template(context);
+  }
+
+  async sendInternalMail(
+    from: string,
+    to: string,
+    templateName: emailTemplateTypes,
+    context: { [key: string]: string },
+  ) {
+    const html = await this.compileTemplate(templateName, context);
     await this.transporter.sendMail({
-      from: `Christian Kubel Højmose <${process.env.SMTP_USERNAME}`,
+      from,
       to,
-      subject,
-      text,
+      subject: 'New Order Created',
+      html,
     });
   }
 }
