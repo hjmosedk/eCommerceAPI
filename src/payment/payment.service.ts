@@ -1,6 +1,10 @@
 import { IsCurrency } from './../orders/typeGuards/custom.validators';
 import { Order } from './../orders/entities/order.entity';
-import { Injectable } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { Ecommerce } from 'ckh-typings';
 import Stripe from 'stripe';
 
@@ -24,5 +28,36 @@ export class PaymentService {
     });
 
     return paymentIntent;
+  }
+
+  async capturePayment(
+    paymentIntendId: string,
+    metadata: Record<string, string>,
+  ) {
+    try {
+      const paymentIntent =
+        await this.stripe.paymentIntents.retrieve(paymentIntendId);
+
+      if (!paymentIntent) {
+        throw new BadRequestException(
+          'The payment does not exist, unable to capture it',
+        );
+      }
+
+      const paymentConfirmed = await this.stripe.paymentIntents.capture(
+        paymentIntendId,
+        { metadata },
+      );
+
+      if (paymentConfirmed.status != 'succeeded') {
+        throw new InternalServerErrorException(
+          'The payment cannot be captured',
+        );
+      }
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'Internal Error - The payment cannot be captured',
+      );
+    }
   }
 }
