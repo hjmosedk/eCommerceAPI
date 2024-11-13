@@ -7,9 +7,10 @@ import { ProductsController } from './products.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { UniqueConstraintFilter } from './unique-constraint.filter';
+import { PaymentModule } from 'src/payment/payment.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Product])],
+  imports: [TypeOrmModule.forFeature([Product]), PaymentModule],
   providers: [
     ProductsService,
     { provide: APP_FILTER, useClass: UniqueConstraintFilter },
