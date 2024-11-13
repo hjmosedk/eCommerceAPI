@@ -43,7 +43,7 @@ export class MessageService {
   ) {
     const html = await this.compileTemplate(templateName, context);
     await this.transporter.sendMail({
-      from: process.env.FROM_EMAIL,
+      from: `Customer Service <${process.env.FROM_EMAIL}>`,
       to,
       subject: 'New Order Created',
       html,

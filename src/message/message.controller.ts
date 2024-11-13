@@ -14,8 +14,7 @@ export class MessageController {
   })
   @Get('sendEmail')
   async sendEmail() {
-    await this.messageService.sendInternalMail(
-      '"Customer Support" <support@hjmose.dk>',
+    await this.messageService.sendMail(
       'christian@hjmose.dk',
       emailTemplateTypes.newOrder,
       { userName: 'Christian Kubel Højmose', orderNumber: '1145' },
