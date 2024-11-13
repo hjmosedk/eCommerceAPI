@@ -36,15 +36,14 @@ export class MessageService {
     return template(context);
   }
 
-  async sendInternalMail(
-    from: string,
+  async sendMail(
     to: string,
     templateName: emailTemplateTypes,
     context: { [key: string]: string },
   ) {
     const html = await this.compileTemplate(templateName, context);
     await this.transporter.sendMail({
-      from,
+      from: process.env.FROM_EMAIL,
       to,
       subject: 'New Order Created',
       html,
