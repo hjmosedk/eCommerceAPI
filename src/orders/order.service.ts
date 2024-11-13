@@ -42,18 +42,37 @@ export class OrderService {
       ]);
   }
 
-  async getAll(): Promise<Order[]> {
-    const orders = await this.getOrderAndProductInformation().getMany();
+  async getAll(page: number, limit: number): Promise<[Order[], number]> {
+    const pageNumber = Number(page);
+    const limitNumber = Number(limit);
 
-    if (!orders) {
+    if (isNaN(pageNumber) || isNaN(limitNumber)) {
+      throw new BadRequestException('Invalid page or limit value');
+    }
+
+    const [orders, totalCount] = await this.getOrderAndProductInformation()
+      .skip((pageNumber - 1) * limitNumber)
+      .take(limitNumber)
+      .getManyAndCount();
+
+    if (!orders.length) {
       return null;
     }
 
-    return orders;
+    return [orders, totalCount];
   }
 
-  async getOrderByStatus(status: Ecommerce.OrderStatus): Promise<Order[]> {
-    //const submittedStatus = status.toUpperCase();
+  async getOrderByStatus(
+    status: Ecommerce.OrderStatus,
+    page: number,
+    limit: number,
+  ): Promise<[Order[], number]> {
+    const pageNumber = Number(page);
+    const limitNumber = Number(limit);
+
+    if (isNaN(pageNumber) || isNaN(limitNumber)) {
+      throw new BadRequestException('Invalid page or limit value');
+    }
 
     if (!typeGuards.isOrderStatus(status)) {
       throw new BadRequestException('Status it not a valid value');
@@ -61,13 +80,15 @@ export class OrderService {
 
     // * To ensure best practice both in postgres and typescript
     //const postgresqlStatus = status.toLowerCase();
-    const orders = await this.getOrderAndProductInformation()
+    const [orders, totalCount] = await this.getOrderAndProductInformation()
       .where('order.orderStatus = :status', { status: status })
-      .getMany();
-    if (!orders || orders.length === 0) {
+      .skip((pageNumber - 1) * limitNumber)
+      .take(limitNumber)
+      .getManyAndCount();
+    if (!orders.length) {
       throw new NotFoundException('No orders in system');
     }
-    return orders;
+    return [orders, totalCount];
   }
 
   async getOne(id: number): Promise<Order> {
