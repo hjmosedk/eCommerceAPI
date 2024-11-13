@@ -1,6 +1,8 @@
+import { PaymentService } from './../payment/payment.service';
 import {
   BadRequestException,
   Injectable,
+  InternalServerErrorException,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -12,6 +14,8 @@ import typeGuards from './typeGuards/type.guards';
 import { NewOrderDto } from './dtos/new-order.dto';
 import { Ecommerce } from 'ckh-typings';
 import * as Dinero from 'dinero.js';
+import { MessageService } from 'src/message/message.service';
+import { emailTemplateTypes } from 'src/message/entities/templates.enum';
 
 @Injectable()
 export class OrderService {
@@ -20,6 +24,8 @@ export class OrderService {
     @InjectRepository(OrderItem) private orderItemRepo: Repository<OrderItem>,
     private productService: ProductsService,
     private dataSource: DataSource,
+    private paymentService: PaymentService,
+    private messageService: MessageService,
   ) {}
 
   private getOrderAndProductInformation() {
@@ -152,6 +158,16 @@ export class OrderService {
       // Commit the transaction
       await queryRunner.commitTransaction();
 
+      await this.messageService.sendMail(
+        customer.personalInformation.email,
+        emailTemplateTypes.newOrder,
+        {
+          firstName: customer.personalInformation.firstName,
+          lastName: customer.personalInformation.lastName,
+          orderNumber: order.id.toString(),
+        },
+      );
+
       return await this.getOne(savedOrder.id);
     } catch (error) {
       if (queryRunner.isTransactionActive) {
@@ -186,10 +202,69 @@ export class OrderService {
     if (!order) {
       throw new NotFoundException('Order not found in system');
     }
+
+    await this.handleStatusChange(order, newStatus);
+
     const newOrderStatus = newStatus.toUpperCase();
     order.orderStatus = newOrderStatus as Ecommerce.OrderStatus;
+    if (newOrderStatus === Ecommerce.OrderStatus.CONFIRMED) {
+      order.paymentId = 'orderPayed';
+      order.paymentMethodId = 'orderPayed';
+      order.paymentStatus = 'succeeded';
+    }
     const updatedOrder = await this.orderRepo.save(order);
 
     return updatedOrder;
+  }
+
+  async confirmOrder(order: Order) {
+    const { personalInformation } = order.customer;
+    const { email, firstName, lastName } = personalInformation;
+
+    try {
+      await this.paymentService.capturePayment(order.paymentId, {
+        orderId: order.id.toString(),
+      });
+      await this.messageService.sendMail(
+        email,
+        emailTemplateTypes.orderConfirmed,
+        { firstName, lastName, orderNumber: order.id.toString() },
+      );
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'The order cannot be confirmed! - Please try again',
+      );
+    }
+  }
+
+  async shipOrder(order: Order) {
+    const { personalInformation } = order.customer;
+    const { email, firstName, lastName } = personalInformation;
+
+    try {
+      await this.messageService.sendMail(
+        email,
+        emailTemplateTypes.orderShipped,
+        { firstName, lastName, orderNumber: order.id.toString() },
+      );
+    } catch (error) {
+      throw new InternalServerErrorException(
+        'The order cannot be shipped! - Please try again',
+      );
+    }
+  }
+
+  async handleStatusChange(order: Order, newStatus: Ecommerce.OrderStatus) {
+    const statusHandlers = {
+      [Ecommerce.OrderStatus.CONFIRMED]: this.confirmOrder,
+      [Ecommerce.OrderStatus.SHIPPED]: this.shipOrder,
+    };
+
+    const handler = statusHandlers[newStatus];
+    if (handler) {
+      await handler.call(this, order);
+    } else {
+      throw new BadRequestException('Unsupported Order Status');
+    }
   }
 }
