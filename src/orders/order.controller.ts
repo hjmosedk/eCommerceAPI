@@ -1,4 +1,4 @@
-import { ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import {
   Controller,
   Get,
@@ -13,7 +13,6 @@ import {
 } from '@nestjs/common';
 import { OrderService } from './order.service';
 import { NewOrderDto } from './dtos/new-order.dto';
-import typeGuards from './typeGuards/type.guards';
 
 import { Ecommerce } from 'ckh-typings';
 
@@ -25,35 +24,44 @@ export class OrderController {
   @Get()
   @ApiOperation({
     description:
-      'This endpoint will return all orders in the system, the query params allows for the API to sort on order status',
+      'This will return all orders in the system, with relevant pagination',
   })
-  @ApiQuery({ name: 'status', required: false })
-  async getAll(@Query('status') status: Ecommerce.OrderStatus = null) {
-    if (status) {
-      if (!typeGuards.isOrderStatus(status)) {
-        throw new BadRequestException('Status is not correct');
-      }
+  async getAllOrders(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 25,
+  ) {
+    const [orders, totalCount] = await this.orderService.getAll(page, limit);
+    return {
+      orders,
+      page,
+      limit,
+      totalCount,
+      totalPages: Math.ceil(totalCount / limit),
+    };
+  }
 
-      const orders = await this.orderService.getOrderByStatus(status);
-
-      return orders.map((order) => {
-        const { paymentId, paymentStatus, ...orderWithoutPaymentIntent } =
-          order;
-        return orderWithoutPaymentIntent;
-      });
-    } else {
-      const orders = await this.orderService.getAll();
-
-      if (orders.length < 1 || !orders) {
-        throw new NotFoundException('There is no orders in the system');
-      }
-
-      return orders.map((order) => {
-        const { paymentId, paymentStatus, ...orderWithoutPaymentIntent } =
-          order;
-        return orderWithoutPaymentIntent;
-      });
-    }
+  @Get('status/:status')
+  @ApiOperation({
+    description:
+      'This endpoint will return all orders in the system, based on the status in the order',
+  })
+  async getAll(
+    @Param('status') status: Ecommerce.OrderStatus,
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 25,
+  ) {
+    const [orders, totalCount] = await this.orderService.getOrderByStatus(
+      status,
+      page,
+      limit,
+    );
+    return {
+      orders,
+      page,
+      limit,
+      totalCount,
+      totalPages: Math.ceil(totalCount / limit),
+    };
   }
 
   @Post()
