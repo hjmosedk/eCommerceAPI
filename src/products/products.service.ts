@@ -25,8 +25,8 @@ export class ProductsService {
       take: limit,
     });
 
-    if (!products) {
-      return null;
+    if (!products.length) {
+      throw new NotFoundException('There is no products in the system');
     }
 
     return [products, totalCount];
@@ -49,8 +49,8 @@ export class ProductsService {
       take: limit,
     });
 
-    if (!activeProducts) {
-      return null;
+    if (!activeProducts.length) {
+      throw new NotFoundException('There is no products in the system');
     }
 
     return [activeProducts, totalCount];

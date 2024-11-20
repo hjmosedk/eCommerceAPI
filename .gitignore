@@ -44,3 +44,4 @@ uploads
 upload
 
 */cert
+/tests/coverage
