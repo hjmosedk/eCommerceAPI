@@ -25,7 +25,7 @@ export class ProductsService {
       take: limit,
     });
 
-    if (!products) {
+    if (!products.length) {
       return null;
     }
 
@@ -49,7 +49,7 @@ export class ProductsService {
       take: limit,
     });
 
-    if (!activeProducts) {
+    if (!activeProducts.length) {
       return null;
     }
 
