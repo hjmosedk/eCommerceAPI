@@ -16,6 +16,8 @@ import { Ecommerce } from 'ckh-typings';
 import * as Dinero from 'dinero.js';
 import { MessageService } from '../message/message.service';
 import { emailTemplateTypes } from '../message/entities/templates.enum';
+import { plainToClass } from 'class-transformer';
+import { OrderDTO } from './dtos/order.dto';
 
 @Injectable()
 export class OrderService {
@@ -42,7 +44,11 @@ export class OrderService {
       ]);
   }
 
-  async getAll(page: number, limit: number): Promise<[Order[], number]> {
+  toOrderDto(order: Ecommerce.OrderModel): OrderDTO {
+    return plainToClass(OrderDTO, order);
+  }
+
+  async getAll(page: number, limit: number): Promise<[OrderDTO[], number]> {
     const pageNumber = Number(page);
     const limitNumber = Number(limit);
 
@@ -59,14 +65,14 @@ export class OrderService {
       throw new NotFoundException('There is no orders in the system');
     }
 
-    return [orders, totalCount];
+    return [orders.map((order) => this.toOrderDto(order)), totalCount];
   }
 
   async getOrderByStatus(
     status: Ecommerce.OrderStatus,
     page: number,
     limit: number,
-  ): Promise<[Order[], number]> {
+  ): Promise<[OrderDTO[], number]> {
     const pageNumber = Number(page);
     const limitNumber = Number(limit);
 
@@ -89,10 +95,25 @@ export class OrderService {
     if (!orders.length) {
       throw new NotFoundException('There is no orders in the system');
     }
-    return [orders, totalCount];
+    return [orders.map((order) => this.toOrderDto(order)), totalCount];
   }
 
-  async getOne(id: number): Promise<Order> {
+  async getOne(id: number): Promise<OrderDTO> {
+    if (!id) {
+      throw new BadRequestException('Id is missing');
+    }
+    const order = await this.getOrderAndProductInformation()
+      .where('order.id = :id', { id: id })
+      .getOne();
+
+    if (!order) {
+      throw new NotFoundException('No product found with the ID');
+    }
+
+    return this.toOrderDto(order);
+  }
+
+  async getOneWithPaymentDetails(id: number): Promise<Order> {
     if (!id) {
       throw new BadRequestException('Id is missing');
     }
@@ -190,7 +211,7 @@ export class OrderService {
         },
       );
 
-      return await this.getOne(savedOrder.id);
+      return await this.getOneWithPaymentDetails(savedOrder.id);
     } catch (error) {
       if (queryRunner.isTransactionActive) {
         await queryRunner.rollbackTransaction();

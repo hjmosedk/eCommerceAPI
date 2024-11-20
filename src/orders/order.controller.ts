@@ -90,9 +90,7 @@ export class OrderController {
       throw new NotFoundException('Order not found, or does not exists');
     }
 
-    const { paymentId, paymentStatus, ...orderWithoutPaymentDetails } = order;
-
-    return orderWithoutPaymentDetails;
+    return order;
   }
 
   @Patch('/:id')
