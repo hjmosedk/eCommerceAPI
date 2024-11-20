@@ -31,13 +31,14 @@ describe('OrderController', () => {
 
   beforeEach(async () => {
     fakeOrderService = {
-      getAll: () => {
-        return Promise.resolve(OrderArray);
+      getAll: (page, limit) => {
+        return Promise.resolve([OrderArray, OrderArray.length]);
       },
       getOrderByStatus(status) {
-        return Promise.resolve(
-          OrderArray.filter((order) => order.orderStatus === status),
+        const filteredOrder = OrderArray.filter(
+          (order) => order.orderStatus === status,
         );
+        return Promise.resolve([filteredOrder, filteredOrder.length]);
       },
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       createOne: (_newOrder: NewOrderDto) => {
@@ -68,33 +69,34 @@ describe('OrderController', () => {
 
   describe('GET, does all get functions work?', () => {
     test('There is no orders in the system, an error is thrown', async () => {
-      fakeOrderService.getAll = () => {
-        return Promise.resolve([]);
-      };
+      fakeOrderService.getAll = jest.fn().mockImplementation(() => {
+        throw new NotFoundException('There is no orders in the system');
+      });
 
       expect.assertions(2);
 
       try {
-        await controller.getAll();
-        expect(false).toBe(true);
+        await controller.getAllOrders(1, 25);
       } catch (error) {
         expect(error).toBeInstanceOf(NotFoundException);
         expect(error.message).toBe('There is no orders in the system');
       }
     });
     test('All orders are returned when called without any params', async () => {
-      const ordersList = await controller.getAll();
+      const ordersList = await controller.getAllOrders(1, 25);
 
       expect.assertions(2);
-      expect(ordersList.length).toBe(2);
-      expect(ordersList).toContain(fakeOrderWithReceivedStatus);
+      expect(ordersList['orders'].length).toBe(2);
+      expect(ordersList.orders).toContain(fakeOrderWithReceivedStatus);
     });
     test('Incorrect status result in an error', async () => {
+      fakeOrderService.getOrderByStatus = jest.fn().mockImplementation(() => {
+        throw new BadRequestException('Status is not correct');
+      });
       expect.assertions(2);
 
       try {
-        await controller.getAll('Hello World' as Ecommerce.OrderStatus);
-        expect(false).toBe(true); // Type casting is used, to ensure the typescript compline check does
+        await controller.getAll('Hello World' as any, 1, 25);
       } catch (error) {
         expect(error).toBeInstanceOf(BadRequestException);
         expect(error.message).toBe('Status is not correct');
@@ -103,12 +105,25 @@ describe('OrderController', () => {
     test('Sort on status works as expected', async () => {
       const filteredOrder = await controller.getAll(
         Ecommerce.OrderStatus.CONFIRMED,
+        1,
+        25,
       );
       expect.assertions(2);
-      expect(filteredOrder.length).toBe(1);
-      expect(filteredOrder[0].orderStatus).toBe(
+      expect(filteredOrder['orders'].length).toBe(1);
+      expect(filteredOrder.orders[0].orderStatus).toBe(
         Ecommerce.OrderStatus.CONFIRMED,
       );
+    });
+    test('Get order by ID works as expected', async () => {
+      const orders = await controller.getAllOrders(1, 25);
+      const orderId = orders['orders'][0].id;
+      const order = await controller.findOne(orderId.toString());
+
+      expect.assertions(3);
+
+      expect(order).toBeDefined();
+      expect(order.id).toBe(orderId);
+      expect(order.orderTotalPrice).toBe(orders['orders'][0].orderTotalPrice);
     });
   });
   describe('POST, does the functions works as expected?', () => {
@@ -118,6 +133,9 @@ describe('OrderController', () => {
         customer: FakeCustomer,
         orderNotes: null,
         orderCurrency: Ecommerce.CurrencyType.DKK,
+        paymentStatus: 'awaiting_capture',
+        paymentId: 'fake_Id',
+        paymentMethodId: 'fakeId',
       };
 
       expect.assertions(3);
