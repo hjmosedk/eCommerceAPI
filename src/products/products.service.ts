@@ -26,7 +26,7 @@ export class ProductsService {
     });
 
     if (!products.length) {
-      return null;
+      throw new NotFoundException('There is no products in the system');
     }
 
     return [products, totalCount];
@@ -50,7 +50,7 @@ export class ProductsService {
     });
 
     if (!activeProducts.length) {
-      return null;
+      throw new NotFoundException('There is no products in the system');
     }
 
     return [activeProducts, totalCount];

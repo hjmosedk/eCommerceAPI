@@ -14,8 +14,8 @@ import typeGuards from './typeGuards/type.guards';
 import { NewOrderDto } from './dtos/new-order.dto';
 import { Ecommerce } from 'ckh-typings';
 import * as Dinero from 'dinero.js';
-import { MessageService } from 'src/message/message.service';
-import { emailTemplateTypes } from 'src/message/entities/templates.enum';
+import { MessageService } from '../message/message.service';
+import { emailTemplateTypes } from '../message/entities/templates.enum';
 
 @Injectable()
 export class OrderService {
@@ -56,7 +56,7 @@ export class OrderService {
       .getManyAndCount();
 
     if (!orders.length) {
-      return null;
+      throw new NotFoundException('There is no orders in the system');
     }
 
     return [orders, totalCount];
@@ -85,8 +85,9 @@ export class OrderService {
       .skip((pageNumber - 1) * limitNumber)
       .take(limitNumber)
       .getManyAndCount();
+
     if (!orders.length) {
-      throw new NotFoundException('No orders in system');
+      throw new NotFoundException('There is no orders in the system');
     }
     return [orders, totalCount];
   }
