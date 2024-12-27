@@ -7,13 +7,18 @@ import {
 } from '@nestjs/common';
 import { Ecommerce } from 'ckh-typings';
 import Stripe from 'stripe';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class PaymentService {
   private stripe: Stripe;
 
-  constructor() {
-    this.stripe = new Stripe(process.env.STRIPE_KEY);
+  constructor(private readonly configService: ConfigService) {
+    const stripeKey = this.configService.get<string>('STRIPE_KEY');
+    if (!stripeKey) {
+      throw new InternalServerErrorException('Stripe key is not defined');
+    }
+    this.stripe = new Stripe(stripeKey);
   }
 
   async createPaymentIntent(

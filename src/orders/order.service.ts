@@ -107,7 +107,7 @@ export class OrderService {
       .getOne();
 
     if (!order) {
-      throw new NotFoundException('No product found with the ID');
+      throw new NotFoundException('No order found with the ID');
     }
 
     return this.toOrderDto(order);
@@ -122,7 +122,7 @@ export class OrderService {
       .getOne();
 
     if (!order) {
-      throw new NotFoundException('No product found with the ID');
+      throw new NotFoundException('No order found with the ID');
     }
 
     return order;
@@ -207,7 +207,7 @@ export class OrderService {
         {
           firstName: customer.personalInformation.firstName,
           lastName: customer.personalInformation.lastName,
-          orderNumber: order.id.toString(),
+          orderNumber: savedOrder.id.toString(),
         },
       );
 

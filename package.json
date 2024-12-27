@@ -94,7 +94,7 @@
       "src/**/*.{ts,js}",
       "!src/**/*.d.ts"
     ],
-    "coverageDirectory": "./tests/coverage",
+    "coverageDirectory": "./test/coverage",
     "testEnvironment": "node",
     "testPathIgnorePatterns": [
       "/node_modules/",
