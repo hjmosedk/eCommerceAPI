@@ -18,8 +18,8 @@ describe('ProductsController', () => {
 
   beforeEach(async () => {
     fakeProductsService = {
-      getAll: () => {
-        return Promise.resolve(fakeTestProducts);
+      getAll: (page, limit) => {
+        return Promise.resolve([fakeTestProducts, fakeTestProducts.length]);
       },
       getActiveProducts: () => {
         const publicProducts = fakeTestProducts.filter(
@@ -30,7 +30,7 @@ describe('ProductsController', () => {
           (product) => product.quantity > 0,
         );
 
-        return Promise.resolve(activeProducts);
+        return Promise.resolve([activeProducts, activeProducts.length]);
       },
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       getOne: (_id: number) => {
@@ -63,19 +63,19 @@ describe('ProductsController', () => {
     test('Get all products correctly', async () => {
       const products = await productController.getAll();
       expect.assertions(2);
-      expect(products.length).toBe(3);
+      expect(products['products'].length).toBe(3);
       expect(products).toBeDefined();
     });
 
     test('Get only active products', async () => {
       const activeProducts = await productController.getActiveProducts();
       expect.assertions(2);
-      expect(activeProducts.length).toBe(1);
-      expect(activeProducts[0].name).toBe(fakeGlovesItem.name);
+      expect(activeProducts['products'].length).toBe(1);
+      expect(activeProducts.products[0].name).toBe(fakeGlovesItem.name);
     });
 
     test('No products returns an error', async () => {
-      fakeProductsService.getAll = () => Promise.resolve([]);
+      fakeProductsService.getAll = () => Promise.resolve([[], 0]);
 
       try {
         await productController.getAll();
@@ -87,7 +87,12 @@ describe('ProductsController', () => {
     });
     test('One products is correctly found in the database', async () => {
       const products = await productController.getAll();
-      const product = await productController.getOne(products[0].id.toString());
+      const wantedProduct = products.products.filter(
+        (product) => product.name === fakeTestProducts[0].name,
+      );
+      const product = await productController.getOne(
+        wantedProduct[0].id.toString(),
+      );
       expect.assertions(2);
       expect(product).toBeDefined();
       expect(product.sku).toBe(fakeTestProducts[0].sku);

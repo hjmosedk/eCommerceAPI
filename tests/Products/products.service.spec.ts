@@ -9,7 +9,7 @@ import {
   goldWatchItem,
   fakeGoldWatchItem,
 } from '../testObjects';
-import { NotFoundException } from '@nestjs/common';
+import { NotFoundException, BadRequestException } from '@nestjs/common';
 
 describe('ProductsService', () => {
   let productService: ProductsService;
@@ -38,42 +38,63 @@ describe('ProductsService', () => {
 
   describe('Test productModule - Get items', () => {
     test('The correct list of products is generated', async () => {
+      const newFakeTestProducts = structuredClone(fakeTestProducts);
+
       const productsRepositoryFindSpy = jest
-        .spyOn(productRepository, 'find')
-        .mockResolvedValue(fakeTestProducts);
+        .spyOn(productRepository, 'findAndCount')
+        .mockResolvedValue([newFakeTestProducts, newFakeTestProducts.length]);
 
-      const result = await productService.getAll();
+      const result = await productService.getAll(1, 25);
 
-      expect.assertions(2);
+      expect.assertions(3);
 
-      expect(result).toBe(fakeTestProducts);
+      expect(result[0]).toEqual(newFakeTestProducts);
+      expect(result[1]).toBe(newFakeTestProducts.length);
       expect(productsRepositoryFindSpy).toHaveBeenCalled();
     });
     test('Only the active product is returned', async () => {
-      const productsRepositoryFindSpy = jest
-        .spyOn(productRepository, 'find')
-        .mockResolvedValue(fakeTestProducts);
+      const fakePublicProducts = fakeTestProducts.filter(
+        (product) => product.isPublic === true,
+      );
+      const fakeActiveProducts = fakePublicProducts.filter(
+        (product) => product.quantity > 0,
+      );
 
-      const result = await productService.getActiveProducts();
+      const productsRepositoryFindSpy = jest
+        .spyOn(productRepository, 'findAndCount')
+        .mockResolvedValue([fakeActiveProducts, fakeActiveProducts.length]);
+
+      const result = await productService.getActiveProducts(1, 15);
 
       expect.assertions(2);
-      expect(result.length).toBe(1);
+      expect(result[0].length).toBe(1);
       expect(productsRepositoryFindSpy).toHaveBeenCalled();
     });
-    test('No product in database returns null', async () => {
+    test('Invalid page number or limited throws BadRequestException', async () => {
+      expect.assertions(2);
+      await expect(productService.getAll(NaN, 25)).rejects.toThrow(
+        BadRequestException,
+      );
+      await expect(productService.getAll(1, NaN)).rejects.toThrow(
+        BadRequestException,
+      );
+    });
+    test('No product in database returns an error', async () => {
       const productRepositoryFindSpy = jest
-        .spyOn(productRepository, 'find')
-        .mockResolvedValue(null);
+        .spyOn(productRepository, 'findAndCount')
+        .mockResolvedValue([[], 0]);
 
-      const resultActiveProducts = await productService.getActiveProducts();
-      const resultAllProduct = await productService.getAll();
+      await expect(productService.getActiveProducts(1, 15)).rejects.toThrow(
+        NotFoundException,
+      );
 
-      expect.assertions(4);
+      await expect(productService.getAll(1, 15)).rejects.toThrow(
+        NotFoundException,
+      );
 
-      expect(resultActiveProducts).toEqual(resultAllProduct);
+      expect.assertions(3);
+
       expect(productRepositoryFindSpy).toHaveBeenCalled();
-      expect(resultActiveProducts).toBe(null);
-      expect(resultAllProduct).toBe(null);
     });
     test('A product is returned when :ID is called', async () => {
       const productRepositoryFindOneSpy = jest
