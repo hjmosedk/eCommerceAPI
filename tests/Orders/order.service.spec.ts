@@ -362,7 +362,6 @@ describe('OrderService', () => {
         newFakeOrder.updateLastChange = () => {};
         fakeNewOrder.updateLastChange = () => {};
         newFakeOrder.paymentStatus = 'awaiting_collection';
-        console.log(newFakeOrder);
 
         newFakeOrder.orderItems = [fakeDiamondRingOrderItem];
 
