@@ -1,4 +1,3 @@
-import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { Product } from '../../../src/products/entities/product.entity';
 import { ProductsController } from '../../../src/products/products.controller';
