@@ -3,8 +3,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsArray, Validate, IsString } from 'class-validator';
 import { Ecommerce } from 'ckh-typings';
-import { OrderItemsListDto } from 'src/orders/dtos/order-items-list.dto';
-import { IsCurrency } from 'src/orders/typeGuards/custom.validators';
+import { OrderItemsListDto } from '../../orders/dtos/order-items-list.dto';
+import { IsCurrency } from '../../orders/typeGuards/custom.validators';
 
 export class OrderPaymentDTO {
   @ApiProperty({

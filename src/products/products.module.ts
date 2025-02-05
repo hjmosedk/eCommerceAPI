@@ -7,7 +7,7 @@ import { ProductsController } from './products.controller';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 import { UniqueConstraintFilter } from './unique-constraint.filter';
-import { PaymentModule } from 'src/payment/payment.module';
+import { PaymentModule } from '../payment/payment.module';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Product]), PaymentModule],
