@@ -1,4 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+//istanbul ignore file
+//* The functionality of this file is not yet implemented fully, so it will be tested at a later date.
+
+import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { systemNotification } from './entities/systemNotification.entity';

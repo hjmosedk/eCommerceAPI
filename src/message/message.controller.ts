@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, InternalServerErrorException } from '@nestjs/common';
 import { MessageService } from './message.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { emailTemplateTypes } from './entities/templates.enum';
@@ -14,10 +14,14 @@ export class MessageController {
   })
   @Get('sendEmail')
   async sendEmail() {
-    await this.messageService.sendMail(
-      'christian@hjmose.dk',
-      emailTemplateTypes.newOrder,
-      { userName: 'Christian Kubel Højmose', orderNumber: '1145' },
-    );
+    try {
+      await this.messageService.sendMail(
+        'christian@hjmose.dk',
+        emailTemplateTypes.newOrder,
+        { userName: 'Christian Kubel Højmose', orderNumber: '1145' },
+      );
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to send email');
+    }
   }
 }

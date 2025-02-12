@@ -11,7 +11,7 @@ export class PaymentController {
 
   @Post()
   @ApiOperation({
-    description: 'This is function returns a payment clientSecret',
+    description: 'This is function returns a payment paymentIntent',
   })
   async paymentIntent(@Body() body: OrderPaymentDTO) {
     const { orderCurrency, orderItems } = body;
