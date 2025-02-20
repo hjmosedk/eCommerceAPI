@@ -65,7 +65,6 @@ describe('OrderController - create New - The test files have been spilt up in mu
         orderCurrency: Ecommerce.CurrencyType.DKK,
         paymentStatus: 'awaiting_capture',
         paymentId: 'fake_Id',
-        paymentMethodId: 'fakeId',
       };
 
       expect.assertions(3);
