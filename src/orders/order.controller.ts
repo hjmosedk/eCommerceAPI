@@ -45,7 +45,7 @@ export class OrderController {
     description:
       'This endpoint will return all orders in the system, based on the status in the order',
   })
-  async getAll(
+  async getAllByStatus(
     @Param('status') status: Ecommerce.OrderStatus,
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 25,

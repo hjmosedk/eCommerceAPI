@@ -1,3 +1,5 @@
+//istanbul ignore file
+//* The functionality of this file is not yet implemented fully, so it will be tested at a later date.
 import {
   Controller,
   Get,

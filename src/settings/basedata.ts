@@ -1,3 +1,5 @@
+// istanbul ignore file
+//* this file is currently a settings files and does not need to be tested
 import { Ecommerce } from 'ckh-typings';
 import { systemNotification } from './entities/systemNotification.entity';
 

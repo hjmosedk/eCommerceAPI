@@ -66,13 +66,21 @@ export class NewOrderDto
 
   @IsDefined()
   @IsString()
+  @ApiProperty({
+    description:
+      'This is the payment status saved to the order database - This information is only saved transient in the database',
+    example: 'awaiting_collection',
+    required: true,
+  })
   paymentStatus: string;
 
   @IsOptional()
   @IsString()
+  @ApiProperty({
+    description:
+      'This is the id of the payment - It is used to collect the payment from stripe - it is only saved until the payment have been collected.',
+    example: 'PI_123456789',
+    required: false,
+  })
   paymentId: string;
-
-  @IsOptional()
-  @IsString()
-  paymentMethodId: string;
 }

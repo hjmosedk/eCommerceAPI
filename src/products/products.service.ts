@@ -12,6 +12,35 @@ type newProduct = Omit<Product, 'id'>;
 export class ProductsService {
   constructor(@InjectRepository(Product) private repo: Repository<Product>) {}
 
+  /* istanbul ignore next*/
+  //function does not need to be tested, as it is only used for e2e test, should not work in production.
+  async clearDatabase() {
+    /* istanbul ignore next*/
+    try {
+      /* istanbul ignore next*/
+      this.repo.clear();
+      /* istanbul ignore next*/
+    } catch (error) {
+      /* istanbul ignore next*/
+      throw new Error(`Error cleaning database: ${error.message}`);
+    }
+  }
+
+  /* istanbul ignore next */
+  async createMany(products: newProduct[]) {
+    /* istanbul ignore next */
+    const newProducts: newProduct[] = [];
+    /* istanbul ignore next */
+    products.forEach((product) => {
+      /* istanbul ignore next */
+      const newProduct = this.repo.create(product);
+      /* istanbul ignore next */
+      newProducts.push(newProduct);
+    });
+    /* istanbul ignore next */
+    return await this.repo.insert(newProducts);
+  }
+
   async getAll(page: number, limit: number): Promise<[Product[], number]> {
     const pageNumber = Number(page);
     const limitNumber = Number(limit);
@@ -37,7 +66,7 @@ export class ProductsService {
     limit: number,
   ): Promise<[Product[], number]> {
     const pageNumber = Number(page);
-    const limitNumber = Number(page);
+    const limitNumber = Number(limit);
 
     if (isNaN(pageNumber) || isNaN(limitNumber)) {
       throw new BadRequestException('Invalid page or limit number');
@@ -67,29 +96,6 @@ export class ProductsService {
   async createOne(product: Partial<newProduct>) {
     const newProduct = this.repo.create(product);
     return await this.repo.save(newProduct);
-  }
-
-  async clearDatabase() {
-    try {
-      this.repo.clear();
-    } catch (error) {
-      throw new Error(`Error cleaning database: ${error.message}`);
-    }
-  }
-
-  /* istanbul ignore next */
-  async createMany(products: newProduct[]) {
-    /* istanbul ignore next */
-    const newProducts: newProduct[] = [];
-    /* istanbul ignore next */
-    products.forEach((product) => {
-      /* istanbul ignore next */
-      const newProduct = this.repo.create(product);
-      /* istanbul ignore next */
-      newProducts.push(newProduct);
-    });
-    /* istanbul ignore next */
-    return await this.repo.insert(newProducts);
   }
 
   async updateProduct(id: number, attrs: Partial<Product>) {
