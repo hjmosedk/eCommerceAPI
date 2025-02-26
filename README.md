@@ -2,9 +2,6 @@
 
 Rainbow Baby Dragon eCommerce API solution - A NestJS-based Backend for Learning purposes.
 
-![Build Status](https://img.shields.io/github/workflow/status/hjmosedk/eCommerceAPI/CI)
-![License](https://img.shields.io/github/license/hjmosedk/eCommerceAPI)
-
 ## Description
 
 > [!NOTE]  
