@@ -5,6 +5,7 @@ import { Customer } from 'src/orders/entities/customer.entity';
 import { OrderItem } from '../src/orders/entities/orderItem.entity';
 import { OrderItemsListDto } from 'src/orders/dtos/order-items-list.dto';
 
+const email = process.env.FROM_EMAIL;
 export type newProduct = Omit<Product, 'id'>;
 
 type wrongProduct = Partial<Product>;
@@ -181,7 +182,7 @@ export const FakeCustomer: Customer = {
     firstName: 'Test',
     middleName: 'T.',
     lastName: 'TestGuy',
-    email: process.env.FROM_EMAIL,
+    email,
     phone: '123456789',
   },
   shippingAddress: {

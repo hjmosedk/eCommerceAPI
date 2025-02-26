@@ -96,11 +96,15 @@ beforeEach(async () => {
   const orderItems1 = await getItemsForOrder(app, 1);
   const orderItems2 = await getItemsForOrder(app, 2);
 
+  const email = process.env.FROM_EMAIL;
+  const testCustomer = { ...FakeCustomer };
+  testCustomer.personalInformation.email = email;
+
   try {
     await addOrdersToSystem(
       app,
       orderItems1,
-      FakeCustomer,
+      testCustomer,
       Ecommerce.CurrencyType.DKK,
       null,
       'awaiting_collection',
@@ -109,7 +113,7 @@ beforeEach(async () => {
     await addOrdersToSystem(
       app,
       orderItems2,
-      FakeCustomer,
+      testCustomer,
       Ecommerce.CurrencyType.DKK,
       null,
       'awaiting_collection',
