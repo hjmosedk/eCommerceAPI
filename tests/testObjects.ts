@@ -5,6 +5,7 @@ import { Customer } from 'src/orders/entities/customer.entity';
 import { OrderItem } from '../src/orders/entities/orderItem.entity';
 import { OrderItemsListDto } from 'src/orders/dtos/order-items-list.dto';
 
+const email = process.env.FROM_EMAIL;
 export type newProduct = Omit<Product, 'id'>;
 
 type wrongProduct = Partial<Product>;
@@ -181,7 +182,7 @@ export const FakeCustomer: Customer = {
     firstName: 'Test',
     middleName: 'T.',
     lastName: 'TestGuy',
-    email: 'Test@test.dk',
+    email,
     phone: '123456789',
   },
   shippingAddress: {
@@ -211,6 +212,9 @@ export const fakeOrderWithReceivedStatus: Order = {
   orderTotalPrice: 25000,
   orderNotes: null,
   updateLastChange: () => {},
+  paymentStatus: 'awaiting_collection',
+  paymentId: '1234',
+  paymentMethodId: 'SomeString',
 };
 
 export const fakeOrderWithConfirmedStatus: Order = {
@@ -224,6 +228,9 @@ export const fakeOrderWithConfirmedStatus: Order = {
   orderTotalPrice: 25000,
   orderNotes: null,
   updateLastChange: () => {},
+  paymentStatus: 'awaiting_collection',
+  paymentId: '5678',
+  paymentMethodId: 'SomeString',
 };
 
 export const fakeDiamondRingOrderItem: OrderItem = {

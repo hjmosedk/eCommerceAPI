@@ -1,5 +1,9 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import { MoreThan, Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from './entities/product.entity';
 
@@ -8,51 +12,16 @@ type newProduct = Omit<Product, 'id'>;
 export class ProductsService {
   constructor(@InjectRepository(Product) private repo: Repository<Product>) {}
 
-  async getAll() {
-    const products = await this.repo.find();
-
-    if (!products) {
-      return null;
-    }
-
-    return products;
-  }
-
-  async getActiveProducts() {
-    const allProducts = await this.getAll();
-
-    if (!allProducts) {
-      return null;
-    }
-
-    const publicProducts = allProducts.filter(
-      (product) => product.isPublic === true,
-    );
-
-    const activeProducts = publicProducts.filter(
-      (product) => product.quantity > 0,
-    );
-
-    return activeProducts;
-  }
-
-  async getOne(id: number) {
-    if (!id) {
-      return null;
-    }
-
-    return await this.repo.findOne({ where: { id } });
-  }
-
-  async createOne(product: Partial<newProduct>) {
-    const newProduct = this.repo.create(product);
-    return await this.repo.save(newProduct);
-  }
-
+  /* istanbul ignore next*/
+  //function does not need to be tested, as it is only used for e2e test, should not work in production.
   async clearDatabase() {
+    /* istanbul ignore next*/
     try {
+      /* istanbul ignore next*/
       this.repo.clear();
+      /* istanbul ignore next*/
     } catch (error) {
+      /* istanbul ignore next*/
       throw new Error(`Error cleaning database: ${error.message}`);
     }
   }
@@ -70,6 +39,63 @@ export class ProductsService {
     });
     /* istanbul ignore next */
     return await this.repo.insert(newProducts);
+  }
+
+  async getAll(page: number, limit: number): Promise<[Product[], number]> {
+    const pageNumber = Number(page);
+    const limitNumber = Number(limit);
+
+    if (isNaN(pageNumber) || isNaN(limitNumber)) {
+      throw new BadRequestException('Invalid page or limit number');
+    }
+
+    const [products, totalCount] = await this.repo.findAndCount({
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    if (!products.length) {
+      throw new NotFoundException('There is no products in the system');
+    }
+
+    return [products, totalCount];
+  }
+
+  async getActiveProducts(
+    page: number,
+    limit: number,
+  ): Promise<[Product[], number]> {
+    const pageNumber = Number(page);
+    const limitNumber = Number(limit);
+
+    if (isNaN(pageNumber) || isNaN(limitNumber)) {
+      throw new BadRequestException('Invalid page or limit number');
+    }
+
+    const [activeProducts, totalCount] = await this.repo.findAndCount({
+      where: { quantity: MoreThan(0), isPublic: true },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    if (!activeProducts.length) {
+      throw new NotFoundException('There is no products in the system');
+    }
+
+    return [activeProducts, totalCount];
+  }
+
+  async getOne(id: number) {
+    if (!id) {
+      return null;
+    }
+
+    return await this.repo.findOne({ where: { id } });
+  }
+
+  async createOne(product: Partial<newProduct>) {
+    const newProduct = this.repo.create(product);
+    return await this.repo.save(newProduct);
   }
 
   async updateProduct(id: number, attrs: Partial<Product>) {

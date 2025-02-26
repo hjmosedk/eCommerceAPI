@@ -106,19 +106,40 @@ Content-Type: application/json
 ]
 }
 ####
-POST http://192.168.1.135:3000/products HTTP/1.2
+POST https://192.168.1.135:3000/products HTTP/1.2
 Content-Type: application/json
 
 {
-  "name": "Diamond Ring",
-  "sku": "RNG-222",
-  "description": "This is a diamond ring - This is some placeholder text!",
-  "category": "Jewelry",
-  "price": 250000,
+  "name": "Gloves",
+  "sku": "GLW-22",
+  "description": "These gloves have been made with real leather",
+  "category": "Clothes",
+  "price": 25000,
   "currency": "DKK",
   "image": "66de3cfd-3830-47d2-8ce3-bd622a6dbcf4",
-  "quantity": 5,
+  "quantity": 10,
   "percentage": 0,
   "onSale": false,
-  "isPublic": true
+  "isPublic": false
+}
+
+####
+
+GET http://192.168.1.135:3000/settings/packOrderMessage HTTP/1.2
+Content-Type: application/json
+
+{
+
+}
+
+####
+
+
+POST https://192.168.1.135:3000/payment HTTP/1.2
+Content-Type: application/json
+
+{
+"orderPrice":25000,
+"orderCurrency": "DKK"
+
 }

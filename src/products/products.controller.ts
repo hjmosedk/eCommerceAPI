@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Patch,
+  Query,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { ApiTags, ApiOperation } from '@nestjs/swagger';
@@ -22,14 +23,24 @@ export class ProductsController {
     description:
       'This will return all product with stock <0 and who are public',
   })
-  async getActiveProducts() {
-    const activeProducts = await this.productsService.getActiveProducts();
+  async getActiveProducts(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 25,
+  ) {
+    const [activeProducts, totalCount] =
+      await this.productsService.getActiveProducts(page, limit);
 
     if (activeProducts.length < 1) {
       throw new NotFoundException('There is no products in the database');
     }
 
-    return activeProducts;
+    return {
+      products: activeProducts,
+      page,
+      limit,
+      totalCount,
+      totalPages: Math.ceil(totalCount / limit),
+    };
   }
 
   @Get('/all')
@@ -37,14 +48,26 @@ export class ProductsController {
     description:
       'This will get all products from the database - They are not sorted, and any sorting must be done on client side, this also includes items not in stock, and products who are not public',
   })
-  async getAll() {
-    const products = await this.productsService.getAll();
+  async getAll(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 25,
+  ) {
+    const [products, totalCount] = await this.productsService.getAll(
+      page,
+      limit,
+    );
 
     if (products.length < 1) {
       throw new NotFoundException('There is no products in the database');
     }
 
-    return products;
+    return {
+      products,
+      page,
+      limit,
+      totalCount,
+      totalPage: Math.ceil(totalCount / limit),
+    };
   }
 
   @Get(':id')

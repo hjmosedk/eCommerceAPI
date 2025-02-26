@@ -17,18 +17,7 @@ export const setupDatabase = async () => {
   app.useGlobalPipes(new ValidationPipe());
   await app.init();
 
-  //const productService = app.get(ProductsService);
-  //const dataSource = app.get(DataSource);
-  //const orderService = app.get(OrderService);
-
-  //await clearDatabase(app, [Product, Order]);
-  //await clearTable(dataSource.getRepository(Product));
-  //await clearTable(dataSource.getRepository(Order));
   await clearDatabase(app);
-
-  //* Add your common setup logic, such as seeding the database with initial data
-  //* Add a list of products to the database
-  //await productService.createMany(testProducts);
 
   return app;
 };

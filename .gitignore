@@ -42,3 +42,7 @@ lerna-debug.log*
 ./upload
 uploads
 upload
+
+*/cert
+/tests/coverage
+/test

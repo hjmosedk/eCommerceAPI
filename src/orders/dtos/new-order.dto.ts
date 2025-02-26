@@ -2,13 +2,23 @@ import { ApiProperty } from '@nestjs/swagger';
 import { CustomerDto } from './customer.dto';
 import { OrderItemsListDto } from './order-items-list.dto';
 import { Type } from 'class-transformer';
-import { IsArray, IsOptional, IsString, Validate } from 'class-validator';
+import {
+  IsArray,
+  IsDefined,
+  IsOptional,
+  IsString,
+  Validate,
+} from 'class-validator';
 
 import { Ecommerce } from 'ckh-typings';
 import { IsCurrency } from '../typeGuards/custom.validators';
 
 export class NewOrderDto
-  implements Pick<Ecommerce.OrderModel, 'orderNotes' | 'customer'>
+  implements
+    Pick<
+      Ecommerce.OrderModel,
+      'orderNotes' | 'customer' | 'paymentStatus' | 'paymentId'
+    >
 {
   @ApiProperty({
     description: 'This is the value of the products in the cart',
@@ -53,4 +63,24 @@ export class NewOrderDto
     required: false,
   })
   orderNotes: string;
+
+  @IsDefined()
+  @IsString()
+  @ApiProperty({
+    description:
+      'This is the payment status saved to the order database - This information is only saved transient in the database',
+    example: 'awaiting_collection',
+    required: true,
+  })
+  paymentStatus: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty({
+    description:
+      'This is the id of the payment - It is used to collect the payment from stripe - it is only saved until the payment have been collected.',
+    example: 'PI_123456789',
+    required: false,
+  })
+  paymentId: string;
 }
