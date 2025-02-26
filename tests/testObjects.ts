@@ -181,7 +181,7 @@ export const FakeCustomer: Customer = {
     firstName: 'Test',
     middleName: 'T.',
     lastName: 'TestGuy',
-    email: 'Test@test.dk',
+    email: process.env.FROM_EMAIL,
     phone: '123456789',
   },
   shippingAddress: {
