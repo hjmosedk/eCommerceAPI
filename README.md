@@ -1,23 +1,32 @@
 # Project Title
 
-Rainbow Baby Dragon eCommerce API solution.
+Rainbow Baby Dragon eCommerce API solution - A NestJS-based Backend for Learning purposes.
+
+![Build Status](https://img.shields.io/github/workflow/status/hjmosedk/eCommerceAPI/CI)
+![License](https://img.shields.io/github/license/hjmosedk/eCommerceAPI)
 
 ## Description
 
 > [!NOTE]  
 > The project have been tested and developed on debian bookworm, with postgresql and node. The newest version LTS version have been used of all software, but it is likely to work on older version too. Use at own risk on older software. For translations emails, SMTP service provide by gmail have been used, any SMTP should work
 
-This hobby project created by me for learning purposes. It is not intended for production use, and it is designed only as a coding project. This project is a [nestjs](https://nestjs.com/) backend with my code.
+This project is a [NestJS](https://nestjs.com/) backend with my code, created for learning purposes. It supports user authentication (Not yet implemented), product management, and payment processing via Stripe.
+
+**Key Features:**
+
+- User Authentication
+- Product Management
+- Payment Processing via
+
+> [!WARNING]  
+> This project is not intended for production use.
 
 ## Table of Contents
 
 - [Installation](#installation)
 - [Usage](#usage)
-- [Dependencies](#dependencies)
-- [Acknowledgement](#acknowledgement)
 - [Contributing](#contributing)
 - [License](#license)
-- [Contact](#contact)
 
 ## Installation
 
@@ -32,7 +41,6 @@ This hobby project created by me for learning purposes. It is not intended for p
 > If you want to use stripe for payment processing, you need a [stripe account](https://dashboard.stripe.com/login) - At this time, only stripe is supported
 
 ```bash
-# Example:
 git clone https://github.com/hjmosedk/eCommerceAPI
 cd eCommerceAPI
 npm install
@@ -86,12 +94,25 @@ Remember to change the values base on the relevant use case
 
 ## Usage
 
-## Dependencies
+Once all the installing have completed successfully the software can be run in development mode via:
 
-## Acknowledgement
+```bash
+npm run start:dev
+```
+
+If there is no errors, the swagger documentation can be found [here](https://localhost:3000/api)
+The route for this access is localhost:3000/api.
+
+The project can be run in production mode via:
+
+```bash
+npm run start
+```
 
 ## Contributing
 
+In case of contribution please contact author directly.
+
 ## License
 
-## Contact
+See [License](./LICENCE.md)
