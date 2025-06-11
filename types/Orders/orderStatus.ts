@@ -1,0 +1,8 @@
+export enum OrderStatus {
+  RECEIVED = 'RECEIVED',
+  RESERVED = 'RESERVED',
+  CONFIRMED = 'CONFIRMED',
+  PACKED = 'PACKED',
+  SHIPPED = 'SHIPPED',
+  CLOSED = 'CLOSED',
+}
