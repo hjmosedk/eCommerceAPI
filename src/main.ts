@@ -6,19 +6,23 @@ import { AppModule } from './app.module';
 import { resolve } from 'path';
 import { readFileSync } from 'fs';
 import { GlobalExceptionFilter } from './globalFunctions/exceptionsHandler/GlobalExceptionFilter';
+import { checkPrimeSync } from 'crypto';
 
 async function bootstrap() {
   const allowlist = process.env.ALLOWLIST?.split(',') || [];
   const corsOptionsDelegate = function (req: any, callback: any) {
-    let corsOptions: any;
-    if (allowlist.indexOf(req.header('Origin')) !== -1) {
-      corsOptions = { origin: true }; // reflect (enable) the requested origin in the CORS response
-    } else {
-      corsOptions = { origin: false }; // disable CORS for this request
-    }
-    callback(null, corsOptions); // callback expects two parameters: error and options
-  };
+    const origin = req.header('Origin');
+    const corsOptions = allowlist.includes(origin)
+      ? {
+          origin: true,
+          methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS', 'HEAD'],
+          allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+          credentials: true,
+        }
+      : { origin: false };
 
+    callback(null, corsOptions);
+  };
   const httpsOptions = {
     key: readFileSync(process.env.HTTPS_KEY),
     cert: readFileSync(process.env.HTTPS_CERT),
@@ -42,6 +46,18 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   app.enableCors(corsOptionsDelegate);
+  app.use((req, res, next) => {
+    console.log('this is request headers:', req.headers);
+    console.log('this is the response headers:', res.headers);
+    console.log('This is the status code: ', res.statusCode);
+    if (req.method === 'OPTIONS') {
+      console.log(
+        `Preflight request for ${req.path} from origin ${req.headers.origin}`,
+      );
+    }
+    next();
+  });
+
   await app.listen(3000);
 }
 bootstrap();
