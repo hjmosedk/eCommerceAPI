@@ -27,7 +27,7 @@ export const diamondRingItem: newProduct = {
   orderItems: [],
 };
 
-export const cheecburgerItem: newProduct = {
+export const cheeseburgerItem: newProduct = {
   name: 'Cheeseburger',
   sku: 'CHE-1',
   description: 'This is a cheeseburger with a some text',
@@ -90,7 +90,7 @@ export const pokemonFolder: newProduct = {
 export const testProducts: newProduct[] = [
   diamondRingItem,
   glovesItem,
-  cheecburgerItem,
+  cheeseburgerItem,
   pokemonFolder,
 ];
 
@@ -123,7 +123,7 @@ export const fakeDiamondRingItem: Product = {
   orderItems: [],
 };
 
-export const fakeCheecburgerItem: Product = {
+export const fakeCheeseburgerItem: Product = {
   id: 2,
   name: 'Cheeseburger',
   sku: 'CHE-1',
@@ -173,7 +173,7 @@ export const fakeGoldWatchItem: Product = {
 
 export const fakeTestProducts = [
   fakeDiamondRingItem,
-  fakeCheecburgerItem,
+  fakeCheeseburgerItem,
   fakeGlovesItem,
 ];
 
@@ -242,23 +242,23 @@ export const fakeDiamondRingOrderItem: OrderItem = {
   order: fakeOrderWithReceivedStatus,
 };
 
-export const fakeCheecburgerOrderItem: OrderItem = {
+export const fakeCheeseburgerOrderItem: OrderItem = {
   id: 1,
-  productId: fakeCheecburgerItem.id,
+  productId: fakeCheeseburgerItem.id,
   salesQuantity: 1,
-  price: fakeCheecburgerItem.price,
-  product: fakeCheecburgerItem,
+  price: fakeCheeseburgerItem.price,
+  product: fakeCheeseburgerItem,
   order: fakeOrderWithReceivedStatus,
 };
 
 fakeOrderWithReceivedStatus.orderItems = [
   fakeDiamondRingOrderItem,
-  fakeCheecburgerOrderItem,
+  fakeCheeseburgerOrderItem,
 ];
 
 fakeOrderWithConfirmedStatus.orderItems = [
   fakeDiamondRingOrderItem,
-  fakeCheecburgerOrderItem,
+  fakeCheeseburgerOrderItem,
 ];
 
 export const FakeOrderList: Order[] = [
