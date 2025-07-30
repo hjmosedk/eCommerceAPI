@@ -38,7 +38,7 @@
     "@types/uuid": "^10.0.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.2",
-    "cross-env": "^7.0.3",
+    "cross-env": "^10.0.0",
     "dinero.js": "^1.9.1",
     "handlebars": "^4.7.8",
     "nodemailer": "^7.0.5",
@@ -50,7 +50,7 @@
     "typeorm": "^0.3.25"
   },
   "devDependencies": {
-    "@nestjs/cli": "^11.0.7",
+    "@nestjs/cli": "^11.0.8",
     "@nestjs/schematics": "^11.0.5",
     "@nestjs/testing": "^11.1.5",
     "@types/dinero.js": "^1.9.4",
@@ -63,8 +63,8 @@
     "@typescript-eslint/eslint-plugin": "^8.38.0",
     "@typescript-eslint/parser": "^8.38.0",
     "ckh-typings": "file:../../typings",
-    "commit-and-tag-version": "^12.5.1",
-    "eslint": "^9.31.0",
+    "commit-and-tag-version": "^12.5.2",
+    "eslint": "^9.32.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.3",
     "husky": "^9.1.7",
