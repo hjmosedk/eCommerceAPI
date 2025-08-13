@@ -46,18 +46,6 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   app.enableCors(corsOptionsDelegate);
-  app.use((req, res, next) => {
-    console.log('this is request headers:', req.headers);
-    console.log('this is the response headers:', res.headers);
-    console.log('This is the status code: ', res.statusCode);
-    if (req.method === 'OPTIONS') {
-      console.log(
-        `Preflight request for ${req.path} from origin ${req.headers.origin}`,
-      );
-    }
-    next();
-  });
-
   await app.listen(3000);
 }
 bootstrap();

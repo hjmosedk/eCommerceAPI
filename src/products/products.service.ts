@@ -18,7 +18,7 @@ export class ProductsService {
     /* istanbul ignore next*/
     try {
       /* istanbul ignore next*/
-      this.repo.clear();
+      this.repo.createQueryBuilder().delete().execute();
       /* istanbul ignore next*/
     } catch (error) {
       /* istanbul ignore next*/
